@@ -84,6 +84,7 @@
         }
     },
     "require-dev": {
-        "symfony/finder": "7.0.*"
+        "symfony/finder": "7.0.*",
+        "symfony/maker-bundle": "^1.59"
     }
 }

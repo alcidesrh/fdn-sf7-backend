@@ -2,31 +2,34 @@
 
 namespace App\Entity\Base;
 
-use App\Attribute\FormCreateExclude;
+use App\Attribute\FormKitCreateExclude;
 use Doctrine\ORM\Mapping as ORM;
 use ReflectionClass;
 
 #[ORM\MappedSuperclass]
-class Base {
+class Base
+{
 
-  #[ORM\Id]
-  #[ORM\GeneratedValue]
-  #[ORM\Column]
-  #[FormCreateExclude]
-  protected ?int $id = null;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    #[FormKitCreateExclude]
+    protected ?int $id = null;
 
-  public function getId(): ?int {
-    return $this->id;
-  }
-
-  public function __toString() {
-
-    $class = get_class($this);
-    $reflectionClass = new ReflectionClass($class);
-
-    if (!empty($nombre = \array_filter($reflectionClass->getProperties(), fn ($i) => \in_array($i->getName(), ['nombre', 'name'])))) {
-      return $this->getNombre() ?? $class;
+    public function getId(): ?int
+    {
+        return $this->id;
     }
-    return '';
-  }
+
+    public function __toString()
+    {
+
+        $class = get_class($this);
+        $reflectionClass = new ReflectionClass($class);
+
+        if (!empty($nombre = \array_filter($reflectionClass->getProperties(), fn ($i) => \in_array($i->getName(), ['nombre', 'name'])))) {
+            return $this->getNombre() ?? $class;
+        }
+        return '';
+    }
 }

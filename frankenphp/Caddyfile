@@ -51,5 +51,24 @@
 	# Disable Topics tracking if not enabled explicitly: https://github.com/jkarlin/topics
 	header ?Permissions-Policy "browsing-topics=()"
 
+	  #----------------------------- FDN Reverse Proxies -------------------------------
+    # /login
+    # @login expression path('/login') && !header({'Accept': '*text/html*'})
+    # reverse_proxy @login http://{$PWA_UPSTREAM}
+
+
+    # Matches requests for HTML documents, for static files and for Nuxt.js files,
+    # except for known API paths and paths with extensions handled by API Platform
+    @nuxt expression `(
+            header({'Accept': '*text/html*'})
+            && !path(
+                 '/logout', '/docs*', '/api*', '/graphql*', '/bundles*', '/contexts*', '/_profiler*', '/_wdt*',
+                '*.json*', '*.html', '*.csv', '*.yml', '*.yaml', '*.xml', '/auth'
+            )
+        )
+        || path('/favicon.ico', '/manifest.json', '/robots.txt', '/_nuxt*', '.cache*', '/sitemap*')`
+
+    reverse_proxy @nuxt http://{$PWA_UPSTREAM}
+
 	php_server
 }

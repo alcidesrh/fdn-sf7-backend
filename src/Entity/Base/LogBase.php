@@ -8,34 +8,39 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
 
 #[ORM\MappedSuperclass]
-class LogBase extends Base {
+class LogBase extends Base
+{
 
-  use TimestampableEntity;
+    use TimestampableEntity;
 
-  #[ORM\Column(type: Types::TEXT, nullable: true)]
-  private ?string $descripcion = null;
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $descripcion = null;
 
-  #[ORM\ManyToOne]
-  private ?User $user = null;
+    #[ORM\ManyToOne]
+    private ?User $user = null;
 
 
-  public function getDescripcion(): ?string {
-    return $this->descripcion;
-  }
+    public function getDescripcion(): ?string
+    {
+        return $this->descripcion;
+    }
 
-  public function setDescripcion(?string $descripcion): static {
-    $this->descripcion = $descripcion;
+    public function setDescripcion(?string $descripcion): static
+    {
+        $this->descripcion = $descripcion;
 
-    return $this;
-  }
+        return $this;
+    }
 
-  public function getUser(): ?User {
-    return $this->user;
-  }
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
 
-  public function setUser(?User $user): static {
-    $this->user1 = $user;
+    public function setUser(?User $user): static
+    {
+        $this->user1 = $user;
 
-    return $this;
-  }
+        return $this;
+    }
 }

@@ -6,20 +6,16 @@ namespace App\ApiResource\Form;
 
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
-use App\Entity\Permiso;
-use App\Services\FormKitGenerate;
-use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\ORM\EntityManager;
-use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
-use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
-use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
 
-class FormStateProvider implements ProviderInterface {
+class FormStateProvider implements ProviderInterface
+{
 
-    public function __construct(private CreateForm $createForm) {
+    public function __construct(private CreateForm $createForm)
+    {
     }
 
-    public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null {
+    public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
+    {
 
 
         // $return = new CreateForm($this->formKitGenerate);

@@ -10,7 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: FDNRepository::class)]
 #[ORM\InheritanceType('JOINED')]
 #[ORM\DiscriminatorColumn(name: 'discr', type: 'string')]
-#[ORM\DiscriminatorMap(['fdn' => FDN::class, 'enclave' => Enclave::class, 'parada' => Parada::class])]
+#[ORM\DiscriminatorMap(['fdn' => FDN::class, 'enclave' => Enclave::class, 'parada' => Parada::class, 'taxon' => Taxon::class])]
 #[ApiResource]
-class FDN extends Base {
+class FDN extends Base
+{
 }

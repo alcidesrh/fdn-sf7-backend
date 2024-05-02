@@ -2,14 +2,10 @@
 
 namespace App\ApiResource\Form;
 
-use function Symfony\Component\String\u;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
-use App\Entity\Permiso;
 use App\Services\FormKitGenerate;
-use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
-use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
 
 #[ApiResource(
   shortName: 'create_form',
@@ -21,12 +17,6 @@ use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
 )]
 class CreateForm {
 
-
-  #[Ignore]
-  private string $form;
-
-  // #[Ignore]
-  // private FormKitGenerate $formKitGenerate;
 
   private string $className;
 

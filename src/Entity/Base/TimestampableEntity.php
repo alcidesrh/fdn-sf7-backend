@@ -9,7 +9,7 @@
 
 namespace App\Entity\Base;
 
-use App\Attribute\FormCreateExclude;
+use App\Attribute\FormKitCreateExclude;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -19,68 +19,44 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *
  * @author Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
  */
-trait TimestampableEntity {
-  /**
-   * @var \DateTime|null
-   *
-   * @Gedmo\Timestampable(on="create")
-   *
-   * @ORM\Column(type="datetime")
-   */
-  #[FormCreateExclude]
-  #[Gedmo\Timestampable(on: 'create')]
-  #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-  protected $createdAt;
+trait TimestampableEntity
+{
+    #[FormKitCreateExclude]
+    #[Gedmo\Timestampable(on: 'create')]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    protected $createdAt;
 
-  /**
-   * @var \DateTime|null
-   *
-   * @Gedmo\Timestampable(on="update")
-   *
-   * @ORM\Column(type="datetime")
-   */
-  #[FormCreateExclude]
-  #[Gedmo\Timestampable(on: 'update')]
-  #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-  protected $updatedAt;
+    #[FormKitCreateExclude]
+    #[Gedmo\Timestampable(on: 'update')]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    protected $updatedAt;
 
-  /**
-   * Sets createdAt.
-   *
-   * @return $this
-   */
-  public function setCreatedAt(\DateTime $createdAt) {
-    $this->createdAt = $createdAt;
+    public function setCreatedAt(\DateTime $createdAt)
+    {
+        $this->createdAt = $createdAt;
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * Returns createdAt.
-   *
-   * @return \DateTime|null
-   */
-  public function getCreatedAt() {
-    return $this->createdAt;
-  }
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
 
-  /**
-   * Sets updatedAt.
-   *
-   * @return $this
-   */
-  public function setUpdatedAt(\DateTime $updatedAt) {
-    $this->updatedAt = $updatedAt;
+    public function setUpdatedAt(\DateTime $updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * Returns updatedAt.
-   *
-   * @return \DateTime|null
-   */
-  public function getUpdatedAt() {
-    return $this->updatedAt;
-  }
+    /**
+     * Returns updatedAt.
+     *
+     * @return \DateTime|null
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
 }

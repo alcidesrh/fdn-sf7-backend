@@ -4,13 +4,15 @@ namespace App\Services;
 
 use function Symfony\Component\String\u;
 
+use ApiPlatform\Doctrine\Common\PropertyHelperTrait;
+use App\Attribute\AttributeUtil;
 use App\Attribute\FormKitCreateExclude;
 use App\Attribute\FormKitFieldOrder;
 use App\Attribute\FormKitLabel;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use ReflectionAttribute;
+use Doctrine\Persistence\Mapping\ClassMetadata;
 use ReflectionClass;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
@@ -18,37 +20,31 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Finder\Finder;
 
 #[Attribute]
-class FormKitGenerate
-{
-
+class FormKitGenerate {
+    use PropertyHelperTrait;
     private ArrayCollection $form;
 
-    public function __construct(private EntityManagerInterface $entityManager, #[Autowire('%kernel.project_dir%/src/Entity')]
-    private $entityDir,)
-    {
+    public function __construct(private EntityManagerInterface $entityManager, private AttributeUtil $attributeUtil) {
         $this->form = new ArrayCollection();
     }
 
-    public function create($className)
-    {
+    public function create($className) {
 
         if ($className == 'entity') {
             return [[
                 '$formkit' => 'select',
                 'label' => 'Entidades',
                 'name' => 'entity',
-                'options' => $this->entityList()
+                'options' => $this->attributeUtil->getResources(true)
             ]];
         }
         try {
-
-
             $className = u($className)->camel()->title();
             $className = "App\Entity\\$className";
 
             $reflectionClass = new ReflectionClass($className);
 
-            $info = self::getExtractor();
+            $info = AttributeUtil::getExtractor();
             $properties = $info->getProperties($className);
 
             if ($order = $reflectionClass->getAttributes(FormKitFieldOrder::class)) {
@@ -59,7 +55,7 @@ class FormKitGenerate
             // $metadata = $this->getClassMetadata($className);
             // $properties = \array_merge($metadata->getFieldNames(), $metadata->getAssociationNames());
             foreach ($properties as $value) {
-
+                // $mapped =    $this->enisPropertyMapped($value, $className);
                 try {
                     $attrs = $reflectionClass->getProperty($value)->getAttributes();
 
@@ -103,12 +99,9 @@ class FormKitGenerate
     }
 
 
-    public function getForm(array $data)
-    {
+    public function getForm(array $data) {
 
         $form = [];
-
-
         foreach ($data as $key => $value) {
 
             list($name, $label, $type, $class) = \array_values($value);
@@ -140,30 +133,9 @@ class FormKitGenerate
         return $form;
     }
 
-    static function getExtractor()
-    {
-        // $phpDocExtractor = new PhpDocExtractor();
-        $reflectionExtractor = new ReflectionExtractor();
-        // // list of PropertyListExtractorInterface (any iterable)
-        $listExtractors = [$reflectionExtractor];
-        // // list of PropertyTypeExtractorInterface (any iterable)
-        $typeExtractors = [$reflectionExtractor];
-        // // list of PropertyAccessExtractorInterface (any iterable)
-        $accessExtractors = [$reflectionExtractor];
-        // // list of PropertyInitializableExtractorInterface (any iterable)
-        $propertyInitializableExtractors = [$reflectionExtractor];
 
-        return new PropertyInfoExtractor(
-            $listExtractors,
-            $typeExtractors,
-            [],
-            $accessExtractors,
-            $propertyInitializableExtractors
-        );
-    }
 
-    static function getInputType($type, $class)
-    {
+    static function getInputType($type, $class) {
 
         if ($type == 'object' || $type == 'array') {
             if ($class == DateTimeInterface::class) {
@@ -174,17 +146,18 @@ class FormKitGenerate
         return 'text';
     }
 
-    public function entityList()
-    {
+    public function entityList() {
         $finder = new Finder();
         // find all files in the current directory
         $finder->files()->in($this->entityDir)->depth(0);
         $options = [['label' => 'Entidades', 'value' => 0]];
         foreach ($finder as $file) {
-            // }
             $options[] = ['label' => $file->getFilenameWithoutExtension(), 'value' => $file->getFilenameWithoutExtension()];
         }
 
         return $options;
+    }
+    public function getClassMetadata(string $classResource): ClassMetadata {
+        return $this->entityManager->getClassMetadata($classResource);
     }
 }

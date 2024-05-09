@@ -41,7 +41,9 @@ class Factory {
         method_exists($intance, $method = "set$property") ||
         method_exists($intance, $method = "add$property")
       ) {
-
+        if ($method == 'setStatus') {
+          $w = 0;
+        }
         $intance->{$method}($data[$value]);
       }
     }

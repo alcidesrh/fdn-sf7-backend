@@ -5,12 +5,13 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Metadata\ApiResource;
+use App\Attribute\ResourceAccess;
 use App\Entity\Base\Traits\LegacyTrait;
 use App\Repository\AgenciaRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AgenciaRepository::class)]
-#[ApiResource]
+#[ApiResource, ResourceAccess]
 class Agencia extends Enclave {
 
     use LegacyTrait;

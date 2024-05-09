@@ -7,8 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use ReflectionClass;
 
 #[ORM\MappedSuperclass]
-class Base
-{
+class Base {
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -16,13 +15,11 @@ class Base
     #[FormKitCreateExclude]
     protected ?int $id = null;
 
-    public function getId(): ?int
-    {
+    public function getId(): ?int {
         return $this->id;
     }
 
-    public function __toString()
-    {
+    public function __toString() {
 
         $class = get_class($this);
         $reflectionClass = new ReflectionClass($class);

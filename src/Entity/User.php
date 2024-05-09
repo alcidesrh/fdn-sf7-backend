@@ -15,8 +15,7 @@ use App\Entity\Base\UserBase;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[ApiResource]
-class User extends UserBase implements UserInterface, PasswordAuthenticatedUserInterface
-{
+class User extends UserBase implements UserInterface, PasswordAuthenticatedUserInterface {
     #[ORM\Column(length: 180, unique: true)]
     private ?string $username = null;
 
@@ -36,8 +35,7 @@ class User extends UserBase implements UserInterface, PasswordAuthenticatedUserI
 
     #[ORM\ManyToMany(targetEntity: Permiso::class, mappedBy: 'usuarios')]
     private Collection $permisos;
-    public function __construct(string $userIdentifier = '', array $roles = [])
-    {
+    public function __construct(string $userIdentifier = '', array $roles = []) {
 
         $this->username = $userIdentifier;
         $this->roles = $roles;
@@ -45,13 +43,11 @@ class User extends UserBase implements UserInterface, PasswordAuthenticatedUserI
         $this->permisos = new ArrayCollection();
     }
 
-    public function getUsername(): string
-    {
+    public function getUsername(): string {
         return $this->username;
     }
 
-    public function setUsername(string $username): static
-    {
+    public function setUsername(string $username): static {
         $this->username = $username;
 
         return $this;
@@ -63,16 +59,14 @@ class User extends UserBase implements UserInterface, PasswordAuthenticatedUserI
      * @see UserInterface
      */
     #[FormKitCreateExclude]
-    public function getUserIdentifier(): string
-    {
+    public function getUserIdentifier(): string {
         return (string) $this->username;
     }
 
     /**
      * @see UserInterface
      */
-    public function getRoles(): array
-    {
+    public function getRoles(): array {
         if (null === $this->accessTokenScopes) {
             // logged in via the full user mechanism
             $roles = $this->roles;
@@ -85,8 +79,7 @@ class User extends UserBase implements UserInterface, PasswordAuthenticatedUserI
         return array_unique($roles);
     }
 
-    public function setRoles(array $roles): static
-    {
+    public function setRoles(array $roles): static {
         $this->roles = $roles;
 
         return $this;
@@ -95,13 +88,11 @@ class User extends UserBase implements UserInterface, PasswordAuthenticatedUserI
     /**
      * @see PasswordAuthenticatedUserInterface
      */
-    public function getPassword(): ?string
-    {
+    public function getPassword(): ?string {
         return $this->password;
     }
 
-    public function setPassword(string $password): static
-    {
+    public function setPassword(string $password): static {
         $this->password = $password;
 
         return $this;
@@ -110,8 +101,7 @@ class User extends UserBase implements UserInterface, PasswordAuthenticatedUserI
     /**
      * @see UserInterface
      */
-    public function eraseCredentials(): void
-    {
+    public function eraseCredentials(): void {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
@@ -126,21 +116,18 @@ class User extends UserBase implements UserInterface, PasswordAuthenticatedUserI
     //     );
     // }
 
-    public function __toString()
-    {
+    public function __toString() {
         return $this->username;
     }
 
     /**
      * @return Collection<int, ApiToken>
      */
-    public function getApiTokens(): Collection
-    {
+    public function getApiTokens(): Collection {
         return $this->apiTokens;
     }
 
-    public function addApiToken(ApiToken $apiToken): static
-    {
+    public function addApiToken(ApiToken $apiToken): static {
         if (!$this->apiTokens->contains($apiToken)) {
             $this->apiTokens->add($apiToken);
             $apiToken->setUsuario($this);
@@ -149,8 +136,7 @@ class User extends UserBase implements UserInterface, PasswordAuthenticatedUserI
         return $this;
     }
 
-    public function removeApiToken(ApiToken $apiToken): static
-    {
+    public function removeApiToken(ApiToken $apiToken): static {
         if ($this->apiTokens->removeElement($apiToken)) {
             // set the owning side to null (unless already changed)
             if ($apiToken->getUsuario() === $this) {
@@ -164,28 +150,24 @@ class User extends UserBase implements UserInterface, PasswordAuthenticatedUserI
     /**
      * @return string[]
      */
-    public function getValidTokenStrings(): array
-    {
+    public function getValidTokenStrings(): array {
         return $this->getApiTokens()
             ->filter(fn (ApiToken $token) => $token->isValid())
             ->map(fn (ApiToken $token) => $token->getToken())
             ->toArray();
     }
-    public function markAsTokenAuthenticated(array $scopes)
-    {
+    public function markAsTokenAuthenticated(array $scopes) {
         $this->accessTokenScopes = $scopes;
     }
 
     /**
      * @return Collection<int, Permiso>
      */
-    public function getPermisos(): Collection
-    {
+    public function getPermisos(): Collection {
         return $this->permisos;
     }
 
-    public function addPermiso(Permiso $permiso): static
-    {
+    public function addPermiso(Permiso $permiso): static {
         if (!$this->permisos->contains($permiso)) {
             $this->permisos->add($permiso);
             $permiso->addUsuario($this);
@@ -194,8 +176,7 @@ class User extends UserBase implements UserInterface, PasswordAuthenticatedUserI
         return $this;
     }
 
-    public function removePermiso(Permiso $permiso): static
-    {
+    public function removePermiso(Permiso $permiso): static {
         if ($this->permisos->removeElement($permiso)) {
             $permiso->removeUsuario($this);
         }

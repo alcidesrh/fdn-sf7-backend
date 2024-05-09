@@ -1,8 +1,13 @@
 doctrine:
     dbal:
         default_connection: default
+        types:
+            status:  App\Enum\StatusType
+        
         connections:
                 default:
+                    mapping_types:
+                        enum: string
                     # configure these for your database server
                     url: "%env(DATABASE_URL)%"
                     logging: true

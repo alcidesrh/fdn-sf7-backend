@@ -5,8 +5,7 @@ namespace App\Attribute;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class FormKitCreateExclude
-{
+final class FormKitCreateExclude {
 
   // public function __construct(
   //   public readonly string|null $targetEntity = null,

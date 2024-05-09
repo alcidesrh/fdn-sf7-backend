@@ -1,0 +1,26 @@
+{
+  "workbench.colorCustomizations": {
+    "activityBar.activeBackground": "#1e293b",
+    "activityBar.background": "#1e293b",
+    "activityBar.foreground": "#f8fafc",
+    "activityBar.inactiveForeground": "#f8fafc99",
+    "activityBarBadge.background": "#f8fafc",
+    "activityBarBadge.foreground": "#15202b",
+    "commandCenter.border": "#f8fafc99",
+    "sash.hoverBorder": "#1e293b",
+    "statusBar.background": "#334155",
+    "statusBar.foreground": "#f8fafc",
+    "statusBarItem.hoverBackground": "#1e293b",
+    "statusBarItem.remoteBackground": "#334155",
+    "statusBarItem.remoteForeground": "#f8fafc",
+    "titleBar.activeBackground": "#1e293b",
+    "titleBar.activeForeground": "#f8fafc",
+    "titleBar.inactiveBackground": "#1e293b",
+    "titleBar.inactiveForeground": "#f8fafc99"
+  },
+  "editor.inlineSuggest.enabled": true,
+  "editor.inlineSuggest.suppressSuggestions": false,
+  "editor.snippetSuggestions": "top",
+  "editor.suggest.preview": true,
+  "php.suggest.basic": false,
+}

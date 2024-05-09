@@ -19,8 +19,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *
  * @author Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
  */
-trait TimestampableEntity
-{
+trait TimestampableEntity {
     #[FormKitCreateExclude]
     #[Gedmo\Timestampable(on: 'create')]
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
@@ -31,20 +30,17 @@ trait TimestampableEntity
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     protected $updatedAt;
 
-    public function setCreatedAt(\DateTime $createdAt)
-    {
+    public function setCreatedAt(\DateTime $createdAt) {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getCreatedAt()
-    {
+    public function getCreatedAt() {
         return $this->createdAt;
     }
 
-    public function setUpdatedAt(\DateTime $updatedAt)
-    {
+    public function setUpdatedAt(\DateTime $updatedAt) {
         $this->updatedAt = $updatedAt;
 
         return $this;
@@ -55,8 +51,7 @@ trait TimestampableEntity
      *
      * @return \DateTime|null
      */
-    public function getUpdatedAt()
-    {
+    public function getUpdatedAt() {
         return $this->updatedAt;
     }
 }

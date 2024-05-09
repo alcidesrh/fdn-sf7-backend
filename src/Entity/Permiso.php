@@ -13,8 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: PermisoRepository::class)]
 #[ApiResource]
 #[FormKitFieldOrder("nombre", "link", "posicion", "status", 'parent', 'children')]
-class Permiso extends NombreNotaStatusBase
-{
+class Permiso extends NombreNotaStatusBase {
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'hijos')]
     public ?self $padre = null;
@@ -26,24 +25,20 @@ class Permiso extends NombreNotaStatusBase
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'permisos')]
     private Collection $usuarios;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->hijos = new ArrayCollection();
         $this->usuarios = new ArrayCollection();
     }
 
-    public function getId(): ?int
-    {
+    public function getId(): ?int {
         return $this->id;
     }
 
-    public function getPadre(): ?self
-    {
+    public function getPadre(): ?self {
         return $this->padre;
     }
 
-    public function setPadre(?self $padre): static
-    {
+    public function setPadre(?self $padre): static {
         $this->padre = $padre;
 
         return $this;
@@ -52,13 +47,11 @@ class Permiso extends NombreNotaStatusBase
     /**
      * @return Collection<int, self>
      */
-    public function getHijos(): Collection
-    {
+    public function getHijos(): Collection {
         return $this->hijos;
     }
 
-    public function addHijo(self $hijo): static
-    {
+    public function addHijo(self $hijo): static {
         if (!$this->hijos->contains($hijo)) {
             $this->hijos->add($hijo);
             $hijo->setPadre($this);
@@ -67,8 +60,7 @@ class Permiso extends NombreNotaStatusBase
         return $this;
     }
 
-    public function removeHijo(self $hijo): static
-    {
+    public function removeHijo(self $hijo): static {
         if ($this->hijos->removeElement($hijo)) {
             // set the owning side to null (unless already changed)
             if ($hijo->getPadre() === $this) {
@@ -81,13 +73,11 @@ class Permiso extends NombreNotaStatusBase
     /**
      * @return Collection<int, User>
      */
-    public function getUsuarios(): Collection
-    {
+    public function getUsuarios(): Collection {
         return $this->usuarios;
     }
 
-    public function addUsuario(User $usuario): static
-    {
+    public function addUsuario(User $usuario): static {
         if (!$this->usuarios->contains($usuario)) {
             $this->usuarios->add($usuario);
         }
@@ -95,14 +85,12 @@ class Permiso extends NombreNotaStatusBase
         return $this;
     }
 
-    public function removeUsuario(User $usuario): static
-    {
+    public function removeUsuario(User $usuario): static {
         $this->usuarios->removeElement($usuario);
 
         return $this;
     }
-    static function createForm()
-    {
+    static function createForm() {
         return '
     $el: "div",
     children: "Iniciar Sessión",

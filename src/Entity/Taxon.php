@@ -16,8 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\InheritanceType('JOINED')]
 #[ORM\DiscriminatorColumn(name: 'discr', type: 'string')]
 #[ORM\DiscriminatorMap(['enclave' => MenuItem::class])]
-class Taxon extends NombreNotaStatusBaseSuperClass
-{
+class Taxon extends NombreNotaStatusBaseSuperClass {
 
     #[ORM\ManyToOne(targetEntity: self::class)]
     protected ?self $parent = null;
@@ -33,30 +32,25 @@ class Taxon extends NombreNotaStatusBaseSuperClass
     #[FormKitCreateExclude]
     protected Collection $children;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->children = new ArrayCollection();
     }
 
-    public function getParent(): ?self
-    {
+    public function getParent(): ?self {
         return $this->parent;
     }
 
-    public function setParent(?self $parent): static
-    {
+    public function setParent(?self $parent): static {
         $this->parent = $parent;
 
         return $this;
     }
 
-    public function getPosicion(): ?int
-    {
+    public function getPosicion(): ?int {
         return $this->posicion;
     }
 
-    public function setPosicion(?int $posicion): static
-    {
+    public function setPosicion(?int $posicion): static {
         $this->posicion = $posicion;
 
         return $this;
@@ -65,13 +59,11 @@ class Taxon extends NombreNotaStatusBaseSuperClass
     /**
      * @return Collection<int, self>
      */
-    public function getChildren(): Collection
-    {
+    public function getChildren(): Collection {
         return $this->children;
     }
 
-    public function addChild(self $child): static
-    {
+    public function addChild(self $child): static {
         if (!$this->children->contains($child)) {
             $this->children->add($child);
         }
@@ -79,8 +71,7 @@ class Taxon extends NombreNotaStatusBaseSuperClass
         return $this;
     }
 
-    public function removeChild(self $child): static
-    {
+    public function removeChild(self $child): static {
         $this->children->removeElement($child);
 
         return $this;

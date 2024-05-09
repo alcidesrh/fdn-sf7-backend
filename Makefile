@@ -130,7 +130,7 @@ check: ## Docker check
 # Snippet L126+2 => templates/snippet/code/_135.html.twig
 
 sh: ## Log to the docker container
-	@$(DOCKER_COMP) exec php bash
+	cd ../ && $(DOCKER_COMP) exec php bash
 
 
 caddy: ## Log to the docker container

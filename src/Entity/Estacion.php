@@ -23,7 +23,6 @@ class Estacion extends Enclave {
 
     public function __construct() {
         $this->users = new ArrayCollection();
-        $this->status = 1;
     }
 
     /**

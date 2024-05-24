@@ -4,14 +4,11 @@ namespace App\Attribute;
 
 use Attribute;
 
-#[Attribute(Attribute::TARGET_PROPERTY)]
+#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_CLASS)]
 final class FormKitCreateExclude {
 
-  // public function __construct(
-  //   public readonly string|null $targetEntity = null,
-  //   public readonly array|null $cascade = null,
-  //   public readonly string $fetch = 'LAZY',
-  //   public readonly string|null $inversedBy = null,
-  // ) {
-  // }
+  public $fields = [];
+  public function __construct(?string ...$args) {
+    $this->fields = $args;
+  }
 }

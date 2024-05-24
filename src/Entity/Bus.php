@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use App\Entity\Base\Interfaces\StatusInterface;
+
 use App\Entity\Base\TimeLegacyStatusBase;
 use App\Entity\Base\Traits\StatusTrait;
 use App\Repository\BusRepository;
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BusRepository::class)]
 #[ApiResource]
-class Bus extends TimeLegacyStatusBase implements StatusInterface {
+class Bus extends TimeLegacyStatusBase {
 
     use StatusTrait;
 

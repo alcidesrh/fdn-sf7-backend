@@ -4,7 +4,7 @@ namespace App\Entity\Base;
 
 use App\Enum\StatusType;
 use App\Entity\Base\Interfaces\EstadoVentaInterface;
-use App\Entity\Base\Interfaces\StatusInterface;
+
 use App\Entity\Base\Traits\StatusTrait;
 use Doctrine\Common\Annotations\Annotation\Enum;
 use Doctrine\ORM\Mapping as ORM;

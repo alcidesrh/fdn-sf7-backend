@@ -2,7 +2,6 @@
 
 namespace App\Entity\Base\Traits;
 
-use App\Attribute\FormKitCreateExclude;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 

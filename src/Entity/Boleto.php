@@ -3,14 +3,13 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use App\Attribute\ResourceAccess;
 use App\Entity\Base\BoletoBase;
 use App\Repository\BoletoRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BoletoRepository::class)]
-#[ApiResource, ResourceAccess]
+#[ApiResource]
 class Boleto extends BoletoBase {
 
     #[ORM\ManyToOne]

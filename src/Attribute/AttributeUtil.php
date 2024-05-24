@@ -15,23 +15,6 @@ final class AttributeUtil {
     # code...
   }
 
-  public function getResources(bool $name = null) {
-
-    $finder = new Finder();
-    // find all files in the current directory
-    $finder->files()->in($this->resourcePath)->depth(0);
-    $options = [];
-    foreach ($finder as $file) {
-      if ($name) {
-        $options[] = $file->getFilenameWithoutExtension();
-      } else {
-        $options[] = "App\Entity\\{$file->getFilenameWithoutExtension()}";
-      }
-    }
-
-    return $options;
-  }
-
   static function getExtractor() {
     // $phpDocExtractor = new PhpDocExtractor();
     $reflectionExtractor = new ReflectionExtractor();
@@ -51,5 +34,22 @@ final class AttributeUtil {
       $accessExtractors,
       $propertyInitializableExtractors
     );
+  }
+
+  public function getResources(bool $name = null) {
+
+    $finder = new Finder();
+    // find all files in the current directory
+    $finder->files()->in($this->resourcePath)->depth(0);
+    $options = [];
+    foreach ($finder as $file) {
+      if ($name) {
+        $options[] = $file->getFilenameWithoutExtension();
+      } else {
+        $options[] = "App\Entity\\{$file->getFilenameWithoutExtension()}";
+      }
+    }
+
+    return $options;
   }
 }

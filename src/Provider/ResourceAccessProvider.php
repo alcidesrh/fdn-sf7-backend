@@ -6,6 +6,7 @@ namespace App\Provider;
 
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
+use App\ApiResource\Form\CreateForm;
 use App\Attribute\AttributeUtil;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Routing\RouterInterface;
@@ -13,25 +14,28 @@ use Symfony\Component\Routing\Route;
 
 class ResourceAccessProvider implements ProviderInterface {
 
-    public function __construct(private RouterInterface $router, #[Autowire('%kernel.project_dir%/src/Entity')] private $entityDir, private AttributeUtil $attributeUtil) {
+    public function __construct(private CreateForm $createForm, private RouterInterface $router, #[Autowire('%kernel.project_dir%/src/Entity')] private $entityDir, private AttributeUtil $attributeUtil) {
     }
 
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null {
 
-        $resource = $this->attributeUtil->getResources();
 
         $routes = $this->router->getRouteCollection()->getIterator();
-        while ($routes->valid()) {
-            $route = $routes->current();
-            $routes->next();
-        }
+
         $routes =
             array_map(
-                fn ($i) => [array_values($i)],
+                fn (Route $i) => $i->getPhemes(), //getDefault('name'),
                 $this->router->getRouteCollection()->getIterator()->getArrayCopy()
             );
-        // $return = new CreateForm($this->formKitGenerate);
-        return [];
+
+        return [[
+            '$formkit' => 'select',
+            'label' => 'Rutas',
+            'name' => 'entity',
+            'options' => $routes
+        ]];
+        return $routes;
+        return $this->createForm->getForm($uriVariables['className']);
     }
 }
 

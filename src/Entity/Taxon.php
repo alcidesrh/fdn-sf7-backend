@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use App\Attribute\FormKitCreateExclude;
 use App\Entity\Base\NombreNotaStatusBaseSuperClass;
 use App\Repository\TaxonRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -15,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ApiResource]
 #[ORM\InheritanceType('JOINED')]
 #[ORM\DiscriminatorColumn(name: 'discr', type: 'string')]
-#[ORM\DiscriminatorMap(['enclave' => MenuItem::class])]
+#[ORM\DiscriminatorMap(['enclave' => Menu::class])]
 class Taxon extends NombreNotaStatusBaseSuperClass {
 
     #[ORM\ManyToOne(targetEntity: self::class)]
@@ -29,7 +28,6 @@ class Taxon extends NombreNotaStatusBaseSuperClass {
      * @var Collection<int, self>
      */
     #[ORM\ManyToMany(targetEntity: self::class)]
-    #[FormKitCreateExclude]
     protected Collection $children;
 
     public function __construct() {

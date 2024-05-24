@@ -19,8 +19,5 @@ class ResourceAccess {
 
 
   public function __construct() {
-    // $this->className = $className;
-    // $formKitGenerate = $formKitGenerate;
-    // $this->form = $formKitGenerate->form($className);
   }
 }

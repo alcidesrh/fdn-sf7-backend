@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Entity\Base\Base;
 use App\Entity\Base\TimestampableEntity;
 use App\Repository\ApiTokenRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 
@@ -28,8 +29,8 @@ class ApiToken extends Base {
     #[ORM\JoinColumn(nullable: false)]
     private ?User $usuario = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $expira = null;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $expira = null;
 
     #[ORM\Column(length: 68)]
     private string $token;
@@ -59,7 +60,7 @@ class ApiToken extends Base {
         return $this->expira;
     }
 
-    public function setExpira(?\DateTimeImmutable $expira): self {
+    public function setExpira(?\DateTimeInterface $expira): self {
         $this->expira = $expira;
 
         return $this;
@@ -86,7 +87,7 @@ class ApiToken extends Base {
     }
 
     public function isValid(): bool {
-        return $this->expira === null || $this->expira > new \DateTimeImmutable() || $this->isActivo();
+        return $this->expira === null || $this->expira > new \DateTimeInterface() || $this->isActivo();
     }
 
     public function isActivo(): ?bool {

@@ -14,7 +14,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[AsCommand(
-    name: 'username_password_hasher',
+    name: 'password',
     description: 'Establece com opassword los usernames.',
 )]
 class UsernameAsPasswordCommand extends Command {

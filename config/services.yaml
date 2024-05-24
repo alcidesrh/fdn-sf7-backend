@@ -38,4 +38,4 @@ services:
     _instanceof:
         App\Enum\StatusType:
             tags: [ 'app.doctrine_enum_type' ]
-          
+  

@@ -3,65 +3,42 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use App\Attribute\FormKitCreateExclude;
+use App\Attribute\FormKitFieldOrder;
+use App\Attribute\FormKitLabel;
 use App\Repository\MenuRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MenuRepository::class)]
 #[ApiResource]
-class Menu {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+#[FormKitFieldOrder("nombre", "link", "posicion", "status", 'parent', 'children')]
+#[FormKitCreateExclude("status", "parent")]
+#[FormKitLabel(['nombre' => 'texto'])]
+class Menu extends Taxon {
 
-    /**
-     * @var Collection<int, MenuItem>
-     */
-    #[ORM\ManyToMany(targetEntity: MenuItem::class)]
-    private Collection $menuItems;
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $link = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $seccion = null;
+    private ?string $tipo = null;
 
-    public function __construct() {
-        $this->menuItems = new ArrayCollection();
+
+    public function getLink(): ?string {
+        return $this->link;
     }
 
-    public function getId(): ?int {
-        return $this->id;
-    }
-
-    /**
-     * @return Collection<int, MenuItem>
-     */
-    public function getMenuItems(): Collection {
-        return $this->menuItems;
-    }
-
-    public function addMenuItem(MenuItem $menuItem): static {
-        if (!$this->menuItems->contains($menuItem)) {
-            $this->menuItems->add($menuItem);
-        }
+    public function setLink(?string $link): static {
+        $this->link = $link;
 
         return $this;
     }
 
-    public function removeMenuItem(MenuItem $menuItem): static {
-        $this->menuItems->removeElement($menuItem);
-
-        return $this;
+    public function getTipo(): ?string {
+        return $this->tipo;
     }
 
-    public function getSeccion(): ?string
-    {
-        return $this->seccion;
-    }
-
-    public function setSeccion(?string $seccion): static
-    {
-        $this->seccion = $seccion;
+    public function setTipo(?string $tipo): static {
+        $this->tipo = $tipo;
 
         return $this;
     }

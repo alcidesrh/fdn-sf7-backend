@@ -3,14 +3,12 @@
 namespace App\Entity\Base\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
-use App\Attribute\FormKitLabel;
 use App\Enum\Status;
-use App\Enum\StatusType;
 
 trait StatusTrait {
 
-    #[FormKitLabel('activo')]
-    #[ORM\Column(type: StatusType::NAME, nullable: true)]
+
+    #[ORM\Column(type: "string", enumType: Status::class, nullable: true)]
     protected ?Status $status = null;
 
     public function getStatus(): ?Status {

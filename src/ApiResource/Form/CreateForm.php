@@ -5,8 +5,9 @@ namespace App\ApiResource\Form;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
+use function Symfony\Component\String\u;
 use App\Provider\FormStateProvider;
-use App\Services\FormKitGenerate;
+use Doctrine\ORM\EntityManagerInterface;
 
 #[ApiResource(
   shortName: 'create_form',
@@ -18,26 +19,18 @@ use App\Services\FormKitGenerate;
 )]
 class CreateForm {
 
-
   private string $className;
 
-  public function __construct(private FormKitGenerate $formKitGenerate) {
-    // $this->className = $className;
-    // $formKitGenerate = $formKitGenerate;
-    // $this->form = $formKitGenerate->form($className);
+  public function __construct(private EntityManagerInterface $entityManagerInterface) {
   }
 
-
-  public function getForm() {
-    return $this->formKitGenerate->create($this->className);
+  public function getForm(string $className) {
+    $this->className = u($className)->camel()->title();
+    return FormFactory::create($className)->setEntityManage($this->entityManagerInterface)->form();
   }
+
   #[ApiProperty(identifier: true, readable: false)]
   public function getClassName(): string {
     return $this->className;
-  }
-
-  public function setClassName(string $className): self {
-    $this->className = $className;
-    return $this;
   }
 }

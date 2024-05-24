@@ -15,8 +15,6 @@ class FormStateProvider implements ProviderInterface {
 
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null {
 
-
-        // $return = new CreateForm($this->formKitGenerate);
-        return $this->createForm->setClassName($uriVariables['className'])->getForm();
+        return $this->createForm->getForm($uriVariables['className']);
     }
 }

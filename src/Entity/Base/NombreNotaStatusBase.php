@@ -2,13 +2,13 @@
 
 namespace App\Entity\Base;
 
-use App\Entity\Base\Interfaces\StatusInterface;
+
 use App\Entity\Base\Traits\StatusTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
 
 
-class NombreNotaStatusBase extends Base implements StatusInterface {
+class NombreNotaStatusBase extends Base {
 
   use StatusTrait;
 

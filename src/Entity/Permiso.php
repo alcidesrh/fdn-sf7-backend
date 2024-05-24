@@ -9,6 +9,8 @@ use App\Repository\PermisoRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use RecursiveArrayIterator;
+use RecursiveIteratorIterator;
 
 #[ORM\Entity(repositoryClass: PermisoRepository::class)]
 #[ApiResource]

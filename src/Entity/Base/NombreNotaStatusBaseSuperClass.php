@@ -2,14 +2,14 @@
 
 namespace App\Entity\Base;
 
-use App\Entity\Base\Interfaces\StatusInterface;
+
 use App\Entity\Base\Traits\StatusTrait;
 use App\Entity\FDN;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
 
 #[ORM\MappedSuperclass]
-class NombreNotaStatusBaseSuperClass extends FDN implements StatusInterface {
+class NombreNotaStatusBaseSuperClass extends FDN {
 
   use StatusTrait;
 

@@ -309,6 +309,8 @@ debug-build:
 	XDEBUG_MODE=debug  APP_ENV=dev $(DOCKER_COMP) up --build  -d
 debug:
 	XDEBUG_MODE=debug APP_ENV=dev $(DOCKER_COMP) up -d
+debug-http:
+	SERVER_NAME=:80 XDEBUG_MODE=debug APP_ENV=dev $(DOCKER_COMP) up -d	
 
 restart_debug:
 	$(DOCKER_COMP) down --remove-orphans && XDEBUG_MODE=debug  APP_ENV=dev $(DOCKER_COMP) up -d

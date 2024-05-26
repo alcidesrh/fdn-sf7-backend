@@ -8,9 +8,15 @@ api_platform:
         [A PWA](/) and [an admin](/admin) are consuming this API.
     # Mercure integration, remove if unwanted
     mercure:
-        include_type: true
+        include_type: true 
+    collection:
+        pagination:
+            page_parameter_name: _page
     graphql:
         graphql_playground: false
+        collection:
+            pagination:
+                enabled: true
     formats:
         jsonld: ['application/ld+json']
         graphql: ['application/graphql']
@@ -22,6 +28,7 @@ api_platform:
         public: true
     # Good defaults for REST APIs
     defaults:
+        pagination_enabled: true
         route_prefix: 'api'
         stateless: true
         cache_headers:

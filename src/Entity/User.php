@@ -10,11 +10,13 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use ApiPlatform\Metadata\ApiResource;
+use App\Attribute\ColumnTableList;
 use App\Entity\Base\UserBase;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[ApiResource]
+#[ColumnTableList('id', 'usuario', "nombre", "telefono", "status", 'roles')]
 class User extends UserBase implements UserInterface, PasswordAuthenticatedUserInterface {
     #[ORM\Column(length: 180, unique: true)]
     private ?string $username = null;

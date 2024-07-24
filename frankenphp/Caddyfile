@@ -70,5 +70,6 @@
 
     reverse_proxy @nuxt http://{$PWA_UPSTREAM}
 
+
 	php_server
 }

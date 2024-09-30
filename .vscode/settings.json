@@ -23,4 +23,5 @@
   "editor.snippetSuggestions": "top",
   "editor.suggest.preview": true,
   "php.suggest.basic": false,
+  "editor.suggest.showWords": false,
 }

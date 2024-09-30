@@ -24,7 +24,7 @@ class ResourceAccessProvider implements ProviderInterface {
 
         $routes =
             array_map(
-                fn (Route $i) => $i->getPhemes(), //getDefault('name'),
+                fn(Route $i) => $i->getPhemes(), //getDefault('name'),
                 $this->router->getRouteCollection()->getIterator()->getArrayCopy()
             );
 

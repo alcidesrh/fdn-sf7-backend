@@ -2,6 +2,11 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Common\Filter\DateFilterInterface;
+use ApiPlatform\Doctrine\Common\Filter\SearchFilterInterface;
+use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use App\Attribute\FormKitCreateExclude;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -10,14 +15,38 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GraphQl\Query;
+use ApiPlatform\Metadata\GraphQl\QueryCollection;
 use App\Attribute\ColumnTableList;
 use App\Entity\Base\UserBase;
+use App\Filter\UserFilter;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-#[ApiResource]
-#[ColumnTableList('id', 'usuario', "nombre", "telefono", "status", 'roles')]
+#[ApiResource(
+    graphQlOperations: [
+        new Query(),
+        // new Mutation(name: 'create'),
+        // new Mutation(name: 'update'),
+        // new DeleteMutation(name: 'delete'),
+        new QueryCollection(
+            paginationType: 'page',
+            filters: ['or.filter', 'date.filter', 'order.filter'],
+        ),
+    ]
+)]
+
+#[ApiFilter(UserFilter::class, alias: 'or.filter', properties: ['id', 'nombre', 'username', 'status'], arguments: ['searchFilterProperties' => ['id' => SearchFilterInterface::STRATEGY_EXACT, 'nombre' => SearchFilterInterface::STRATEGY_IPARTIAL, 'username' => SearchFilterInterface::STRATEGY_IPARTIAL, 'status' => SearchFilterInterface::STRATEGY_EXACT, 'createdAt' => DateFilterInterface::EXCLUDE_NULL]])]
+
+#[ApiFilter(DateFilter::class, alias: 'date.filter', properties: ['createdAt' => DateFilterInterface::EXCLUDE_NULL])]
+
+#[ApiFilter(OrderFilter::class, alias: 'order.filter', properties: ['id', 'nombre', 'username', 'createdAt', 'status'], arguments: ['orderParameterName' => 'order'])]
+
+#[ColumnTableList('_id*sort*label=id*sortfield=id*search', 'username*sort*label=usuario*search', "fullName*sort*sortfield=nombre*label=nombre*search", "telefono", "createdAt*sort*label=fecha*search", 'roles*search', 'status*search')]
+
 class User extends UserBase implements UserInterface, PasswordAuthenticatedUserInterface {
+
+
     #[ORM\Column(length: 180, unique: true)]
     private ?string $username = null;
 
@@ -30,6 +59,9 @@ class User extends UserBase implements UserInterface, PasswordAuthenticatedUserI
     #[ORM\Column(nullable: true)]
     private ?string $password = null;
 
+
+    private ?string $fullName;
+
     #[ORM\OneToMany(mappedBy: 'usuario', targetEntity: ApiToken::class)]
     private Collection $apiTokens;
 
@@ -37,12 +69,17 @@ class User extends UserBase implements UserInterface, PasswordAuthenticatedUserI
 
     #[ORM\ManyToMany(targetEntity: Permiso::class, mappedBy: 'usuarios')]
     private Collection $permisos;
+
     public function __construct(string $userIdentifier = '', array $roles = []) {
 
         $this->username = $userIdentifier;
         $this->roles = $roles;
         $this->apiTokens = new ArrayCollection();
         $this->permisos = new ArrayCollection();
+    }
+
+    public function getFullName() {
+        return $this->nombre . ' ' . $this->apellido;
     }
 
     public function getUsername(): string {
@@ -154,8 +191,8 @@ class User extends UserBase implements UserInterface, PasswordAuthenticatedUserI
      */
     public function getValidTokenStrings(): array {
         return $this->getApiTokens()
-            ->filter(fn (ApiToken $token) => $token->isValid())
-            ->map(fn (ApiToken $token) => $token->getToken())
+            ->filter(fn(ApiToken $token) => $token->isValid())
+            ->map(fn(ApiToken $token) => $token->getToken())
             ->toArray();
     }
     public function markAsTokenAuthenticated(array $scopes) {

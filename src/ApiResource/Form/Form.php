@@ -114,7 +114,7 @@ class Form implements FormInterface {
     if ($input == 'select' && $class && $class != DateTimeInterface::class) {
       if (\enum_exists($class)) {
         $schema['options']  = array_map(
-          fn ($enumItem) => "{$enumItem->value}",
+          fn($enumItem) => "{$enumItem->value}",
           $class::cases()
         );
       } else {
@@ -164,14 +164,14 @@ class Form implements FormInterface {
       foreach ($order as $propertyName) {
         $value = array_filter(
           $this->properties,
-          fn (ReflectionProperty $reflectionProperty) => strtolower($reflectionProperty->getName()) == strtolower($propertyName)
+          fn(ReflectionProperty $reflectionProperty) => strtolower($reflectionProperty->getName()) == strtolower($propertyName)
         );
         if ($value) {
           $temp[] = array_values($value)[0];
         }
       }
 
-      $this->properties = array_merge($temp, array_udiff_assoc($this->properties, $temp, fn (ReflectionProperty $reflectionProperty, ReflectionProperty $reflectionProperty2) => $reflectionProperty->getName() == $reflectionProperty2->getName() ? 1 : 0));
+      $this->properties = array_merge($temp, array_udiff_assoc($this->properties, $temp, fn(ReflectionProperty $reflectionProperty, ReflectionProperty $reflectionProperty2) => $reflectionProperty->getName() == $reflectionProperty2->getName() ? 1 : 0));
 
       if ($exclude = $this->reflectionClass->getAttributes(FormKitCreateExclude::class)) {
         $exclude = $exclude[0]->newInstance()->fields;

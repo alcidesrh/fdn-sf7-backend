@@ -5,7 +5,7 @@ declare(strict_types=1);
 use App\Kernel;
 
 require_once dirname(__DIR__) . '/vendor/autoload_runtime.php';
-
+// sleep(3);
 // Support CloudFlare Flexible SSL
 // https://developers.cloudflare.com/fundamentals/reference/http-request-headers/#cf-visitor
 if ($_SERVER['HTTP_CF_VISITOR'] ?? false) {

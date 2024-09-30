@@ -26,6 +26,7 @@ api_platform:
     # Good defaults for REST APIs
     defaults:
         pagination_enabled: true
+        pagination_client_items_per_page: true
         route_prefix: 'api'
         stateless: true
         cache_headers:

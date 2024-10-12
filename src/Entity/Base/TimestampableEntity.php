@@ -10,6 +10,7 @@
 namespace App\Entity\Base;
 
 use App\Attribute\FormKitCreateExclude;
+use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -23,12 +24,12 @@ trait TimestampableEntity {
     #[FormKitCreateExclude]
     #[Gedmo\Timestampable(on: 'create')]
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    protected $createdAt;
+    protected \DateTime $createdAt;
 
     #[FormKitCreateExclude]
     #[Gedmo\Timestampable(on: 'update')]
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    protected $updatedAt;
+    protected \DateTime $updatedAt;
 
     public function setCreatedAt(\DateTime $createdAt) {
         $this->createdAt = $createdAt;

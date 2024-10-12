@@ -144,9 +144,11 @@ final class UserFilter extends OrFilter {
   public function apply(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, ?Operation $operation = null, array $context = []): void {
     $this->properties = $this->searchFilterProperties;
 
-    if (!empty($context['args']['nombre'])) {
-      $context['args']['apellido'] = $context['args']['nombre'];
+    if (!empty($context['args']['fullName'])) {
+      $context['args']['apellido'] = $context['args']['fullName'];
       $this->properties['apellido'] = 'ipartial';
+      $context['args']['nombre'] = $context['args']['fullName'];
+      $this->properties['nombre'] = 'ipartial';
     }
     foreach (array_filter($context['args'], fn($v) => $v) as $key => $value) {
       $this->filterProperty($key, $value, $queryBuilder, $queryNameGenerator, $resourceClass, $operation);

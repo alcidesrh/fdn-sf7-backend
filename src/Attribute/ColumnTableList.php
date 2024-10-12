@@ -8,7 +8,7 @@ use Attribute;
 final class ColumnTableList {
     public $columns = [];
 
-    public function __construct(?string ...$args) {
-        $this->columns = $args;
+    public function __construct(protected ?array $properties = [],) {
+        $this->columns = $properties;
     }
 }

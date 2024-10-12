@@ -32,17 +32,24 @@ use App\Filter\UserFilter;
         new QueryCollection(
             paginationType: 'page',
             filters: ['or.filter', 'date.filter', 'order.filter'],
+            extraArgs: ['fullName' => ['type' => 'String']]
         ),
     ]
 )]
 
-#[ApiFilter(UserFilter::class, alias: 'or.filter', properties: ['id', 'nombre', 'username', 'status'], arguments: ['searchFilterProperties' => ['id' => SearchFilterInterface::STRATEGY_EXACT, 'nombre' => SearchFilterInterface::STRATEGY_IPARTIAL, 'username' => SearchFilterInterface::STRATEGY_IPARTIAL, 'status' => SearchFilterInterface::STRATEGY_EXACT, 'createdAt' => DateFilterInterface::EXCLUDE_NULL]])]
+#[ApiFilter(UserFilter::class, alias: 'or.filter', properties: ['id', 'fullName', 'username', 'status'], arguments: ['searchFilterProperties' => ['id' => SearchFilterInterface::STRATEGY_EXACT, 'fullName' => SearchFilterInterface::STRATEGY_IPARTIAL, 'username' => SearchFilterInterface::STRATEGY_IPARTIAL, 'status' => SearchFilterInterface::STRATEGY_EXACT, 'createdAt' => DateFilterInterface::INCLUDE_NULL_BEFORE_AND_AFTER]])]
 
 #[ApiFilter(DateFilter::class, alias: 'date.filter', properties: ['createdAt' => DateFilterInterface::EXCLUDE_NULL])]
 
 #[ApiFilter(OrderFilter::class, alias: 'order.filter', properties: ['id', 'nombre', 'username', 'createdAt', 'status'], arguments: ['orderParameterName' => 'order'])]
 
-#[ColumnTableList('_id*sort*label=id*sortfield=id*search', 'username*sort*label=usuario*search', "fullName*sort*sortfield=nombre*label=nombre*search", "telefono", "createdAt*sort*label=fecha*search", 'roles*search', 'status*search')]
+#[ColumnTableList(properties: [
+    ['name' => 'id', 'label' => 'Id', 'sort' => true, 'filter' => true],
+    ['name' => 'username', 'label' => 'Usuario', 'sort' => true, 'filter' => true],
+    ['name' => 'fullName', 'label' => 'Nombre', 'sort' => 'nombre', 'filter' => true],
+    ['name' => 'createdAt', 'label' => 'Fecha creación', 'sort' => 'fecha', 'filter' => true],
+    ['name' => 'status', 'label' => 'Status', 'sort' => 'status'],
+])]
 
 class User extends UserBase implements UserInterface, PasswordAuthenticatedUserInterface {
 

@@ -6,20 +6,21 @@ use ApiPlatform\GraphQl\Resolver\QueryItemResolverInterface;
 use App\ApiResource\ResourceBase;
 use App\Attribute\ColumnTableList;
 use App\DTO\MetadataDTO;
+use App\Enum\Status;
 use ReflectionClass;
 use ReflectionProperty;
 use Doctrine\ORM\EntityManagerInterface;
 
 final class ColumnsMetadataResolver implements QueryItemResolverInterface {
 
-  public function __construct(private EntityManagerInterface $entityManagerInterface) {
+
+
+  public function __construct(private EntityManagerInterface $entityManagerInterface, private ?ReflectionClass $reflectionClass) {
   }
 
   public function __invoke(?object $item, array $context): object {
 
     $className = ResourceBase::entityNameParse($context['args']['className']);
-
-    $return = ['total' => $this->total($className), 'collection' => $this->collection($className)];
 
     $metadata = new MetadataDTO();
     $metadata->columns = ['total' => $this->total($className), 'collection' => $this->collection($className)];
@@ -39,24 +40,23 @@ final class ColumnsMetadataResolver implements QueryItemResolverInterface {
 
   public function collection($className): object|array|null {
 
-    $reflectionClass = new ReflectionClass($className);
-    if ($attrClass = $reflectionClass->getAttributes(ColumnTableList::class)) {
+    $this->reflectionClass = new ReflectionClass($className);
+    if ($attrClass = $this->reflectionClass->getAttributes(ColumnTableList::class)) {
+      $metadata = $attrClass[0]->newInstance()->columns;
+      $data = [];
+      foreach ($metadata as $value) {
 
-      $parse = function ($value) {
-        if (!empty($data = explode('*', $value))) {
-          $temp = ['field' => $data[0]];
-          if (count($data) > 1) {
-            for ($i = 1; $i < count($data); $i++) {
-              if (!empty($temp3 = explode('=', $data[$i]))) {
-                $temp[$temp3[0]] = $temp3[1] ?? true;
-              }
-            }
-          }
+        $property = $value['name'];
+
+        if ((is_array($value) && in_array('filter', $value)) || 'filter' == $value) {
+          $schema = $this->getSchema($value);
+          $data[] = [...$value, 'schema' => $schema];
+        } else {
+          $data[] = $value;
         }
-        return $temp;
-      };
-      $return = array_map($parse, $attrClass[0]->newInstance()->columns);
-      return $return;
+      }
+
+      return $data;
     }
     return array_map(function (ReflectionProperty $v) {
 
@@ -64,6 +64,25 @@ final class ColumnsMetadataResolver implements QueryItemResolverInterface {
         'field' => $v->getName(),
         'label' => $v->getName()
       ];
-    }, $reflectionClass->getProperties());
+    }, $this->reflectionClass->getProperties());
+  }
+  public function getSchema(&$data) {
+
+    $temp = $this->reflectionClass->getProperty($data['name']);
+    $type = $temp->getType()->getName();
+    $schema = ['$formkit' => 'texticon_fdn', 'name' => $data['name'], 'placeholder' => $data['label'] ?? $data['name'], 'loading' => '$loading'];
+    if (isset($data['outerClass'])) {
+      $schema['outerClass'] = $data['outerClass'];
+      unset($data['outerClass']);
+    }
+    if (isset($data['inputClass'])) {
+      $schema['inputClass'] = $data['inputClass'];
+      unset($data['inputClass']);
+    }
+
+    return match ($type) {
+      in_array($type, ['string', 'int', Status::class]) ? $type : false => $schema,
+      'DateTime' => [...$schema, '$formkit' => 'datepicker_fdn', 'selectionMode' => 'range', 'hourFormat' => 12, 'showTime' => true],
+    };
   }
 }

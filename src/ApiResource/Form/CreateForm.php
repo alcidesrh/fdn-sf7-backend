@@ -26,7 +26,7 @@ class CreateForm {
 
   public function getForm(string $className) {
     $this->className = u($className)->camel()->title();
-    return FormFactory::create($className)->setEntityManage($this->entityManagerInterface)->form();
+    return FormFactory::create($this->className)->setEntityManage($this->entityManagerInterface)->form();
   }
 
   #[ApiProperty(identifier: true, readable: false)]

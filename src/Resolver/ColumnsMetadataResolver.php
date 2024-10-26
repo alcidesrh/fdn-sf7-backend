@@ -23,9 +23,9 @@ final class ColumnsMetadataResolver implements QueryItemResolverInterface {
     $className = ResourceBase::entityNameParse($context['args']['className']);
 
     $metadata = new MetadataDTO();
-    $metadata->columns = ['total' => $this->total($className), 'collection' => $this->collection($className)];
+    $metadata->columns = ['collection' => $this->collection($className)];
     return $metadata; //[new CollectionMetadataDTO($return['total'], $return['collection'])];
-    return ['total' => $this->total($className), 'collection' => $this->collection($className)];
+    return ['columns' => $this->collection($className)];
   }
 
   public function total($className): int {
@@ -45,8 +45,6 @@ final class ColumnsMetadataResolver implements QueryItemResolverInterface {
       $metadata = $attrClass[0]->newInstance()->columns;
       $data = [];
       foreach ($metadata as $value) {
-
-        $property = $value['name'];
 
         if ((is_array($value) && in_array('filter', $value)) || 'filter' == $value) {
           $schema = $this->getSchema($value);
@@ -80,9 +78,12 @@ final class ColumnsMetadataResolver implements QueryItemResolverInterface {
       unset($data['inputClass']);
     }
 
-    return match ($type) {
+    $schema = match ($type) {
       in_array($type, ['string', 'int', Status::class]) ? $type : false => $schema,
       'DateTime' => [...$schema, '$formkit' => 'datepicker_fdn', 'selectionMode' => 'range', 'hourFormat' => 12, 'showTime' => true],
+      'DateTimeInterface' => [...$schema, '$formkit' => 'datepicker_fdn', 'selectionMode' => 'range', 'hourFormat' => 12, 'showTime' => true],
     };
+
+    return $schema;
   }
 }

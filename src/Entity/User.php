@@ -6,8 +6,9 @@ use ApiPlatform\Doctrine\Common\Filter\DateFilterInterface;
 use ApiPlatform\Doctrine\Common\Filter\SearchFilterInterface;
 use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
-use App\Attribute\FormKitCreateExclude;
+use App\Attribute\FormKitExclude;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -18,14 +19,18 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\GraphQl\QueryCollection;
 use App\Attribute\ColumnTableList;
+use App\Attribute\FormKitFieldForm;
+use App\Attribute\FormKitLabel;
 use App\Entity\Base\UserBase;
-use App\Filter\UserFilter;
+use App\Filter\OrFilter;
+use App\Resolver\UserByUsernameResolver;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[ApiResource(
     graphQlOperations: [
         new Query(),
+
         // new Mutation(name: 'create'),
         // new Mutation(name: 'update'),
         // new DeleteMutation(name: 'delete'),
@@ -34,10 +39,18 @@ use App\Filter\UserFilter;
             filters: ['or.filter', 'date.filter', 'order.filter'],
             extraArgs: ['fullName' => ['type' => 'String']]
         ),
+        new Query(
+            name: 'getUserByUsername',
+            filters: ['search.filter'],
+            resolver: UserByUsernameResolver::class,
+            args: ['username' => ['type' => 'String']],
+            // read: false
+        ),
     ]
 )]
+#[ApiFilter(SearchFilter::class, alias: 'search.filter',  properties: ['username' => SearchFilterInterface::STRATEGY_EXACT])]
 
-#[ApiFilter(UserFilter::class, alias: 'or.filter', properties: ['id', 'fullName', 'username', 'status'], arguments: ['searchFilterProperties' => ['id' => SearchFilterInterface::STRATEGY_EXACT, 'fullName' => SearchFilterInterface::STRATEGY_IPARTIAL, 'username' => SearchFilterInterface::STRATEGY_IPARTIAL, 'status' => SearchFilterInterface::STRATEGY_EXACT, 'createdAt' => DateFilterInterface::INCLUDE_NULL_BEFORE_AND_AFTER]])]
+#[ApiFilter(OrFilter::class, alias: 'or.filter', properties: ['id', 'fullName', 'username', 'status'], arguments: ['searchFilterProperties' => ['id' => SearchFilterInterface::STRATEGY_EXACT, 'fullName' => SearchFilterInterface::STRATEGY_IPARTIAL, 'username' => SearchFilterInterface::STRATEGY_IPARTIAL, 'status' => SearchFilterInterface::STRATEGY_EXACT, 'createdAt' => DateFilterInterface::INCLUDE_NULL_BEFORE_AND_AFTER]])]
 
 #[ApiFilter(DateFilter::class, alias: 'date.filter', properties: ['createdAt' => DateFilterInterface::EXCLUDE_NULL])]
 
@@ -50,6 +63,13 @@ use App\Filter\UserFilter;
     ['name' => 'createdAt', 'label' => 'Fecha creación', 'sort' => 'fecha', 'filter' => true],
     ['name' => 'status', 'label' => 'Status', 'sort' => 'status'],
 ])]
+
+#[FormKitFieldForm(properties: [
+    ['$cmp' => 'Fieldset', 'props' => ['legend' => 'datos personales'], 'children' => ['nit', 'nombre', 'apellido', 'username', 'email', 'telefono', 'direccion',]],
+    ['$cmp' => 'Fieldset', 'props' => ['legend' => 'Roles & Privilegios'], 'children' => ['status', 'permisos', 'roles']]
+])]
+#[FormKitExclude("fullName", 'accessTokenScopes', 'password', 'legacyId')]
+
 
 class User extends UserBase implements UserInterface, PasswordAuthenticatedUserInterface {
 
@@ -69,6 +89,7 @@ class User extends UserBase implements UserInterface, PasswordAuthenticatedUserI
 
     private ?string $fullName;
 
+    #[FormKitLabel('tipos de token')]
     #[ORM\OneToMany(mappedBy: 'usuario', targetEntity: ApiToken::class)]
     private Collection $apiTokens;
 
@@ -104,7 +125,7 @@ class User extends UserBase implements UserInterface, PasswordAuthenticatedUserI
      *
      * @see UserInterface
      */
-    #[FormKitCreateExclude]
+    #[FormKitExclude]
     public function getUserIdentifier(): string {
         return (string) $this->username;
     }

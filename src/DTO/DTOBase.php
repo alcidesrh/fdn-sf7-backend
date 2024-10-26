@@ -3,7 +3,6 @@
 namespace App\DTO;
 
 use ApiPlatform\Metadata\ApiProperty;
-use DateTime;
 
 class DTOBase {
 

@@ -99,4 +99,7 @@ class ApiToken extends Base {
 
         return $this;
     }
+    public function __toString(): string {
+        return $this->usuario->getFullName();
+    }
 }

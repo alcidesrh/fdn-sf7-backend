@@ -2,7 +2,7 @@
 
 namespace App\Entity\Base;
 
-use App\Attribute\FormKitCreateExclude;
+use App\Attribute\FormKitExclude;
 use Doctrine\ORM\Mapping as ORM;
 use ReflectionClass;
 
@@ -13,7 +13,7 @@ class Base {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[FormKitCreateExclude]
+    #[FormKitExclude]
     protected ?int $id = null;
 
     public function getId(): ?int {

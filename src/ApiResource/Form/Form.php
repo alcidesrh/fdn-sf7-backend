@@ -3,22 +3,21 @@
 namespace App\ApiResource\Form;
 
 use App\Attribute\AttributeUtil;
-use App\Attribute\FormKitCreateExclude;
-use App\Attribute\FormKitFieldOrder;
+use App\Attribute\FormKitExclude;
+use App\Attribute\FormKitFieldForm;
 use App\Attribute\FormKitLabel;
-use DateTimeInterface;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use ReflectionClass;
 use ReflectionProperty;
 use Symfony\Component\Finder\Finder;
 
-class Form implements FormInterface {
+class Form {
 
   protected array $schema = [];
   protected string $className;
   protected EntityManagerInterface $entityManager;
   protected array $properties;
+  protected array $groups;
   protected ReflectionClass $reflectionClass;
 
   public function __construct(string $className) {
@@ -32,9 +31,10 @@ class Form implements FormInterface {
     $this->entityManager = $entityManagerInterface;
     return $this;
   }
-  // public function getClassMetadata(string $classResource): ClassMetadata {
-  //   return $this->entityManager->getClassMetadata($classResource);
-  // }
+
+  public function getSchema(): array {
+    return $this->schema;
+  }
 
   public function form() {
 
@@ -48,86 +48,33 @@ class Form implements FormInterface {
     }
     try {
 
-      $info = AttributeUtil::getExtractor();
-
-      $this->excludeAndOrderClassProperties();
-
-      foreach ($this->properties as $property) {
-
-        if (!$typeInfo = $info->getTypes($this->classPath(), $property->getName())[0] ?? null) {
-          continue;
+      if ($formKitFieldForm = $this->reflectionClass->getAttributes(FormKitFieldForm::class)) {
+        $data = $formKitFieldForm[0]->newInstance()->properties;
+        foreach ($data as $group) {
+          $this->schema[] = $this->parseFileds($group);
         }
-
-        $type = $typeInfo->getBuiltinType();
-        $collectionValueTypes = $typeInfo->getCollectionValueTypes();
-
-        if (!empty($collectionValueTypes)) {
-          $class =  $collectionValueTypes[0]->getClassName();
-        } else {
-          $class = $typeInfo?->getClassName();
-        }
-
-        $label = $property->getName();
-        if ($labelAttrb = $property->getAttributes(FormKitLabel::class)[0] ?? null) {
-          $label = $labelAttrb->newInstance()->label;
-        }
-
-        $this->schema[$property->getName()] = $this->formKitSchema([
-          'name' => $property->getName(),
-          'label' => $label,
-          'type' => $type,
-          'class' => $class
-
-        ]);
       }
-      return $this->getSchema();
+      $fields = $this->extractFields($data);
+
+      $extra = \array_diff(
+        \array_map(fn(ReflectionProperty $reflectionProperty) => ($reflectionProperty->getName()), $this->properties),
+        $fields
+      );
+      if (!empty($extra) && $exclude = $this->reflectionClass->getAttributes(FormKitExclude::class)) {
+        $exclude = $exclude[0]->newInstance()->fields;
+        $extra = \array_diff($extra, $exclude);
+      }
+      foreach ($extra as $value) {
+        $this->schema[] = $this->schemaGenerate($value);
+      }
+      return $this->schema;
     } catch (\Throwable $th) {
       throw $th;
     }
   }
-  public function getSchema(): array {
-    return $this->schema;
-  }
 
   public function classPath(): string {
     return "App\Entity\\{$this->className}";
-  }
-
-  public function formKitSchema(array $value) {
-
-    list($name, $label, $type, $class) = \array_values($value);
-
-    $input = self::getInputType($type, $class);
-
-    $schema = [
-      '$formkit' => $input,
-      'label' => \ucwords($label),
-      'name' => \strtolower($name),
-      'labelClass' => 'text',
-      'validation' => 'required'
-    ];
-
-    $aux = function ($el) {
-      return ['label' => (string)$el, 'value' => $el->getId()];
-    };
-
-    if ($input == 'select' && $class && $class != DateTimeInterface::class) {
-      if (\enum_exists($class)) {
-        $schema['options']  = array_map(
-          fn($enumItem) => "{$enumItem->value}",
-          $class::cases()
-        );
-      } else {
-        $schema['options']  = (new ArrayCollection($this->entityManager->getRepository($class)->findAll()))->map($aux)->toArray();
-      }
-    }
-    if ($type == 'array') {
-      $schema['multiple'] = true;
-    }
-    // }
-
-
-    return $schema;
   }
 
   final public static function getEntityList($dir, $pattern = null) {
@@ -145,46 +92,59 @@ class Form implements FormInterface {
     return $options;
   }
 
-  final static function getInputType($type, $class) {
-
-    if ($type == 'object' || $type == 'array') {
-      if ($class == DateTimeInterface::class) {
-        return 'date';
+  public function parseFileds($data): array {
+    $temp = [];
+    foreach ($data as $key => $value) {
+      if (!is_numeric($key)) {
+        if ($key != 'children') {
+          $temp[$key] = $data[$key];
+        } else {
+          $temp[$key] = array_map(fn($i) => is_array($i) ? $this->parseFileds($i) : $this->schemaGenerate($i), $value);
+        }
+      } else {
+        $temp[$key][] = $this->schema($value);
       }
-      return 'select';
     }
-    return 'text';
+    return $temp;
   }
 
-  public function excludeAndOrderClassProperties() {
+  public function schemaGenerate($value) {
+    $info = AttributeUtil::getExtractor();
+    if (!$typeInfo = $info->getTypes($this->classPath(), $value)[0] ?? null) {
+      return false;
+    }
+    $property = $this->reflectionClass->getProperty($value);
+    $type = $this->reflectionClass->getProperty($value)->getType()->getName();
+    $collectionValueTypes = $typeInfo->getCollectionValueTypes();
 
-    if ($order = $this->reflectionClass->getAttributes(FormKitFieldOrder::class)) {
-      $order = $order[0]->newInstance()->order;
-      $temp = [];
-      foreach ($order as $propertyName) {
-        $value = array_filter(
-          $this->properties,
-          fn(ReflectionProperty $reflectionProperty) => strtolower($reflectionProperty->getName()) == strtolower($propertyName)
-        );
-        if ($value) {
-          $temp[] = array_values($value)[0];
-        }
-      }
+    if (!empty($collectionValueTypes)) {
+      $class =  $collectionValueTypes[0]->getClassName();
+    } else {
+      $class = $typeInfo?->getClassName();
+    }
 
-      $this->properties = array_merge($temp, array_udiff_assoc($this->properties, $temp, fn(ReflectionProperty $reflectionProperty, ReflectionProperty $reflectionProperty2) => $reflectionProperty->getName() == $reflectionProperty2->getName() ? 1 : 0));
+    $label = $value;
+    if ($labelAttrb = $property->getAttributes(FormKitLabel::class)[0] ?? null) {
+      $label = $labelAttrb->newInstance()->label;
+    }
+    $schema = [
+      'name' => $value,
+      'label' => $label,
+      'type' => $type,
+      'class' => $class
+    ];
+    return FormKitBase::formKitSchema($schema, $this->entityManager);
+  }
 
-      if ($exclude = $this->reflectionClass->getAttributes(FormKitCreateExclude::class)) {
-        $exclude = $exclude[0]->newInstance()->fields;
-        $temp = [];
-        foreach ($this->properties as $property) {
-          if (in_array($property->name, $exclude) || $property->getAttributes(FormKitCreateExclude::class)) {
-            continue;
-          }
-          $temp[] = $property;
-        }
-        $this->properties = $temp;
+  public function extractFields($data) {
+    $fields = [];
+    foreach ($data as $value) {
+      if (isset($value['children'])) {
+        $fields = [...$fields, ...$this->extractFields($value['children'])];
+      } else if (is_string($value)) {
+        $fields[] = $value;
       }
     }
-    return $this->properties;
+    return $fields;
   }
 }

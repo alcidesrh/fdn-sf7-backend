@@ -3,16 +3,16 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use App\Attribute\FormKitCreateExclude;
-use App\Attribute\FormKitFieldOrder;
+use App\Attribute\FormKitExclude;
+use App\Attribute\FormKitFieldForm;
 use App\Attribute\FormKitLabel;
 use App\Repository\MenuRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MenuRepository::class)]
 #[ApiResource]
-#[FormKitFieldOrder("nombre", "link", "posicion", "status", 'parent', 'children')]
-#[FormKitCreateExclude("status", "parent")]
+#[FormKitFieldForm("nombre", "link", "posicion", "status", 'parent', 'children')]
+#[FormKitExclude("status", "parent")]
 #[FormKitLabel(['nombre' => 'texto'])]
 class Menu extends Taxon {
 

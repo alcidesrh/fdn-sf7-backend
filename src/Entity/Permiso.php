@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use App\Attribute\FormKitFieldOrder;
+use App\Attribute\FormKitFieldForm;
 use App\Entity\Base\NombreNotaStatusBase;
 use App\Repository\PermisoRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -14,7 +14,7 @@ use RecursiveIteratorIterator;
 
 #[ORM\Entity(repositoryClass: PermisoRepository::class)]
 #[ApiResource]
-#[FormKitFieldOrder("nombre", "link", "posicion", "status", 'parent', 'children')]
+#[FormKitFieldForm("nombre", "link", "posicion", "status", 'parent', 'children')]
 class Permiso extends NombreNotaStatusBase {
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'hijos')]

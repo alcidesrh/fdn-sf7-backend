@@ -13,7 +13,7 @@ use ApiPlatform\Metadata\GraphQl\QueryCollection;
 use App\Attribute\ColumnTableList;
 use App\Entity\Base\TimeLegacyStatusBase;
 use App\Entity\Base\Traits\StatusTrait;
-use App\Filter\BusFilter;
+use App\Filter\OrFilter;
 use App\Repository\BusRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -33,7 +33,7 @@ use Doctrine\ORM\Mapping as ORM;
     ]
 )]
 
-#[ApiFilter(BusFilter::class, alias: 'bus.or.filter', properties: ['id', 'marca', 'placa', 'status'], arguments: ['searchFilterProperties' => ['id' => SearchFilterInterface::STRATEGY_EXACT, 'placa' => SearchFilterInterface::STRATEGY_IPARTIAL, 'marca' => SearchFilterInterface::STRATEGY_IPARTIAL, 'status' => SearchFilterInterface::STRATEGY_EXACT, 'createdAt' => DateFilterInterface::EXCLUDE_NULL]])]
+#[ApiFilter(OrFilter::class, alias: 'bus.or.filter', properties: ['id', 'marca', 'placa', 'status'], arguments: ['searchFilterProperties' => ['id' => SearchFilterInterface::STRATEGY_EXACT, 'placa' => SearchFilterInterface::STRATEGY_IPARTIAL, 'marca' => SearchFilterInterface::STRATEGY_IPARTIAL, 'status' => SearchFilterInterface::STRATEGY_EXACT, 'createdAt' => DateFilterInterface::EXCLUDE_NULL]])]
 
 #[ApiFilter(DateFilter::class, alias: 'bus.date.filter', properties: ['createdAt' => DateFilterInterface::EXCLUDE_NULL])]
 

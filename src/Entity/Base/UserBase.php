@@ -12,6 +12,5 @@ class UserBase extends Base {
   use TimestampableEntity,
     StatusTrait,
     LegacyTrait,
-    PersonaTrait,
-    StatusTrait;
+    PersonaTrait;
 }

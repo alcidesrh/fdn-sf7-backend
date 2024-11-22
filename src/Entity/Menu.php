@@ -4,14 +4,14 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use App\Attribute\FormKitExclude;
-use App\Attribute\FormKitFieldForm;
+use App\FormKit\SchemaForm;
 use App\Attribute\FormKitLabel;
 use App\Repository\MenuRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MenuRepository::class)]
 #[ApiResource]
-#[FormKitFieldForm("nombre", "link", "posicion", "status", 'parent', 'children')]
+#[SchemaForm("nombre", "link", "posicion", "status", 'parent', 'children')]
 #[FormKitExclude("status", "parent")]
 #[FormKitLabel(['nombre' => 'texto'])]
 class Menu extends Taxon {

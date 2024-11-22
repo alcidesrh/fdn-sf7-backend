@@ -16,10 +16,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GraphQl\DeleteMutation;
+use ApiPlatform\Metadata\GraphQl\Mutation;
 use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\GraphQl\QueryCollection;
 use App\Attribute\ColumnTableList;
-use App\Attribute\FormKitFieldForm;
 use App\Attribute\FormKitLabel;
 use App\Entity\Base\UserBase;
 use App\Filter\OrFilter;
@@ -30,10 +31,9 @@ use App\Resolver\UserByUsernameResolver;
 #[ApiResource(
     graphQlOperations: [
         new Query(),
-
-        // new Mutation(name: 'create'),
-        // new Mutation(name: 'update'),
-        // new DeleteMutation(name: 'delete'),
+        new Mutation(name: 'create'),
+        new Mutation(name: 'update'),
+        new DeleteMutation(name: 'delete'),
         new QueryCollection(
             paginationType: 'page',
             filters: ['or.filter', 'date.filter', 'order.filter'],
@@ -63,13 +63,6 @@ use App\Resolver\UserByUsernameResolver;
     ['name' => 'createdAt', 'label' => 'Fecha creación', 'sort' => 'fecha', 'filter' => true],
     ['name' => 'status', 'label' => 'Status', 'sort' => 'status'],
 ])]
-
-#[FormKitFieldForm(properties: [
-    ['$cmp' => 'Fieldset', 'props' => ['legend' => 'datos personales'], 'children' => ['nit', 'nombre', 'apellido', 'username', 'email', 'telefono', 'direccion',]],
-    ['$cmp' => 'Fieldset', 'props' => ['legend' => 'Roles & Privilegios'], 'children' => ['status', 'permisos', 'roles']]
-])]
-#[FormKitExclude("fullName", 'accessTokenScopes', 'password', 'legacyId')]
-
 
 class User extends UserBase implements UserInterface, PasswordAuthenticatedUserInterface {
 

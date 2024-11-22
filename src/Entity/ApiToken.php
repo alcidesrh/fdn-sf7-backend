@@ -26,7 +26,7 @@ class ApiToken extends Base {
     ];
 
     #[ORM\ManyToOne(inversedBy: 'apiTokens')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'cascade')]
     private ?User $usuario = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]

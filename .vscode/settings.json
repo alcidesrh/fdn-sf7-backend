@@ -20,8 +20,8 @@
   },
   "editor.inlineSuggest.enabled": true,
   "editor.inlineSuggest.suppressSuggestions": false,
-  "editor.snippetSuggestions": "top",
+  "editor.snippetSuggestions": "bottom",
   "editor.suggest.preview": true,
   "php.suggest.basic": false,
-  "editor.suggest.showWords": true,
+  "editor.suggest.showWords": false,
 }

@@ -7,5 +7,7 @@ class FormFactory {
 
     $form = "{$resource}Form";
     return \file_exists(__DIR__ . '/' . $form . '.php') ?  new (__NAMESPACE__ . '\\' . $form)($resource) : new Form($resource);
+    $form = "{$resource}Form";
+    return \file_exists(__DIR__ . '/' . $form . '.php') ?  new (__NAMESPACE__ . '\\' . $form)($resource) : new Form($resource);
   }
 }

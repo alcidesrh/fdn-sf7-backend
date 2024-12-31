@@ -1,5 +1,19 @@
 type Query {
   node(id: ID!): Node
+  columnFieldsResources(
+    "Returns the first n elements from the list."
+    first: Int
+
+    "Returns the last n elements from the list."
+    last: Int
+
+    "Returns the elements in the list that come before the specified cursor."
+    before: String
+
+    "Returns the elements in the list that come after the specified cursor."
+    after: String
+  ): ColumnFieldsResourceCursorConnection
+  columnFieldsResource(id: ID!): ColumnFieldsResource
   create_forms(
     "Returns the first n elements from the list."
     first: Int
@@ -14,20 +28,9 @@ type Query {
     after: String
   ): create_formCursorConnection
   create_form(id: ID!): create_form
-  resources(
-    "Returns the first n elements from the list."
-    first: Int
-
-    "Returns the last n elements from the list."
-    last: Int
-
-    "Returns the elements in the list that come before the specified cursor."
-    before: String
-
-    "Returns the elements in the list that come after the specified cursor."
-    after: String
-  ): resourceCursorConnection
-  resource(id: ID!): resource
+  getMetadataResource(entity: String): MetadataResource
+  columnsMetadataResource(entity: String): MetadataResource
+  getResource(entity: String, field: String, value: String): Resource
   agencias(
     "Returns the first n elements from the list."
     first: Int
@@ -84,20 +87,25 @@ type Query {
     after: String
   ): BoletoLogCursorConnection
   boletoLog(id: ID!): BoletoLog
-  buses(
-    "Returns the first n elements from the list."
-    first: Int
-
-    "Returns the last n elements from the list."
-    last: Int
-
-    "Returns the elements in the list that come before the specified cursor."
-    before: String
-
-    "Returns the elements in the list that come after the specified cursor."
-    after: String
-  ): BusCursorConnection
   bus(id: ID!): Bus
+  buses(
+    "Returns the current page."
+    page: Int
+
+    "Returns the number of items per page."
+    itemsPerPage: Int
+
+    id: Int
+    id_list: [Int]
+    marca: String
+    marca_list: [String]
+    placa: String
+    placa_list: [String]
+    status: String
+    status_list: [String]
+    createdAt: [BusFilter_createdAt]
+    order: [BusFilter_order]
+  ): BusPageConnection
   clientes(
     "Returns the first n elements from the list."
     first: Int
@@ -112,20 +120,14 @@ type Query {
     after: String
   ): ClienteCursorConnection
   cliente(id: ID!): Cliente
-  empresas(
-    "Returns the first n elements from the list."
-    first: Int
-
-    "Returns the last n elements from the list."
-    last: Int
-
-    "Returns the elements in the list that come before the specified cursor."
-    before: String
-
-    "Returns the elements in the list that come after the specified cursor."
-    after: String
-  ): EmpresaCursorConnection
   empresa(id: ID!): Empresa
+  empresas(
+    "Returns the current page."
+    page: Int
+
+    "Returns the number of items per page."
+    itemsPerPage: Int
+  ): EmpresaPageConnection
   enclaves(
     "Returns the first n elements from the list."
     first: Int
@@ -140,20 +142,22 @@ type Query {
     after: String
   ): EnclaveCursorConnection
   enclave(id: ID!): Enclave
-  estacions(
-    "Returns the first n elements from the list."
-    first: Int
-
-    "Returns the last n elements from the list."
-    last: Int
-
-    "Returns the elements in the list that come before the specified cursor."
-    before: String
-
-    "Returns the elements in the list that come after the specified cursor."
-    after: String
-  ): EstacionCursorConnection
   estacion(id: ID!): Estacion
+  estacions(
+    "Returns the current page."
+    page: Int
+
+    "Returns the number of items per page."
+    itemsPerPage: Int
+
+    id: Int
+    id_list: [Int]
+    nombre: String
+    nombre_list: [String]
+    alias: String
+    alias_list: [String]
+    order: [EstacionFilter_order]
+  ): EstacionPageConnection
   fDNs(
     "Returns the first n elements from the list."
     first: Int
@@ -251,20 +255,28 @@ type Query {
     after: String
   ): PermisoCursorConnection
   permiso(id: ID!): Permiso
-  pilotos(
-    "Returns the first n elements from the list."
-    first: Int
-
-    "Returns the last n elements from the list."
-    last: Int
-
-    "Returns the elements in the list that come before the specified cursor."
-    before: String
-
-    "Returns the elements in the list that come after the specified cursor."
-    after: String
-  ): PilotoCursorConnection
   piloto(id: ID!): Piloto
+  pilotos(
+    "Returns the current page."
+    page: Int
+
+    "Returns the number of items per page."
+    itemsPerPage: Int
+
+    id: Int
+    id_list: [Int]
+    email: String
+    email_list: [String]
+    status: String
+    status_list: [String]
+    licencia: String
+    licencia_list: [String]
+    telefono: String
+    telefono_list: [String]
+    createdAt: [PilotoFilter_createdAt]
+    order: [PilotoFilter_order]
+    fullName: String
+  ): PilotoPageConnection
   recorridos(
     "Returns the first n elements from the list."
     first: Int
@@ -335,20 +347,29 @@ type Query {
     after: String
   ): TaxonCursorConnection
   taxon(id: ID!): Taxon
-  users(
-    "Returns the first n elements from the list."
-    first: Int
-
-    "Returns the last n elements from the list."
-    last: Int
-
-    "Returns the elements in the list that come before the specified cursor."
-    before: String
-
-    "Returns the elements in the list that come after the specified cursor."
-    after: String
-  ): UserCursorConnection
   user(id: ID!): User
+  users(
+    "Returns the current page."
+    page: Int
+
+    "Returns the number of items per page."
+    itemsPerPage: Int
+
+    id: Int
+    id_list: [Int]
+    username: String
+    username_list: [String]
+    status: String
+    status_list: [String]
+    nombre: String
+    nombre_list: [String]
+    apellido: String
+    apellido_list: [String]
+    createdAt: [UserFilter_createdAt]
+    order: [UserFilter_order]
+    fullName: String
+  ): UserPageConnection
+  getUserByUsernameUser(username: String): User
   ventas(
     "Returns the first n elements from the list."
     first: Int
@@ -369,6 +390,31 @@ type Query {
 interface Node {
   "The id of this node."
   id: ID!
+}
+
+"Cursor connection for ColumnFieldsResource."
+type ColumnFieldsResourceCursorConnection {
+  edges: [ColumnFieldsResourceEdge]
+  pageInfo: ColumnFieldsResourcePageInfo!
+  totalCount: Int!
+}
+
+"Edge of ColumnFieldsResource."
+type ColumnFieldsResourceEdge {
+  node: ColumnFieldsResource
+  cursor: String!
+}
+
+type ColumnFieldsResource implements Node {
+  id: ID!
+}
+
+"Information about the current page."
+type ColumnFieldsResourcePageInfo {
+  endCursor: String
+  startCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
 }
 
 "Cursor connection for create_form."
@@ -396,82 +442,22 @@ type create_formPageInfo {
   hasPreviousPage: Boolean!
 }
 
-"Cursor connection for resource."
-type resourceCursorConnection {
-  edges: [resourceEdge]
-  pageInfo: resourcePageInfo!
-  totalCount: Int!
-}
-
-"Edge of resource."
-type resourceEdge {
-  node: resource
-  cursor: String!
-}
-
-type resource implements Node {
+type MetadataResource implements Node {
   id: ID!
+  status: Iterable
+  columns: Iterable
+  data: Iterable!
+  _id: String!
 }
 
-"Information about the current page."
-type resourcePageInfo {
-  endCursor: String
-  startCursor: String
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
-}
+"The `Iterable` scalar type represents an array or a Traversable with any kind of data."
+scalar Iterable
 
-"Cursor connection for Agencia."
-type AgenciaCursorConnection {
-  edges: [AgenciaEdge]
-  pageInfo: AgenciaPageInfo!
-  totalCount: Int!
-}
-
-"Edge of Agencia."
-type AgenciaEdge {
-  node: Agencia
-  cursor: String!
-}
-
-type Agencia implements Node {
+type Resource implements Node {
   id: ID!
-  users(
-    "Returns the first n elements from the list."
-    first: Int
-
-    "Returns the last n elements from the list."
-    last: Int
-
-    "Returns the elements in the list that come before the specified cursor."
-    before: String
-
-    "Returns the elements in the list that come after the specified cursor."
-    after: String
-  ): UserCursorConnection
-  alias: String!
-  email: String
-  telefono: String
-  direccion: String
-  localidad: Localidad
-  nombre: String
-  nota: String
-  _id: Int!
-  status: StatusEnum
-  legacyId: Int
-}
-
-"Cursor connection for User."
-type UserCursorConnection {
-  edges: [UserEdge]
-  pageInfo: UserPageInfo!
-  totalCount: Int!
-}
-
-"Edge of User."
-type UserEdge {
-  node: User
-  cursor: String!
+  user: User
+  estacion: Estacion
+  _id: String!
 }
 
 type User implements Node {
@@ -479,6 +465,7 @@ type User implements Node {
   username: String!
   roles: Iterable!
   password: String
+  fullName: String
   permisos(
     "Returns the first n elements from the list."
     first: Int
@@ -495,7 +482,7 @@ type User implements Node {
   _id: Int!
   createdAt: String!
   updatedAt: String!
-  status: StatusEnum
+  status: Status
   legacyId: Int
   apellido: String
   nombre: String!
@@ -507,9 +494,6 @@ type User implements Node {
   userIdentifier: String!
   validTokenStrings: Iterable!
 }
-
-"The `Iterable` scalar type represents an array or a Traversable with any kind of data."
-scalar Iterable
 
 "Cursor connection for Permiso."
 type PermisoCursorConnection {
@@ -541,25 +525,62 @@ type Permiso implements Node {
     after: String
   ): PermisoCursorConnection
   usuarios(
-    "Returns the first n elements from the list."
-    first: Int
+    "Returns the current page."
+    page: Int
 
-    "Returns the last n elements from the list."
-    last: Int
+    "Returns the number of items per page."
+    itemsPerPage: Int
 
-    "Returns the elements in the list that come before the specified cursor."
-    before: String
-
-    "Returns the elements in the list that come after the specified cursor."
-    after: String
-  ): UserCursorConnection
+    id: Int
+    id_list: [Int]
+    username: String
+    username_list: [String]
+    status: String
+    status_list: [String]
+    nombre: String
+    nombre_list: [String]
+    apellido: String
+    apellido_list: [String]
+    createdAt: [UserFilter_createdAt]
+    order: [UserFilter_order]
+  ): UserPageConnection
   nombre: String
   nota: String
   _id: Int!
-  status: StatusEnum
+  status: Status
 }
 
-enum StatusEnum {
+input UserFilter_createdAt {
+  before: String
+  strictly_before: String
+  after: String
+  strictly_after: String
+}
+
+input UserFilter_order {
+  id: String
+  nombre: String
+  apellido: String
+  username: String
+  createdAt: String
+  status: String
+}
+
+"Page connection for User."
+type UserPageConnection {
+  collection: [User]
+  paginationInfo: UserPaginationInfo!
+}
+
+"Information about the pagination."
+type UserPaginationInfo {
+  itemsPerPage: Int!
+  lastPage: Int!
+  totalCount: Int!
+  hasNextPage: Boolean!
+}
+
+enum Status {
   creado
   progreso
   finalizado
@@ -594,12 +615,86 @@ type Pais implements Node {
   _id: Int!
 }
 
-"Information about the current page."
-type UserPageInfo {
-  endCursor: String
-  startCursor: String
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
+type Estacion implements Node {
+  id: ID!
+  users(
+    "Returns the current page."
+    page: Int
+
+    "Returns the number of items per page."
+    itemsPerPage: Int
+
+    id: Int
+    id_list: [Int]
+    username: String
+    username_list: [String]
+    status: String
+    status_list: [String]
+    nombre: String
+    nombre_list: [String]
+    apellido: String
+    apellido_list: [String]
+    createdAt: [UserFilter_createdAt]
+    order: [UserFilter_order]
+  ): UserPageConnection
+  alias: String!
+  email: String
+  telefono: String
+  direccion: String
+  localidad: Localidad
+  nombre: String
+  nota: String
+  _id: Int!
+  status: Status
+  legacyId: Int
+  slug: String
+}
+
+"Cursor connection for Agencia."
+type AgenciaCursorConnection {
+  edges: [AgenciaEdge]
+  pageInfo: AgenciaPageInfo!
+  totalCount: Int!
+}
+
+"Edge of Agencia."
+type AgenciaEdge {
+  node: Agencia
+  cursor: String!
+}
+
+type Agencia implements Node {
+  id: ID!
+  users(
+    "Returns the current page."
+    page: Int
+
+    "Returns the number of items per page."
+    itemsPerPage: Int
+
+    id: Int
+    id_list: [Int]
+    username: String
+    username_list: [String]
+    status: String
+    status_list: [String]
+    nombre: String
+    nombre_list: [String]
+    apellido: String
+    apellido_list: [String]
+    createdAt: [UserFilter_createdAt]
+    order: [UserFilter_order]
+  ): UserPageConnection
+  alias: String!
+  email: String
+  telefono: String
+  direccion: String
+  localidad: Localidad
+  nombre: String
+  nota: String
+  _id: Int!
+  status: Status
+  legacyId: Int
 }
 
 "Information about the current page."
@@ -656,7 +751,7 @@ type Bus implements Node {
   _id: Int!
   createdAt: String!
   updatedAt: String!
-  status: StatusEnum
+  status: Status
   legacyId: Int
 }
 
@@ -668,7 +763,7 @@ type Empresa implements Node {
   _id: Int!
   createdAt: String!
   updatedAt: String!
-  status: StatusEnum
+  status: Status
   legacyId: Int
   nombre: String!
   email: String
@@ -687,10 +782,11 @@ type Piloto implements Node {
   fechaNacimiento: String
   seguroSocial: String
   nacionalidad: String
+  fullName: String
   _id: Int!
   createdAt: String!
   updatedAt: String!
-  status: StatusEnum
+  status: Status
   legacyId: Int
   apellido: String
   nombre: String!
@@ -742,7 +838,7 @@ type Boleto implements Node {
   asiento: Asiento!
   salida: Salida!
   _id: Int!
-  status: StatusEnum
+  status: Status
   createdAt: String!
   updatedAt: String!
 }
@@ -753,7 +849,7 @@ type Cliente implements Node {
   _id: Int!
   createdAt: String!
   updatedAt: String!
-  status: StatusEnum
+  status: Status
   legacyId: Int
   apellido: String
   nombre: String!
@@ -831,7 +927,7 @@ type Salida implements Node {
   _id: Int!
   createdAt: String!
   updatedAt: String!
-  status: StatusEnum
+  status: Status
 }
 
 type Recorrido implements Node {
@@ -843,7 +939,7 @@ type Recorrido implements Node {
   nombre: String
   nota: String
   _id: Int!
-  status: StatusEnum
+  status: Status
   legacyId: Int
 }
 
@@ -866,7 +962,7 @@ type Parada implements Node {
   nombre: String
   nota: String
   _id: Int!
-  status: StatusEnum
+  status: Status
 }
 
 type Enclave implements Node {
@@ -878,7 +974,7 @@ type Enclave implements Node {
   nombre: String
   nota: String
   _id: Int!
-  status: StatusEnum
+  status: Status
 }
 
 "Cursor connection for Recorrido."
@@ -942,25 +1038,33 @@ type BoletoPageInfo {
   hasPreviousPage: Boolean!
 }
 
-"Cursor connection for Bus."
-type BusCursorConnection {
-  edges: [BusEdge]
-  pageInfo: BusPageInfo!
+input BusFilter_createdAt {
+  before: String
+  strictly_before: String
+  after: String
+  strictly_after: String
+}
+
+input BusFilter_order {
+  id: String
+  marca: String
+  placa: String
+  createdAt: String
+  status: String
+}
+
+"Page connection for Bus."
+type BusPageConnection {
+  collection: [Bus]
+  paginationInfo: BusPaginationInfo!
+}
+
+"Information about the pagination."
+type BusPaginationInfo {
+  itemsPerPage: Int!
+  lastPage: Int!
   totalCount: Int!
-}
-
-"Edge of Bus."
-type BusEdge {
-  node: Bus
-  cursor: String!
-}
-
-"Information about the current page."
-type BusPageInfo {
-  endCursor: String
-  startCursor: String
   hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
 }
 
 "Cursor connection for Cliente."
@@ -984,25 +1088,18 @@ type ClientePageInfo {
   hasPreviousPage: Boolean!
 }
 
-"Cursor connection for Empresa."
-type EmpresaCursorConnection {
-  edges: [EmpresaEdge]
-  pageInfo: EmpresaPageInfo!
+"Page connection for Empresa."
+type EmpresaPageConnection {
+  collection: [Empresa]
+  paginationInfo: EmpresaPaginationInfo!
+}
+
+"Information about the pagination."
+type EmpresaPaginationInfo {
+  itemsPerPage: Int!
+  lastPage: Int!
   totalCount: Int!
-}
-
-"Edge of Empresa."
-type EmpresaEdge {
-  node: Empresa
-  cursor: String!
-}
-
-"Information about the current page."
-type EmpresaPageInfo {
-  endCursor: String
-  startCursor: String
   hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
 }
 
 "Cursor connection for Enclave."
@@ -1026,52 +1123,25 @@ type EnclavePageInfo {
   hasPreviousPage: Boolean!
 }
 
-"Cursor connection for Estacion."
-type EstacionCursorConnection {
-  edges: [EstacionEdge]
-  pageInfo: EstacionPageInfo!
-  totalCount: Int!
-}
-
-"Edge of Estacion."
-type EstacionEdge {
-  node: Estacion
-  cursor: String!
-}
-
-type Estacion implements Node {
-  id: ID!
-  users(
-    "Returns the first n elements from the list."
-    first: Int
-
-    "Returns the last n elements from the list."
-    last: Int
-
-    "Returns the elements in the list that come before the specified cursor."
-    before: String
-
-    "Returns the elements in the list that come after the specified cursor."
-    after: String
-  ): UserCursorConnection
-  alias: String!
-  email: String
-  telefono: String
-  direccion: String
-  localidad: Localidad
+input EstacionFilter_order {
+  id: String
   nombre: String
-  nota: String
-  _id: Int!
-  status: StatusEnum
-  legacyId: Int
+  alias: String
+  status: String
 }
 
-"Information about the current page."
-type EstacionPageInfo {
-  endCursor: String
-  startCursor: String
+"Page connection for Estacion."
+type EstacionPageConnection {
+  collection: [Estacion]
+  paginationInfo: EstacionPaginationInfo!
+}
+
+"Information about the pagination."
+type EstacionPaginationInfo {
+  itemsPerPage: Int!
+  lastPage: Int!
+  totalCount: Int!
   hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
 }
 
 "Cursor connection for FDN."
@@ -1123,7 +1193,7 @@ type Factura implements Node {
   _id: Int!
   createdAt: String!
   updatedAt: String!
-  status: StatusEnum
+  status: Status
 }
 
 type Venta implements Node {
@@ -1136,7 +1206,7 @@ type Venta implements Node {
   _id: Int!
   createdAt: String!
   updatedAt: String!
-  status: StatusEnum
+  status: Status
 }
 
 "Information about the current page."
@@ -1203,7 +1273,7 @@ type Menu implements Node {
   nombre: String
   nota: String
   _id: Int!
-  status: StatusEnum
+  status: Status
 }
 
 type Taxon implements Node {
@@ -1226,7 +1296,7 @@ type Taxon implements Node {
   nombre: String
   nota: String
   _id: Int!
-  status: StatusEnum
+  status: Status
 }
 
 "Cursor connection for Taxon."
@@ -1300,25 +1370,33 @@ type ParadaPageInfo {
   hasPreviousPage: Boolean!
 }
 
-"Cursor connection for Piloto."
-type PilotoCursorConnection {
-  edges: [PilotoEdge]
-  pageInfo: PilotoPageInfo!
+input PilotoFilter_createdAt {
+  before: String
+  strictly_before: String
+  after: String
+  strictly_after: String
+}
+
+input PilotoFilter_order {
+  id: String
+  nombre: String
+  email: String
+  createdAt: String
+  status: String
+}
+
+"Page connection for Piloto."
+type PilotoPageConnection {
+  collection: [Piloto]
+  paginationInfo: PilotoPaginationInfo!
+}
+
+"Information about the pagination."
+type PilotoPaginationInfo {
+  itemsPerPage: Int!
+  lastPage: Int!
   totalCount: Int!
-}
-
-"Edge of Piloto."
-type PilotoEdge {
-  node: Piloto
-  cursor: String!
-}
-
-"Information about the current page."
-type PilotoPageInfo {
-  endCursor: String
-  startCursor: String
   hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
 }
 
 "Cursor connection for RecorridoAsientoPrecio."
@@ -1393,6 +1471,15 @@ type VentaPageInfo {
 }
 
 type Mutation {
+  "Updates a ColumnFieldsResource."
+  updateColumnFieldsResource(input: updateColumnFieldsResourceInput!): updateColumnFieldsResourcePayload
+
+  "Deletes a ColumnFieldsResource."
+  deleteColumnFieldsResource(input: deleteColumnFieldsResourceInput!): deleteColumnFieldsResourcePayload
+
+  "Creates a ColumnFieldsResource."
+  createColumnFieldsResource(input: createColumnFieldsResourceInput!): createColumnFieldsResourcePayload
+
   "Updates a create_form."
   updatecreate_form(input: updateCreate_formInput!): updateCreate_formPayload
 
@@ -1402,14 +1489,8 @@ type Mutation {
   "Creates a create_form."
   createcreate_form(input: createCreate_formInput!): createCreate_formPayload
 
-  "Updates a resource."
-  updateresource(input: updateResourceInput!): updateResourcePayload
-
-  "Deletes a resource."
-  deleteresource(input: deleteResourceInput!): deleteResourcePayload
-
-  "Creates a resource."
-  createresource(input: createResourceInput!): createResourcePayload
+  "Deletes a MultipleResource."
+  deleteMultipleResource(input: deleteMultipleResourceInput!): deleteMultipleResourcePayload
 
   "Updates a Agencia."
   updateAgencia(input: updateAgenciaInput!): updateAgenciaPayload
@@ -1447,15 +1528,6 @@ type Mutation {
   "Creates a BoletoLog."
   createBoletoLog(input: createBoletoLogInput!): createBoletoLogPayload
 
-  "Updates a Bus."
-  updateBus(input: updateBusInput!): updateBusPayload
-
-  "Deletes a Bus."
-  deleteBus(input: deleteBusInput!): deleteBusPayload
-
-  "Creates a Bus."
-  createBus(input: createBusInput!): createBusPayload
-
   "Updates a Cliente."
   updateCliente(input: updateClienteInput!): updateClientePayload
 
@@ -1465,14 +1537,14 @@ type Mutation {
   "Creates a Cliente."
   createCliente(input: createClienteInput!): createClientePayload
 
+  "Creates a Empresa."
+  createEmpresa(input: createEmpresaInput!): createEmpresaPayload
+
   "Updates a Empresa."
   updateEmpresa(input: updateEmpresaInput!): updateEmpresaPayload
 
   "Deletes a Empresa."
   deleteEmpresa(input: deleteEmpresaInput!): deleteEmpresaPayload
-
-  "Creates a Empresa."
-  createEmpresa(input: createEmpresaInput!): createEmpresaPayload
 
   "Updates a Enclave."
   updateEnclave(input: updateEnclaveInput!): updateEnclavePayload
@@ -1483,14 +1555,14 @@ type Mutation {
   "Creates a Enclave."
   createEnclave(input: createEnclaveInput!): createEnclavePayload
 
+  "Creates a Estacion."
+  createEstacion(input: createEstacionInput!): createEstacionPayload
+
   "Updates a Estacion."
   updateEstacion(input: updateEstacionInput!): updateEstacionPayload
 
   "Deletes a Estacion."
   deleteEstacion(input: deleteEstacionInput!): deleteEstacionPayload
-
-  "Creates a Estacion."
-  createEstacion(input: createEstacionInput!): createEstacionPayload
 
   "Updates a FDN."
   updateFDN(input: updateFDNInput!): updateFDNPayload
@@ -1555,15 +1627,6 @@ type Mutation {
   "Creates a Permiso."
   createPermiso(input: createPermisoInput!): createPermisoPayload
 
-  "Updates a Piloto."
-  updatePiloto(input: updatePilotoInput!): updatePilotoPayload
-
-  "Deletes a Piloto."
-  deletePiloto(input: deletePilotoInput!): deletePilotoPayload
-
-  "Creates a Piloto."
-  createPiloto(input: createPilotoInput!): createPilotoPayload
-
   "Updates a Recorrido."
   updateRecorrido(input: updateRecorridoInput!): updateRecorridoPayload
 
@@ -1609,14 +1672,14 @@ type Mutation {
   "Creates a Taxon."
   createTaxon(input: createTaxonInput!): createTaxonPayload
 
+  "Creates a User."
+  createUser(input: createUserInput!): createUserPayload
+
   "Updates a User."
   updateUser(input: updateUserInput!): updateUserPayload
 
   "Deletes a User."
   deleteUser(input: deleteUserInput!): deleteUserPayload
-
-  "Creates a User."
-  createUser(input: createUserInput!): createUserPayload
 
   "Updates a Venta."
   updateVenta(input: updateVentaInput!): updateVentaPayload
@@ -1626,6 +1689,43 @@ type Mutation {
 
   "Creates a Venta."
   createVenta(input: createVentaInput!): createVentaPayload
+}
+
+"Updates a ColumnFieldsResource."
+input updateColumnFieldsResourceInput {
+  id: ID!
+  className: String
+  clientMutationId: String
+}
+
+"Updates a ColumnFieldsResource."
+type updateColumnFieldsResourcePayload {
+  columnFieldsResource: ColumnFieldsResource
+  clientMutationId: String
+}
+
+"Deletes a ColumnFieldsResource."
+input deleteColumnFieldsResourceInput {
+  id: ID!
+  clientMutationId: String
+}
+
+"Deletes a ColumnFieldsResource."
+type deleteColumnFieldsResourcePayload {
+  columnFieldsResource: ColumnFieldsResource
+  clientMutationId: String
+}
+
+"Creates a ColumnFieldsResource."
+input createColumnFieldsResourceInput {
+  className: String!
+  clientMutationId: String
+}
+
+"Creates a ColumnFieldsResource."
+type createColumnFieldsResourcePayload {
+  columnFieldsResource: ColumnFieldsResource
+  clientMutationId: String
 }
 
 "Updates a create_form."
@@ -1663,39 +1763,21 @@ type createCreate_formPayload {
   clientMutationId: String
 }
 
-"Updates a resource."
-input updateResourceInput {
+"Deletes a MultipleResource."
+input deleteMultipleResourceInput {
+  ids: [ID]
+  resource: String
+  clientMutationId: String
+}
+
+"Deletes a MultipleResource."
+type deleteMultipleResourcePayload {
+  multipleResource: MultipleResource
+  clientMutationId: String
+}
+
+type MultipleResource implements Node {
   id: ID!
-  clientMutationId: String
-}
-
-"Updates a resource."
-type updateResourcePayload {
-  resource: resource
-  clientMutationId: String
-}
-
-"Deletes a resource."
-input deleteResourceInput {
-  id: ID!
-  clientMutationId: String
-}
-
-"Deletes a resource."
-type deleteResourcePayload {
-  resource: resource
-  clientMutationId: String
-}
-
-"Creates a resource."
-input createResourceInput {
-  clientMutationId: String
-}
-
-"Creates a resource."
-type createResourcePayload {
-  resource: resource
-  clientMutationId: String
 }
 
 "Updates a Agencia."
@@ -1709,7 +1791,7 @@ input updateAgenciaInput {
   localidad: String
   nombre: String
   nota: String
-  status: StatusEnum
+  status: Status
   legacyId: Int
   clientMutationId: String
 }
@@ -1742,7 +1824,7 @@ input createAgenciaInput {
   localidad: String
   nombre: String
   nota: String
-  status: StatusEnum
+  status: Status
   legacyId: Int
   clientMutationId: String
 }
@@ -1802,7 +1884,7 @@ input updateBoletoInput {
   boletoLogs: [String]
   asiento: String
   salida: String
-  status: StatusEnum
+  status: Status
   createdAt: String
   updatedAt: String
   clientMutationId: String
@@ -1833,7 +1915,7 @@ input createBoletoInput {
   boletoLogs: [String]
   asiento: String!
   salida: String!
-  status: StatusEnum
+  status: Status
   createdAt: String!
   updatedAt: String!
   clientMutationId: String
@@ -1892,72 +1974,13 @@ type createBoletoLogPayload {
   clientMutationId: String
 }
 
-"Updates a Bus."
-input updateBusInput {
-  id: ID!
-  codigo: String
-  asientos: [String]
-  precioVariacionAsientoA: Float
-  precioVariacionAsientoB: Float
-  empresa: String
-  piloto: String
-  marca: String
-  placa: String
-  createdAt: String
-  updatedAt: String
-  status: StatusEnum
-  legacyId: Int
-  clientMutationId: String
-}
-
-"Updates a Bus."
-type updateBusPayload {
-  bus: Bus
-  clientMutationId: String
-}
-
-"Deletes a Bus."
-input deleteBusInput {
-  id: ID!
-  clientMutationId: String
-}
-
-"Deletes a Bus."
-type deleteBusPayload {
-  bus: Bus
-  clientMutationId: String
-}
-
-"Creates a Bus."
-input createBusInput {
-  codigo: String
-  asientos: [String]
-  precioVariacionAsientoA: Float
-  precioVariacionAsientoB: Float
-  empresa: String
-  piloto: String
-  marca: String
-  placa: String
-  createdAt: String!
-  updatedAt: String!
-  status: StatusEnum
-  legacyId: Int
-  clientMutationId: String
-}
-
-"Creates a Bus."
-type createBusPayload {
-  bus: Bus
-  clientMutationId: String
-}
-
 "Updates a Cliente."
 input updateClienteInput {
   id: ID!
   dpi: String
   createdAt: String
   updatedAt: String
-  status: StatusEnum
+  status: Status
   legacyId: Int
   apellido: String
   nombre: String
@@ -1992,7 +2015,7 @@ input createClienteInput {
   dpi: String
   createdAt: String!
   updatedAt: String!
-  status: StatusEnum
+  status: Status
   legacyId: Int
   apellido: String
   nombre: String!
@@ -2010,6 +2033,30 @@ type createClientePayload {
   clientMutationId: String
 }
 
+"Creates a Empresa."
+input createEmpresaInput {
+  nombreComercial: String
+  denominacionSocial: String
+  alias: String
+  createdAt: String!
+  updatedAt: String!
+  status: Status
+  legacyId: Int
+  nombre: String!
+  email: String
+  nit: String
+  telefono: String
+  direccion: String
+  localidad: String
+  clientMutationId: String
+}
+
+"Creates a Empresa."
+type createEmpresaPayload {
+  empresa: Empresa
+  clientMutationId: String
+}
+
 "Updates a Empresa."
 input updateEmpresaInput {
   id: ID!
@@ -2018,7 +2065,7 @@ input updateEmpresaInput {
   alias: String
   createdAt: String
   updatedAt: String
-  status: StatusEnum
+  status: Status
   legacyId: Int
   nombre: String
   email: String
@@ -2047,30 +2094,6 @@ type deleteEmpresaPayload {
   clientMutationId: String
 }
 
-"Creates a Empresa."
-input createEmpresaInput {
-  nombreComercial: String
-  denominacionSocial: String
-  alias: String
-  createdAt: String!
-  updatedAt: String!
-  status: StatusEnum
-  legacyId: Int
-  nombre: String!
-  email: String
-  nit: String
-  telefono: String
-  direccion: String
-  localidad: String
-  clientMutationId: String
-}
-
-"Creates a Empresa."
-type createEmpresaPayload {
-  empresa: Empresa
-  clientMutationId: String
-}
-
 "Updates a Enclave."
 input updateEnclaveInput {
   id: ID!
@@ -2080,7 +2103,7 @@ input updateEnclaveInput {
   localidad: String
   nombre: String
   nota: String
-  status: StatusEnum
+  status: Status
   clientMutationId: String
 }
 
@@ -2110,13 +2133,35 @@ input createEnclaveInput {
   localidad: String
   nombre: String
   nota: String
-  status: StatusEnum
+  status: Status
   clientMutationId: String
 }
 
 "Creates a Enclave."
 type createEnclavePayload {
   enclave: Enclave
+  clientMutationId: String
+}
+
+"Creates a Estacion."
+input createEstacionInput {
+  users: [String]
+  alias: String!
+  email: String
+  telefono: String
+  direccion: String
+  localidad: String
+  nombre: String
+  nota: String
+  status: Status
+  legacyId: Int
+  slug: String
+  clientMutationId: String
+}
+
+"Creates a Estacion."
+type createEstacionPayload {
+  estacion: Estacion
   clientMutationId: String
 }
 
@@ -2131,8 +2176,9 @@ input updateEstacionInput {
   localidad: String
   nombre: String
   nota: String
-  status: StatusEnum
+  status: Status
   legacyId: Int
+  slug: String
   clientMutationId: String
 }
 
@@ -2150,27 +2196,6 @@ input deleteEstacionInput {
 
 "Deletes a Estacion."
 type deleteEstacionPayload {
-  estacion: Estacion
-  clientMutationId: String
-}
-
-"Creates a Estacion."
-input createEstacionInput {
-  users: [String]
-  alias: String!
-  email: String
-  telefono: String
-  direccion: String
-  localidad: String
-  nombre: String
-  nota: String
-  status: StatusEnum
-  legacyId: Int
-  clientMutationId: String
-}
-
-"Creates a Estacion."
-type createEstacionPayload {
   estacion: Estacion
   clientMutationId: String
 }
@@ -2220,7 +2245,7 @@ input updateFacturaInput {
   venta: String
   createdAt: String
   updatedAt: String
-  status: StatusEnum
+  status: Status
   clientMutationId: String
 }
 
@@ -2251,7 +2276,7 @@ input createFacturaInput {
   venta: String
   createdAt: String!
   updatedAt: String!
-  status: StatusEnum
+  status: Status
   clientMutationId: String
 }
 
@@ -2310,7 +2335,7 @@ input updateMenuInput {
   children: [String]
   nombre: String
   nota: String
-  status: StatusEnum
+  status: Status
   clientMutationId: String
 }
 
@@ -2341,7 +2366,7 @@ input createMenuInput {
   children: [String]
   nombre: String
   nota: String
-  status: StatusEnum
+  status: Status
   clientMutationId: String
 }
 
@@ -2395,7 +2420,7 @@ input updateParadaInput {
   recorridos: [String]
   nombre: String
   nota: String
-  status: StatusEnum
+  status: Status
   clientMutationId: String
 }
 
@@ -2423,7 +2448,7 @@ input createParadaInput {
   recorridos: [String]
   nombre: String
   nota: String
-  status: StatusEnum
+  status: Status
   clientMutationId: String
 }
 
@@ -2441,7 +2466,7 @@ input updatePermisoInput {
   usuarios: [String]
   nombre: String
   nota: String
-  status: StatusEnum
+  status: Status
   clientMutationId: String
 }
 
@@ -2470,84 +2495,13 @@ input createPermisoInput {
   usuarios: [String]
   nombre: String
   nota: String
-  status: StatusEnum
+  status: Status
   clientMutationId: String
 }
 
 "Creates a Permiso."
 type createPermisoPayload {
   permiso: Permiso
-  clientMutationId: String
-}
-
-"Updates a Piloto."
-input updatePilotoInput {
-  id: ID!
-  licencia: String
-  licenciaVencimiento: String
-  dpi: String
-  sexo: String
-  fechaNacimiento: String
-  seguroSocial: String
-  nacionalidad: String
-  createdAt: String
-  updatedAt: String
-  status: StatusEnum
-  legacyId: Int
-  apellido: String
-  nombre: String
-  email: String
-  nit: String
-  telefono: String
-  direccion: String
-  localidad: String
-  clientMutationId: String
-}
-
-"Updates a Piloto."
-type updatePilotoPayload {
-  piloto: Piloto
-  clientMutationId: String
-}
-
-"Deletes a Piloto."
-input deletePilotoInput {
-  id: ID!
-  clientMutationId: String
-}
-
-"Deletes a Piloto."
-type deletePilotoPayload {
-  piloto: Piloto
-  clientMutationId: String
-}
-
-"Creates a Piloto."
-input createPilotoInput {
-  licencia: String
-  licenciaVencimiento: String
-  dpi: String
-  sexo: String
-  fechaNacimiento: String
-  seguroSocial: String
-  nacionalidad: String
-  createdAt: String!
-  updatedAt: String!
-  status: StatusEnum
-  legacyId: Int
-  apellido: String
-  nombre: String!
-  email: String
-  nit: String
-  telefono: String
-  direccion: String
-  localidad: String
-  clientMutationId: String
-}
-
-"Creates a Piloto."
-type createPilotoPayload {
-  piloto: Piloto
   clientMutationId: String
 }
 
@@ -2560,7 +2514,7 @@ input updateRecorridoInput {
   final: String
   nombre: String
   nota: String
-  status: StatusEnum
+  status: Status
   legacyId: Int
   clientMutationId: String
 }
@@ -2591,7 +2545,7 @@ input createRecorridoInput {
   final: String
   nombre: String
   nota: String
-  status: StatusEnum
+  status: Status
   legacyId: Int
   clientMutationId: String
 }
@@ -2654,7 +2608,7 @@ input updateSalidaInput {
   boletos: [String]
   createdAt: String
   updatedAt: String
-  status: StatusEnum
+  status: Status
   clientMutationId: String
 }
 
@@ -2686,7 +2640,7 @@ input createSalidaInput {
   boletos: [String]
   createdAt: String!
   updatedAt: String!
-  status: StatusEnum
+  status: Status
   clientMutationId: String
 }
 
@@ -2751,7 +2705,7 @@ input updateTaxonInput {
   children: [String]
   nombre: String
   nota: String
-  status: StatusEnum
+  status: Status
   clientMutationId: String
 }
 
@@ -2780,13 +2734,39 @@ input createTaxonInput {
   children: [String]
   nombre: String
   nota: String
-  status: StatusEnum
+  status: Status
   clientMutationId: String
 }
 
 "Creates a Taxon."
 type createTaxonPayload {
   taxon: Taxon
+  clientMutationId: String
+}
+
+"Creates a User."
+input createUserInput {
+  username: String!
+  roles: Iterable!
+  password: String
+  permisos: [String]
+  createdAt: String!
+  updatedAt: String!
+  status: Status
+  legacyId: Int
+  apellido: String
+  nombre: String!
+  email: String
+  nit: String
+  telefono: String
+  direccion: String
+  localidad: String
+  clientMutationId: String
+}
+
+"Creates a User."
+type createUserPayload {
+  user: User
   clientMutationId: String
 }
 
@@ -2799,7 +2779,7 @@ input updateUserInput {
   permisos: [String]
   createdAt: String
   updatedAt: String
-  status: StatusEnum
+  status: Status
   legacyId: Int
   apellido: String
   nombre: String
@@ -2829,32 +2809,6 @@ type deleteUserPayload {
   clientMutationId: String
 }
 
-"Creates a User."
-input createUserInput {
-  username: String!
-  roles: Iterable!
-  password: String
-  permisos: [String]
-  createdAt: String!
-  updatedAt: String!
-  status: StatusEnum
-  legacyId: Int
-  apellido: String
-  nombre: String!
-  email: String
-  nit: String
-  telefono: String
-  direccion: String
-  localidad: String
-  clientMutationId: String
-}
-
-"Creates a User."
-type createUserPayload {
-  user: User
-  clientMutationId: String
-}
-
 "Updates a Venta."
 input updateVentaInput {
   id: ID!
@@ -2865,7 +2819,7 @@ input updateVentaInput {
   factura: String
   createdAt: String
   updatedAt: String
-  status: StatusEnum
+  status: Status
   clientMutationId: String
 }
 
@@ -2896,7 +2850,7 @@ input createVentaInput {
   factura: String
   createdAt: String!
   updatedAt: String!
-  status: StatusEnum
+  status: Status
   clientMutationId: String
 }
 
@@ -2905,3 +2859,4 @@ type createVentaPayload {
   venta: Venta
   clientMutationId: String
 }
+

@@ -8,7 +8,7 @@ api_platform:
         include_type: true 
     collection:
         pagination:
-            page_parameter_name: _page
+            page_parameter_name: page
     graphql:
         graphql_playground: false
         collection:

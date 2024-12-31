@@ -36,7 +36,6 @@ class ExtraerDatosCommand extends Command {
 
     protected function execute(InputInterface $input, OutputInterface $output): int {
         try {
-
             $this->estacionLocalidadPaisUsuarios();
             $this->empresaBusPiloto();
             $this->ruta();

@@ -11,9 +11,6 @@ final class UserByUsernameResolver implements QueryItemResolverInterface {
   public function __construct(private UserRepository $userRepository) {
   }
   /**
-   * @param Book|null $item
-   *
-   * @return Book
    */
   public function __invoke($item, array $context): object {
     if ($arg = $context['args']['username'] ?? null) {

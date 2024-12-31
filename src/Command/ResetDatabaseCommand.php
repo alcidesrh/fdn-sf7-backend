@@ -43,24 +43,33 @@ class ResetDatabaseCommand extends Command {
 
         try {
             $io = new SymfonyStyle($input, $output);
-            $phpBinaryFinder = new PhpExecutableFinder();
-            $phpBinaryPath = $phpBinaryFinder->find();
+            // $phpBinaryFinder = new PhpExecutableFinder();
+            // $phpBinaryPath = $phpBinaryFinder->find();
 
-            $process = [
-                [$phpBinaryPath, 'bin/console', 'doctrine:database:drop', '-nf', '--if-exists', '--quiet'],
-                [$phpBinaryPath, 'bin/console', 'doctrine:database:create', '-n', '--quiet'],
-                ['rm', '-r', 'migrations/*'],
-                [$phpBinaryPath, 'bin/console', 'doctrine:migrations:diff', '-n', '--quiet'],
-                [$phpBinaryPath, 'bin/console', 'doctrine:migrations:migrate', '-n', '--quiet'],
-            ];
-            $io->progressStart(100);
-            foreach ($process as $key => $value) {
-                $io->progressAdvance(20);
-                ($p = new Process($value))->run();
-                // $io->block($p->getOutput());
+            // $process = [
+            // [$phpBinaryPath, 'bin/console', 'doctrine:database:drop', '-nf', '--if-exists', '--quiet'],
+            // [$phpBinaryPath, 'bin/console', 'doctrine:database:create', '-n', '--quiet'],
+            // ['rm', '-r', 'migrations/*'],
+            // [$phpBinaryPath, 'bin/console', 'doctrine:migrations:diff', '-n', '--quiet'],
+            // [$phpBinaryPath, 'bin/console', 'doctrine:migrations:migrate', '-n', '--quiet'],
+            // ];
+            // $io->progressStart(100);
+            // foreach ($process as $key => $value) {
+            // $io->progressAdvance(20);
+            // ($p = new Process($value))->run();
+            // $io->block($p->getOutput());
+            // }
+            $p1 = Process::fromShellCommandline('docker exec fdn-php-1 php bin/console doctrine:database:drop -nf --if-exists --quiet');
+            $p2 = Process::fromShellCommandline('docker exec fdn-php-1 php bin/console doctrine:database:create');
+            $p3 = Process::fromShellCommandline('docker exec fdn-php-1 rm -r migrations/*');
+            $p4 = Process::fromShellCommandline('docker exec fdn-php-1 php bin/console doctrine:migrations:diff');
+            $p5 = Process::fromShellCommandline('docker exec fdn-php-1 php bin/console doctrine:migrations:migrate');
+            $p6 = Process::fromShellCommandline('docker exec fdn-php-1 php bin/console migrar');
+            foreach ([$p1, $p2, $p3, $p4, $p5, $p6,] as $key => $value) {
+                $value->setTimeout(120);
+                $value->run();
             }
-            $p = Process::fromShellCommandline('docker exec fdn-php-1 php bin/console migrar');
-            $p->run();
+            // $p->run();
             $io->success('Base de datos generada!');
         } catch (\Throwable $th) {
             throw $th;

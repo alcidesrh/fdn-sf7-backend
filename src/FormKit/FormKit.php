@@ -19,6 +19,7 @@ class FormKit extends FormBase {
   protected ?EntityManagerInterface $entityManager;
   protected array $properties;
   protected array $groups;
+  protected array $fields;
   protected ReflectionClass $reflectionClass;
 
   public function __construct(?string $className = null, ?EntityManagerInterface $entityManagerInterface = null) {
@@ -27,6 +28,8 @@ class FormKit extends FormBase {
 
     $this->reflectionClass = new ReflectionClass($this->classPath());
     $this->properties = $this->reflectionClass->getProperties();
+
+    $this->fields = ['id', '_id'];
   }
 
   public function form() {
@@ -43,33 +46,38 @@ class FormKit extends FormBase {
       if (!$data = $this->schema()) {
         if ($formKitFieldForm = $this->reflectionClass->getAttributes(SchemaForm::class)) {
           $data = $formKitFieldForm[0]->newInstance()->properties;
+          foreach ($data as $group) {
+            $this->schema[] = $this->parseFields($group);
+          }
         } else {
-          $data = [array_map(fn(ReflectionProperty $reflectionProperty) => $reflectionProperty->getName(), $this->reflectionClass->getProperties())];
+          $data = array_map(fn(ReflectionProperty $reflectionProperty) => $reflectionProperty->getName(), $this->reflectionClass->getProperties());
+          $this->schema = $this->parseFields($data);
+        }
+      } else {
+        foreach ($data as $group) {
+          $this->schema[] = $this->parseFields($group);
+        }
+      }
+      if ($fields = $this->extractFields($data)) {
+
+        $extra = \array_diff(
+          \array_map(fn(ReflectionProperty $reflectionProperty) => ($reflectionProperty->getName()), $this->properties),
+          $fields
+        );
+        if (!empty($extra)) {
+          $exclude = array_merge($this->excludeBase, $this->exclude ?? []);
+          if ($attrsExclude = $this->reflectionClass->getAttributes(FormKitExclude::class)) {
+            $exclude = \array_merge($exclude, $attrsExclude[0]->newInstance()->fields);
+          }
+          $extra = \array_diff($extra, $exclude);
+
+          foreach ($extra as $value) {
+            $this->schema[] = $this->schemaGenerate($value);
+          }
         }
       }
 
-      foreach ($data as $group) {
-        $this->schema[] = $this->parseFields($group);
-      }
-      $fields = $this->extractFields($data);
-
-      $extra = \array_diff(
-        \array_map(fn(ReflectionProperty $reflectionProperty) => ($reflectionProperty->getName()), $this->properties),
-        $fields
-      );
-      if (!empty($extra)) {
-        $exclude = array_merge($this->excludeBase, $this->exclude ?? []);
-        if ($attrsExclude = $this->reflectionClass->getAttributes(FormKitExclude::class)) {
-          $exclude = \array_merge($exclude, $attrsExclude[0]->newInstance()->fields);
-        }
-        $extra = \array_diff($extra, $exclude);
-
-        foreach ($extra as $value) {
-          $this->schema[] = $this->schemaGenerate($value);
-        }
-      }
-
-      return $this->schema;
+      return ['form' => $this->schema, 'fields' => $this->fields];
     } catch (\Throwable $th) {
       throw $th;
     }
@@ -114,7 +122,7 @@ class FormKit extends FormBase {
           }, $value);
         }
       } else {
-        $temp[$key][] = $this->schemaGenerate($value);
+        $temp[$key] = $this->schemaGenerate($value);
       }
     }
     return $temp;
@@ -161,8 +169,11 @@ class FormKit extends FormBase {
         );
       } else {
         $temp = new ArrayCollection($this->entityManager->getRepository($class)->findAll());
-        $schema['options']  = $temp->map(fn($el) => ['label' => (string)$el, 'value' => $el->getId()])->toArray();
+        $schema['options']  = $temp->map(fn($el) => ['label' => (string)$el, 'value' => '/api/localidads/' . $el->getId()])->toArray();
+        $this->fields[] = [$value => ['id']];
       }
+    } else {
+      $this->fields[] = $value;
     }
     if ($type == 'array') {
       $schema['multiple'] = true;
@@ -186,8 +197,8 @@ class FormKit extends FormBase {
 
   public function getInputType($type, $class) {
 
-    if (!in_array($type, ['string', 'int'])) {
-      if (in_array($class, [DateTimeInterface::class, DateTime::class])) {
+    if (!\in_array($type, ['string', 'int'])) {
+      if (\in_array($class, [DateTimeInterface::class, DateTime::class])) {
         return 'datepicker_fdn';
       } elseif ($type == Collection::class || $type == 'array') {
         return 'multiselect_fdn';

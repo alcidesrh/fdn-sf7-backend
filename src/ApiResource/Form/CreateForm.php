@@ -6,6 +6,7 @@ use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use App\FormKit\Form;
+use App\FormKit\FormKit;
 
 use function Symfony\Component\String\u;
 use App\Provider\FormStateProvider;
@@ -31,7 +32,7 @@ class CreateForm {
     $this->className = u($className)->camel()->title();
     $schemaClass = "{$this->className}Schema";
     $path = $this->formkit_path . "/$schemaClass.php";
-    return (\file_exists($path) ?  new ("{$this->formkit_namespace}\\$schemaClass")($this->className, $this->entityManagerInterface) : new Form($this->className, $this->entityManagerInterface))->form();
+    return (\file_exists($path) ?  new ("{$this->formkit_namespace}\\$schemaClass")($this->className, $this->entityManagerInterface) : new FormKit($this->className, $this->entityManagerInterface))->form();
   }
 
   #[ApiProperty(identifier: true, readable: false)]

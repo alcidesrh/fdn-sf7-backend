@@ -8,13 +8,13 @@ class Factory {
   static string $NAME_SPACE = 'App\Entity\\';
   static function create($class_name, $data = [], $include = [], $exclude = []) {
 
-    $camelCase = fn ($string) => preg_replace('/\s+/', '', ucwords(str_replace('_', ' ', $string)));
+    $camelCase = fn($string) => preg_replace('/\s+/', '', ucwords(str_replace('_', ' ', $string)));
 
     $class_name = self::$NAME_SPACE . $camelCase($class_name);
 
     $properties = array_filter(
-      array_map(fn ($v) => $v->name, (new ReflectionClass($class_name))->getProperties()),
-      fn ($v) => !in_array($v, ['id', ...$exclude])
+      array_map(fn($v) => $v->name, (new ReflectionClass($class_name))->getProperties()),
+      fn($v) => !\in_array($v, ['id', ...$exclude])
     );
 
     $keys = array_keys($data);
@@ -23,7 +23,7 @@ class Factory {
 
     if (!empty($include)) {
       $keys = array_intersect($keys, array_keys($include));
-      $data_keys = [...$data_keys, ...array_filter($include, fn ($v) => in_array($v, $keys), ARRAY_FILTER_USE_KEY)];
+      $data_keys = [...$data_keys, ...array_filter($include, fn($v) => \in_array($v, $keys), ARRAY_FILTER_USE_KEY)];
     }
 
     $intance = new $class_name();

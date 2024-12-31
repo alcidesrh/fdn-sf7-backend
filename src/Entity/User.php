@@ -50,16 +50,17 @@ use App\Resolver\UserByUsernameResolver;
 )]
 #[ApiFilter(SearchFilter::class, alias: 'search.filter',  properties: ['username' => SearchFilterInterface::STRATEGY_EXACT])]
 
-#[ApiFilter(OrFilter::class, alias: 'or.filter', properties: ['id', 'fullName', 'username', 'status'], arguments: ['searchFilterProperties' => ['id' => SearchFilterInterface::STRATEGY_EXACT, 'fullName' => SearchFilterInterface::STRATEGY_IPARTIAL, 'username' => SearchFilterInterface::STRATEGY_IPARTIAL, 'status' => SearchFilterInterface::STRATEGY_EXACT, 'createdAt' => DateFilterInterface::INCLUDE_NULL_BEFORE_AND_AFTER]])]
+#[ApiFilter(OrFilter::class, alias: 'or.filter', properties: ['id', 'fullName', 'username', 'status', 'nombre', 'apellido'], arguments: ['searchFilterProperties' => ['id' => SearchFilterInterface::STRATEGY_EXACT, 'fullName' => SearchFilterInterface::STRATEGY_IPARTIAL, 'username' => SearchFilterInterface::STRATEGY_IPARTIAL, 'nombre' => SearchFilterInterface::STRATEGY_IPARTIAL, 'apellido' => SearchFilterInterface::STRATEGY_IPARTIAL, 'status' => SearchFilterInterface::STRATEGY_EXACT, 'createdAt' => DateFilterInterface::INCLUDE_NULL_BEFORE_AND_AFTER]])]
 
 #[ApiFilter(DateFilter::class, alias: 'date.filter', properties: ['createdAt' => DateFilterInterface::EXCLUDE_NULL])]
 
-#[ApiFilter(OrderFilter::class, alias: 'order.filter', properties: ['id', 'nombre', 'username', 'createdAt', 'status'], arguments: ['orderParameterName' => 'order'])]
+#[ApiFilter(OrderFilter::class, alias: 'order.filter', properties: ['id', 'nombre', 'apellido', 'username', 'createdAt', 'status'], arguments: ['orderParameterName' => 'order'])]
 
 #[ColumnTableList(properties: [
     ['name' => 'id', 'label' => 'Id', 'sort' => true, 'filter' => true],
     ['name' => 'username', 'label' => 'Usuario', 'sort' => true, 'filter' => true],
-    ['name' => 'fullName', 'label' => 'Nombre', 'sort' => 'nombre', 'filter' => true],
+    ['name' => 'nombre', 'label' => 'Nombre', 'sort' => true, 'filter' => true],
+    ['name' => 'apellido', 'label' => 'Apellido', 'sort' => true, 'filter' => true],
     ['name' => 'createdAt', 'label' => 'Fecha creación', 'sort' => 'fecha', 'filter' => true],
     ['name' => 'status', 'label' => 'Status', 'sort' => 'status'],
 ])]

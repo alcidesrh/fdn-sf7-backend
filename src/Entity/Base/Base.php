@@ -2,6 +2,7 @@
 
 namespace App\Entity\Base;
 
+use App\Attribute\AttributeUtil;
 use App\Attribute\FormKitExclude;
 use Doctrine\ORM\Mapping as ORM;
 use ReflectionClass;
@@ -19,14 +20,26 @@ class Base {
     public function getId(): ?int {
         return $this->id;
     }
-    public function __toString() {
+    public function getOptionName() {
 
         $class = get_class($this);
-        $reflectionClass = new ReflectionClass($class);
-
-        if (!empty($nombre = \array_filter($reflectionClass->getProperties(), fn($i) => \in_array($i->getName(), ['nombre', 'name'])))) {
-            return $this->getNombre() ?? $class;
+        $info = AttributeUtil::getExtractor();
+        $properties = $info->getProperties($class);
+        if (!empty(\array_intersect($properties, ['nombre', 'name']))) {
+            try {
+                return $this->getNombre();
+            } catch (\Throwable $th) {
+                try {
+                    return $this->getName();
+                } catch (\Throwable $th) {
+                    throw $th;
+                }
+            }
         }
-        return '';
+        return $this->getId();
+    }
+    public function __toString() {
+
+        return $this->getOptionName();
     }
 }

@@ -327,3 +327,7 @@ pcl:
 	@$(DOCKER) logs --follow transportesfuentedelnortecom-php-1
 reset_database:
 	@$(DOCKER_COMP) exec php sh php bin/console doctrine:database:drop -nf --if-exists ; rm -r migrations/*; php bin/console doctrine:database:create -n; php bin/console doctrine:migrations:diff -n; php bin/console doctrine:migrations:migrate -n
+
+schema:
+	@$(DOCKER_COMP) exec php bin/console api:graphql:export > ../api/public/schema.graphql
+

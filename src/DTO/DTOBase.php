@@ -10,6 +10,6 @@ class DTOBase {
 
   #[ApiProperty(identifier: true, writable: false)]
   public function getId(): string {
-    return $this->id->format('Ymdms');
+    return (new \DateTime())->format('Ymdms');
   }
 }

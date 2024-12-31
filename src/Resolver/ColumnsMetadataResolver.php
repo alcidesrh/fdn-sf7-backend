@@ -20,12 +20,11 @@ final class ColumnsMetadataResolver implements QueryItemResolverInterface {
 
   public function __invoke(?object $item, array $context): object {
 
-    $className = ResourceBase::entityNameParse($context['args']['className']);
+    $className = ResourceBase::entityNameParse($context['args']['entity']);
 
     $metadata = new MetadataDTO();
-    $metadata->columns = ['collection' => $this->collection($className)];
+    $metadata->data = ['collection' => $this->collection($className)];
     return $metadata; //[new CollectionMetadataDTO($return['total'], $return['collection'])];
-    return ['columns' => $this->collection($className)];
   }
 
   public function total($className): int {
@@ -45,8 +44,7 @@ final class ColumnsMetadataResolver implements QueryItemResolverInterface {
       $metadata = $attrClass[0]->newInstance()->columns;
       $data = [];
       foreach ($metadata as $value) {
-
-        if ((is_array($value) && in_array('filter', $value)) || 'filter' == $value) {
+        if ((\is_array($value) && !empty($value['filter']))) {
           $schema = $this->getSchema($value);
           $data[] = [...$value, 'schema' => $schema];
         } else {

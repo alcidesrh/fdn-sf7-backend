@@ -62,7 +62,7 @@
     @nuxt expression `(
             header({'Accept': '*text/html*'})
             && !path(
-                 '/logout', '/docs*', '/graphql*', '/schema.graphql', '/bundles*', '/contexts*', '/_profiler*', '/_wdt*',
+                 '/logout', '/docs*', '/api*', '/graphql*', '/schema.graphql', '/bundles*', '/contexts*', '/_profiler*', '/_wdt*',
                 '*.json*', '*.html', '*.csv', '*.yml', '*.yaml', '*.xml', '/auth'
             )
         )

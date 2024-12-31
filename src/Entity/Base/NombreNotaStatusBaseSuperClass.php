@@ -2,7 +2,6 @@
 
 namespace App\Entity\Base;
 
-
 use App\Entity\Base\Traits\StatusTrait;
 use App\Entity\FDN;
 use Doctrine\ORM\Mapping as ORM;

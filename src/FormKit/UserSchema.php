@@ -2,14 +2,15 @@
 
 namespace App\FormKit;
 
+use ApiPlatform\Metadata\IriConverterInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
 class UserSchema extends FormKit {
 
   public $exclude = ['fullName', 'password', 'accessTokenScopes', 'roles', 'id', 'permisos',  'apiTokens'];
 
-  public function __construct(protected ?string $className, protected ?EntityManagerInterface $entityManagerInterface) {
-    parent::__construct($this->className, $this->entityManagerInterface);
+  public function __construct(protected ?string $className, protected ?EntityManagerInterface $entityManagerInterface, protected ?IriConverterInterface $iriConverter) {
+    parent::__construct($this->className, $this->entityManagerInterface, $this->iriConverter);
   }
   public function schema(): array {
     return [

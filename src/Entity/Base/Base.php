@@ -17,10 +17,12 @@ class Base {
     #[FormKitExclude]
     protected ?int $id = null;
 
+    protected ?string $label = null;
+
     public function getId(): ?int {
         return $this->id;
     }
-    public function getOptionName() {
+    public function getLabel() {
 
         $class = get_class($this);
         $info = AttributeUtil::getExtractor();
@@ -40,6 +42,6 @@ class Base {
     }
     public function __toString() {
 
-        return $this->getOptionName();
+        return $this->getLabel();
     }
 }

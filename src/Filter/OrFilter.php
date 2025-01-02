@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace App\Filter;
 
 use ApiPlatform\Api\IdentifiersExtractorInterface as LegacyIdentifiersExtractorInterface;
-use ApiPlatform\Api\IriConverterInterface as LegacyIriConverterInterface;
 use ApiPlatform\Doctrine\Common\Filter\SearchFilterInterface;
 use ApiPlatform\Doctrine\Common\Filter\SearchFilterTrait;
 use ApiPlatform\Doctrine\Orm\Filter\AbstractFilter;
@@ -140,7 +139,7 @@ class OrFilter extends AbstractFilter implements SearchFilterInterface {
   use SearchFilterTrait;
 
   public const DOCTRINE_INTEGER_TYPE = Types::INTEGER;
-  public function __construct(ManagerRegistry $managerRegistry, IriConverterInterface|LegacyIriConverterInterface $iriConverter, ?PropertyAccessorInterface $propertyAccessor = null, ?LoggerInterface $logger = null, ?array $properties = null, IdentifiersExtractorInterface|LegacyIdentifiersExtractorInterface|null $identifiersExtractor = null, ?NameConverterInterface $nameConverter = null, private array $dateFilterProperties = [], private array $searchFilterProperties = []) {
+  public function __construct(ManagerRegistry $managerRegistry, IriConverterInterface $iriConverter, ?PropertyAccessorInterface $propertyAccessor = null, ?LoggerInterface $logger = null, ?array $properties = null, IdentifiersExtractorInterface|LegacyIdentifiersExtractorInterface|null $identifiersExtractor = null, ?NameConverterInterface $nameConverter = null, private array $dateFilterProperties = [], private array $searchFilterProperties = []) {
     parent::__construct($managerRegistry, $logger, $properties, $nameConverter);
 
     $this->iriConverter = $iriConverter;
@@ -161,7 +160,7 @@ class OrFilter extends AbstractFilter implements SearchFilterInterface {
       $this->filterProperty($key, $value, $queryBuilder, $queryNameGenerator, $resourceClass, $operation);
     };
   }
-  protected function getIriConverter(): IriConverterInterface|LegacyIriConverterInterface {
+  protected function getIriConverter(): IriConverterInterface {
     return $this->iriConverter;
   }
 

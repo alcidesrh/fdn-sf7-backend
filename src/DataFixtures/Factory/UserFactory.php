@@ -6,7 +6,6 @@ namespace App\DataFixtures\Factory;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityRepository;
-use Symfony\Component\Uid\Uuid;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;
 use Zenstruck\Foundry\RepositoryProxy;

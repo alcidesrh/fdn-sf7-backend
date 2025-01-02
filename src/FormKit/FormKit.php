@@ -2,6 +2,7 @@
 
 namespace App\FormKit;
 
+use ApiPlatform\Metadata\IriConverterInterface;
 use App\Attribute\AttributeUtil;
 use App\Attribute\FormKitExclude;
 use App\Attribute\FormKitLabel;
@@ -17,15 +18,16 @@ class FormKit extends FormBase {
   protected array $schema = [];
   protected ?string $className;
   protected ?EntityManagerInterface $entityManager;
+  protected ?IriConverterInterface $iriConverter;
   protected array $properties;
   protected array $groups;
   protected array $fields;
   protected ReflectionClass $reflectionClass;
 
-  public function __construct(?string $className = null, ?EntityManagerInterface $entityManagerInterface = null) {
+  public function __construct(?string $className = null, ?EntityManagerInterface $entityManagerInterface = null, ?IriConverterInterface $iriConverter = null) {
     $this->className = $className;
     $this->entityManager = $entityManagerInterface;
-
+    $this->iriConverter = $iriConverter;
     $this->reflectionClass = new ReflectionClass($this->classPath());
     $this->properties = $this->reflectionClass->getProperties();
 
@@ -169,7 +171,7 @@ class FormKit extends FormBase {
         );
       } else {
         $temp = new ArrayCollection($this->entityManager->getRepository($class)->findAll());
-        $schema['options']  = $temp->map(fn($el) => ['label' => (string)$el, 'value' => '/api/localidads/' . $el->getId()])->toArray();
+        $schema['options']  = $temp->map(fn($el) => ['label' => (string)$el, 'id' => $this->iriConverter->getIriFromResource($el)])->toArray();
         $this->fields[] = [$value => ['id']];
       }
     } else {

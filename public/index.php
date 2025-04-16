@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+// include 'borrar/borrar.php';
 
 use App\Kernel;
 

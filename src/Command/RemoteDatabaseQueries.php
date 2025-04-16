@@ -13,12 +13,12 @@ class RemoteDatabaseQueries {
   ) {
   }
 
-  public function getEstPaisLocAge() {
-    $sql_pais = 'select * from pais p';
+  public function getEstNacionLocAge() {
+    $sql_Nacion = 'select * from Nacion p';
   }
   public function getEstaciones(): array {
-    $sql = 'SELECT e.*,p.nombre as pais_nombre, d.nombre as dep_nombre from estacion e
-            join pais p on p.id = e.pais_id
+    $sql = 'SELECT e.*,p.nombre as Nacion_nombre, d.nombre as dep_nombre from estacion e
+            join Nacion p on p.id = e.Nacion_id
             join departamento d on d.id = e.departamento_id;';
 
     return $this->execute_query($sql);

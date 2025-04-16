@@ -8,7 +8,7 @@ use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
-use App\Attribute\FormKitExclude;
+use App\Attribute\ExcludeAttribute;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -21,7 +21,7 @@ use ApiPlatform\Metadata\GraphQl\Mutation;
 use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\GraphQl\QueryCollection;
 use App\Attribute\ColumnTableList;
-use App\Attribute\FormKitLabel;
+use App\Attribute\FormkitLabel;
 use App\Entity\Base\UserBase;
 use App\Filter\OrFilter;
 use App\Resolver\UserByUsernameResolver;
@@ -36,15 +36,12 @@ use App\Resolver\UserByUsernameResolver;
         new DeleteMutation(name: 'delete'),
         new QueryCollection(
             paginationType: 'page',
-            filters: ['or.filter', 'date.filter', 'order.filter'],
-            extraArgs: ['fullName' => ['type' => 'String']]
+            filters: ['or.filter', 'date.filter', 'order.filter']
         ),
         new Query(
             name: 'getUserByUsername',
-            filters: ['search.filter'],
             resolver: UserByUsernameResolver::class,
             args: ['username' => ['type' => 'String']],
-            // read: false
         ),
     ]
 )]
@@ -57,12 +54,13 @@ use App\Resolver\UserByUsernameResolver;
 #[ApiFilter(OrderFilter::class, alias: 'order.filter', properties: ['id', 'nombre', 'apellido', 'username', 'createdAt', 'status'], arguments: ['orderParameterName' => 'order'])]
 
 #[ColumnTableList(properties: [
+    'classes' => 'columns-wraper',
     ['name' => 'id', 'label' => 'Id', 'sort' => true, 'filter' => true],
     ['name' => 'username', 'label' => 'Usuario', 'sort' => true, 'filter' => true],
     ['name' => 'nombre', 'label' => 'Nombre', 'sort' => true, 'filter' => true],
     ['name' => 'apellido', 'label' => 'Apellido', 'sort' => true, 'filter' => true],
     ['name' => 'createdAt', 'label' => 'Fecha creación', 'sort' => 'fecha', 'filter' => true],
-    ['name' => 'status', 'label' => 'Status', 'sort' => 'status'],
+    ['name' => 'status', 'label' => 'Status', 'sort' => 'status']
 ])]
 
 class User extends UserBase implements UserInterface, PasswordAuthenticatedUserInterface {
@@ -71,8 +69,6 @@ class User extends UserBase implements UserInterface, PasswordAuthenticatedUserI
     #[ORM\Column(length: 180, unique: true)]
     private ?string $username = null;
 
-    #[ORM\Column]
-    private array $roles = [];
 
     /**
      * @var string The hashed password
@@ -83,20 +79,31 @@ class User extends UserBase implements UserInterface, PasswordAuthenticatedUserI
 
     private ?string $fullName;
 
-    #[FormKitLabel('tipos de token')]
+    #[FormkitLabel('tipos de token')]
     #[ORM\OneToMany(mappedBy: 'usuario', targetEntity: ApiToken::class)]
     private Collection $apiTokens;
 
     private ?array $accessTokenScopes = null;
 
-    #[ORM\ManyToMany(targetEntity: Permiso::class, mappedBy: 'usuarios')]
+    /**
+     * @var Collection<int, Role>
+     */
+    #[ORM\ManyToMany(targetEntity: Role::class)]
+    private Collection $roles;
+
+    /**
+     * @var Collection<int, Permiso>
+     */
+    #[ORM\ManyToMany(targetEntity: Permiso::class)]
     private Collection $permisos;
+
 
     public function __construct(string $userIdentifier = '', array $roles = []) {
 
         $this->username = $userIdentifier;
-        $this->roles = $roles;
+
         $this->apiTokens = new ArrayCollection();
+        $this->roles = new ArrayCollection();
         $this->permisos = new ArrayCollection();
     }
 
@@ -119,7 +126,7 @@ class User extends UserBase implements UserInterface, PasswordAuthenticatedUserI
      *
      * @see UserInterface
      */
-    #[FormKitExclude]
+    #[ExcludeAttribute]
     public function getUserIdentifier(): string {
         return (string) $this->username;
     }
@@ -127,24 +134,30 @@ class User extends UserBase implements UserInterface, PasswordAuthenticatedUserI
     /**
      * @see UserInterface
      */
+    /**
+     * @return Collection<int, Permiso>
+     */
     public function getRoles(): array {
-        if (null === $this->accessTokenScopes) {
-            // logged in via the full user mechanism
-            $roles = $this->roles;
-            $roles[] = 'ROLE_FULL_USER';
-        } else {
-            $roles = $this->accessTokenScopes;
-        }
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
-        return array_unique($roles);
+        return $this->permisos->toArray();
     }
+    // public function getRoles(): array {
+    //     if (null === $this->accessTokenScopes) {
+    //         // logged in via the full user mechanism
+    //         $roles = $this->roles;
+    //         $roles[] = 'ROLE_FULL_USER';
+    //     } else {
+    //         $roles = $this->accessTokenScopes;
+    //     }
+    //     // guarantee every user at least has ROLE_USER
+    //     $roles[] = 'ROLE_USER';
+    //     return array_unique($roles);
+    // }
 
-    public function setRoles(array $roles): static {
-        $this->roles = $roles;
+    // public function setRoles(array $roles): static {
+    //     $this->roles = $roles;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     /**
      * @see PasswordAuthenticatedUserInterface
@@ -221,6 +234,20 @@ class User extends UserBase implements UserInterface, PasswordAuthenticatedUserI
         $this->accessTokenScopes = $scopes;
     }
 
+    public function addRole(Role $role): static {
+        if (!$this->roles->contains($role)) {
+            $this->roles->add($role);
+        }
+
+        return $this;
+    }
+
+    public function removeRole(Role $role): static {
+        $this->roles->removeElement($role);
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, Permiso>
      */
@@ -231,17 +258,19 @@ class User extends UserBase implements UserInterface, PasswordAuthenticatedUserI
     public function addPermiso(Permiso $permiso): static {
         if (!$this->permisos->contains($permiso)) {
             $this->permisos->add($permiso);
-            $permiso->addUsuario($this);
         }
 
         return $this;
     }
 
     public function removePermiso(Permiso $permiso): static {
-        if ($this->permisos->removeElement($permiso)) {
-            $permiso->removeUsuario($this);
-        }
+        $this->permisos->removeElement($permiso);
 
         return $this;
+    }
+
+    public function getLabel() {
+        $temp = explode(' ', $this->apellido);
+        return $this->username . ': ' . $this->nombre . ' ' . $temp[0] ?? $this->apellido;
     }
 }

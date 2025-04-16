@@ -28,7 +28,7 @@ class Taxon extends NombreNotaStatusBaseSuperClass {
      * @var Collection<int, self>
      */
     #[ORM\ManyToMany(targetEntity: self::class)]
-    protected Collection $children;
+    protected ?Collection $children;
 
     public function __construct() {
         $this->children = new ArrayCollection();

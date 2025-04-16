@@ -10,6 +10,7 @@ api_platform:
         pagination:
             page_parameter_name: page
     graphql:
+        # introspection: false
         graphql_playground: false
         collection:
             pagination:

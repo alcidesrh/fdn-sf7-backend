@@ -2,11 +2,27 @@
 
 namespace App\FormKit;
 
-class FormBase {
+use App\Services\ReflectionForm;
 
-  public $excludeBase = ['createdAt', 'legacyId', 'updatedAt', 'label'];
+class FormBase extends ReflectionForm {
 
-  protected function schema(): array {
-    return [];
+  public $excludeBase = ['createdAt', 'legacyId', 'updatedAt', 'label', 'id'];
+
+  protected array $schema = [];
+
+  public function __construct(
+    protected string|null $entity = "",
+    public array $exclude = []
+  ) {
+    parent::__construct($entity, $exclude);
+  }
+
+  protected function getSchema(): array {
+
+    return $this->schema;
+  }
+  protected function setSchema($schema = []): void {
+
+    $this->schema = $schema;
   }
 }

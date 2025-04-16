@@ -3,9 +3,8 @@
 namespace App\Entity\Base;
 
 use App\Attribute\AttributeUtil;
-use App\Attribute\FormKitExclude;
+use App\Attribute\ExcludeAttribute;
 use Doctrine\ORM\Mapping as ORM;
-use ReflectionClass;
 
 #[ORM\MappedSuperclass]
 class Base {
@@ -14,9 +13,10 @@ class Base {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[FormKitExclude]
+    #[ExcludeAttribute]
     protected ?int $id = null;
 
+    #[ExcludeAttribute]
     protected ?string $label = null;
 
     public function getId(): ?int {

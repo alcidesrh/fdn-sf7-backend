@@ -36,7 +36,7 @@ class ExtraerDatosCommand extends Command {
 
     protected function execute(InputInterface $input, OutputInterface $output): int {
         try {
-            $this->estacionLocalidadPaisUsuarios();
+            $this->estacionLocalidadNacionUsuarios();
             $this->empresaBusPiloto();
             $this->ruta();
             return Command::SUCCESS;
@@ -47,16 +47,16 @@ class ExtraerDatosCommand extends Command {
     }
 
 
-    public function estacionLocalidadPaisUsuarios() {
+    public function estacionLocalidadNacionUsuarios() {
         if ($estaciones = $this->remoteDatabaseQueries->getEstaciones()) {
-            $pais_nombre = [];
+            $nacion_nombre = [];
             $dep_nombre = [];
             foreach ($estaciones as $key => $value) {
-                if (!\array_key_exists($value['pais_nombre'], $pais_nombre)) {
-                    $item2 = Factory::create(class_name: 'pais', data: $value, include: ['pais_nombre' => 'nombre'], exclude: ['nombre']); //(new Pais)->setNombre(\ucwords($value['nombre']));
-                    $pais_nombre[$value['pais_nombre']] = $item2;
+                if (!\array_key_exists($value['Nacion_nombre'], $nacion_nombre)) {
+                    $item2 = Factory::create(class_name: 'Nacion', data: $value, include: ['Nacion_nombre' => 'nombre'], exclude: ['nombre']); //(new Nacion)->setNombre(\ucwords($value['nombre']));
+                    $nacion_nombre[$value['Nacion_nombre']] = $item2;
                     $this->entityManagerInterface->persist($item2);
-                    $value['pais'] = $item2;
+                    $value['Nacion'] = $item2;
                 }
                 if (!\array_key_exists($value['dep_nombre'], $dep_nombre)) {
                     $item3 = Factory::create(class_name: 'localidad', data: $value, include: ['dep_nombre' => 'nombre'], exclude: ['nombre']);

@@ -9,7 +9,8 @@
 
 namespace App\Entity\Base;
 
-use App\Attribute\FormKitExclude;
+use ApiPlatform\Metadata\ApiProperty;
+use App\Attribute\ExcludeAttribute;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -21,12 +22,12 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @author Gediminas Morkevicius <gediminas.morkevicius@gmail.com>
  */
 trait TimestampableEntity {
-    #[FormKitExclude]
+    #[ExcludeAttribute]
     #[Gedmo\Timestampable(on: 'create')]
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     protected \DateTime $createdAt;
 
-    #[FormKitExclude]
+    #[ExcludeAttribute]
     #[Gedmo\Timestampable(on: 'update')]
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     protected \DateTime $updatedAt;

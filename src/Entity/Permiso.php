@@ -3,45 +3,95 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use App\FormKit\SchemaForm;
+use ApiPlatform\Metadata\GraphQl\DeleteMutation;
+use ApiPlatform\Metadata\GraphQl\Mutation;
+use ApiPlatform\Metadata\GraphQl\Query;
+use ApiPlatform\Metadata\GraphQl\QueryCollection;
+use App\Attribute\ColumnTableList;
+use App\Attribute\FormKitDataReference;
+use App\Attribute\PropertyOrder;
 use App\Entity\Base\NombreNotaStatusBase;
 use App\Repository\PermisoRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use RecursiveArrayIterator;
-use RecursiveIteratorIterator;
 
 #[ORM\Entity(repositoryClass: PermisoRepository::class)]
-#[ApiResource]
-#[SchemaForm("nombre", "link", "posicion", "status", 'parent', 'children')]
+#[ApiResource(
+    graphQlOperations: [
+        new Query(),
+        new Mutation(name: 'create'),
+        new Mutation(name: 'update'),
+        new DeleteMutation(name: 'delete'),
+        new QueryCollection(
+            paginationType: 'page',
+            filters: ['order.filter'],
+        )
+    ]
+)]
+// #[FormkitSchema("nombre", "link", "posicion", "status", 'parent', 'children')]
+// #[PropertyOrder('nombre', 'parent', 'children', 'link')]
+
+#[ColumnTableList(properties: [
+    'classes' => 'columns-wraper',
+    ['name' => 'id', 'class' => ' small-column'],
+    ['name' => 'nombre', 'class' => 'columns-wraper'],
+    ['name' => 'parents', 'label' => 'Padre'],
+    ['name' => 'children', 'label' => 'Hijos'],
+    ['name' => 'roles']
+])]
 class Permiso extends NombreNotaStatusBase {
 
-    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'hijos')]
-    public ?self $padre = null;
 
-    #[ORM\OneToMany(mappedBy: 'padre', targetEntity: self::class)]
-    private Collection $hijos;
+    // use StatusTrait;
 
+    /**
+     * @var Collection<int, Role>
+     */
+    #[ORM\ManyToMany(targetEntity: Role::class, inversedBy: 'permisos')]
+    private ?Collection $roles;
 
-    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'permisos')]
-    private Collection $usuarios;
+    /**
+     * @var Collection<int, self>
+     */
+    #[FormKitDataReference('$parents')]
+    #[ORM\ManyToMany(targetEntity: self::class, inversedBy: 'children')]
+    private ?Collection $parents;
+
+    /**
+     * @var Collection<int, self>
+     */
+    #[FormKitDataReference('$children')]
+    #[ORM\ManyToMany(targetEntity: self::class, mappedBy: 'parents')]
+    private ?Collection $children;
 
     public function __construct() {
-        $this->hijos = new ArrayCollection();
-        $this->usuarios = new ArrayCollection();
+        $this->roles = new ArrayCollection();
+        $this->parents = new ArrayCollection();
+        $this->children = new ArrayCollection();
     }
 
     public function getId(): ?int {
         return $this->id;
     }
 
-    public function getPadre(): ?self {
-        return $this->padre;
+    /**
+     * @return Collection<int, Role>
+     */
+    public function getRoles(): Collection {
+        return $this->roles;
     }
 
-    public function setPadre(?self $padre): static {
-        $this->padre = $padre;
+    public function addRole(Role $role): static {
+        if (!$this->roles->contains($role)) {
+            $this->roles->add($role);
+        }
+
+        return $this;
+    }
+
+    public function removeRole(Role $role): static {
+        $this->roles->removeElement($role);
 
         return $this;
     }
@@ -49,39 +99,43 @@ class Permiso extends NombreNotaStatusBase {
     /**
      * @return Collection<int, self>
      */
-    public function getHijos(): Collection {
-        return $this->hijos;
+    public function getParents(): Collection {
+        return $this->parents;
     }
 
-    public function addHijo(self $hijo): static {
-        if (!$this->hijos->contains($hijo)) {
-            $this->hijos->add($hijo);
-            $hijo->setPadre($this);
+    public function addParent(self $parent): static {
+        if (!$this->parents->contains($parent)) {
+            $this->parents->add($parent);
         }
 
         return $this;
     }
 
-    public function removeHijo(self $hijo): static {
-        if ($this->hijos->removeElement($hijo)) {
-            // set the owning side to null (unless already changed)
-            if ($hijo->getPadre() === $this) {
-                $hijo->setPadre(null);
-            }
-        }
+    public function removeParent(self $parent): static {
+        $this->parents->removeElement($parent);
 
         return $this;
     }
+
     /**
-     * @return Collection<int, User>
+     * @return Collection<int, self>
      */
-    public function getUsuarios(): Collection {
-        return $this->usuarios;
+    public function getChildren(): Collection {
+        return $this->children;
     }
 
-    public function addUsuario(User $usuario): static {
-        if (!$this->usuarios->contains($usuario)) {
-            $this->usuarios->add($usuario);
+    public function addChild(self $child): static {
+        if (!$this->children->contains($child)) {
+            $this->children->add($child);
+            $child->addParent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChild(self $child): static {
+        if ($this->children->removeElement($child)) {
+            $child->removeParent($this);
         }
 
         return $this;

@@ -2,12 +2,14 @@
 
 namespace App\ApiResource;
 
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GraphQl\Query;
 use App\DTO\MetadataDTO;
 use App\Resolver\ColumnsMetadataResolver;
 use App\Resolver\CreateFormResolver;
+use App\Security\ABAC;
 use DateTime;
 
 #[ApiResource(
@@ -26,7 +28,7 @@ use DateTime;
       read: false,
       output: MetadataDTO::class,
       args: [
-        'entity' => ['type' => 'String'],
+        'resource' => ['type' => 'String'],
       ]
     ),
     new Query(
@@ -35,21 +37,14 @@ use DateTime;
       read: false,
       output: MetadataDTO::class,
       args: [
-        'entity' => ['type' => 'String'],
+        'resource' => ['type' => 'String'],
       ]
     ),
   ]
 )]
 class MetadataResource {
 
-  public \DateTimeInterface $date;
-
-  public function __construct() {
-    $this->date = new DateTime();
-  }
-
-  #[ApiProperty(identifier: true)]
-  public function getDate(): string {
-    return $this->date->format('Ymdms');
+  public function __construct(private ABAC $casbin) {
+    $temp = $casbin->test();
   }
 }

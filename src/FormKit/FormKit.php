@@ -5,7 +5,7 @@ namespace App\FormKit;
 use ApiPlatform\Metadata\IriConverterInterface;
 use App\Attribute\AttributeUtil;
 use App\Attribute\FormkitLabel;
-use App\Attribute\FormKitDataReference;
+use App\Attribute\FormkitDataReference;
 use App\Attribute\FormKitType;
 use App\Attribute\FormkitSchema;
 use Doctrine\Common\Collections\ArrayCollection;

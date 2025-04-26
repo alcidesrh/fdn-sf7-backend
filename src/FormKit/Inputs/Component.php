@@ -8,23 +8,36 @@ final class Component extends FormGroups {
 
   use InputTrait;
 
-
   public function __construct($cmp, array|string $props = '') {
 
     parent::__construct([
       '$cmp' => $cmp,
-      'children' => []
     ], $props);
   }
 
   public static function createAccordion(array|string $props = ''): self {
 
-    return new self('AccordionPrimevue', self::setInput($props));
+    return new self(
+      'AccordionPrimevue',
+      self::setInput(
+        [
+          'label' => 'role',
+          'icon' => 'ph:tree-structure',
+          ...$props
+        ]
+      )
+    );
   }
 
   public static function createFieldset(array|string $props = ''): self {
 
-    return new self('FieldsetPrimevue', self::setInput($props));
+    return new self('FieldsetPrimevue', self::setInput([
+      // 'legend' => 'Menus relacionados',
+      'toggleable' => true,
+      'style' => 'float: left; min-width: 20em; max-width: 100%; overflow: scroll;',
+      // 'id' => 'menu_menus',
+      ...$props
+    ]));
   }
 
   public static function setInput($props) {

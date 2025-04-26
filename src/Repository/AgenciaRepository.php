@@ -7,14 +7,14 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Agencia>
+ * @extends CustomEntityRepository<Agencia>
  *
  * @method Agencia|null find($id, $lockMode = null, $lockVersion = null)
  * @method Agencia|null findOneBy(array $criteria, array $orderBy = null)
  * @method Agencia[]    findAll()
  * @method Agencia[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class AgenciaRepository extends ServiceEntityRepository {
+class AgenciaRepository extends CustomEntityRepository {
     public function __construct(ManagerRegistry $registry) {
         parent::__construct($registry, Agencia::class);
     }

@@ -64,27 +64,8 @@ class Reflection {
     }
   }
 
-  public function classAttribute($attribute) {
-    return $this->reflection->getAttributes($attribute);
-  }
-  static public function getExtractor() {
-    // $phpDocExtractor = new PhpDocExtractor();
-    $reflectionExtractor = new ReflectionExtractor();
-    // // list of PropertyListExtractorInterface (any iterable)
-    $listExtractors = [$reflectionExtractor];
-    // // list of PropertyTypeExtractorInterface (any iterable)
-    $typeExtractors = [$reflectionExtractor];
-    // // list of PropertyAccessExtractorInterface (any iterable)
-    $accessExtractors = [$reflectionExtractor];
-    // // list of PropertyInitializableExtractorInterface (any iterable)
-    $propertyInitializableExtractors = [$reflectionExtractor];
+  public function getExtractor() {
 
-    return new PropertyInfoExtractor(
-      $listExtractors,
-      $typeExtractors,
-      [],
-      $accessExtractors,
-      $propertyInitializableExtractors
-    );
+    return new PropertyInfoExtractor(typeExtractors: [new ReflectionExtractor()]);
   }
 }

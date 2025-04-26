@@ -7,14 +7,14 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Enclave>
+ * @extends CustomEntityRepository<Enclave>
  *
  * @method Enclave|null find($id, $lockMode = null, $lockVersion = null)
  * @method Enclave|null findOneBy(array $criteria, array $orderBy = null)
  * @method Enclave[]    findAll()
  * @method Enclave[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class EnclaveRepository extends ServiceEntityRepository {
+class EnclaveRepository extends CustomEntityRepository {
     public function __construct(ManagerRegistry $registry) {
         parent::__construct($registry, Enclave::class);
     }

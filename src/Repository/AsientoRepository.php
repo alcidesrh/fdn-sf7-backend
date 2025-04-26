@@ -7,14 +7,14 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Asiento>
+ * @extends CustomEntityRepository<Asiento>
  *
  * @method Asiento|null find($id, $lockMode = null, $lockVersion = null)
  * @method Asiento|null findOneBy(array $criteria, array $orderBy = null)
  * @method Asiento[]    findAll()
  * @method Asiento[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class AsientoRepository extends ServiceEntityRepository {
+class AsientoRepository extends CustomEntityRepository {
     public function __construct(ManagerRegistry $registry) {
         parent::__construct($registry, Asiento::class);
     }

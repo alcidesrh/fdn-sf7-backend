@@ -7,7 +7,7 @@ use ApiPlatform\Metadata\GraphQl\DeleteMutation;
 use ApiPlatform\Metadata\GraphQl\Mutation;
 use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\GraphQl\QueryCollection;
-use App\Attribute\FormKitDataReference;
+use App\Attribute\FormkitDataReference;
 use App\Entity\Base\Base;
 use App\Repository\RoleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -37,21 +37,21 @@ class Role extends Base {
     /**
      * @var Collection<int, self>
      */
-    #[FormKitDataReference('$parents')]
+    #[FormkitDataReference('$parents')]
     #[ORM\ManyToMany(targetEntity: self::class, inversedBy: 'children')]
     private ?Collection $parents;
 
     /**
      * @var Collection<int, self>
      */
-    #[FormKitDataReference('$children')]
+    #[FormkitDataReference('$children')]
     #[ORM\ManyToMany(targetEntity: self::class, mappedBy: 'parents')]
     private ?Collection $children;
 
     /**
      * @var Collection<int, Permiso>
      */
-    #[FormKitDataReference('$permisos')]
+    #[FormkitDataReference('$permisos')]
     #[ORM\ManyToMany(targetEntity: Permiso::class, mappedBy: 'roles')]
     private ?Collection $permisos;
 

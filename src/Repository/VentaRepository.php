@@ -7,14 +7,14 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Venta>
+ * @extends CustomEntityRepository<Venta>
  *
  * @method Venta|null find($id, $lockMode = null, $lockVersion = null)
  * @method Venta|null findOneBy(array $criteria, array $orderBy = null)
  * @method Venta[]    findAll()
  * @method Venta[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class VentaRepository extends ServiceEntityRepository {
+class VentaRepository extends CustomEntityRepository {
     public function __construct(ManagerRegistry $registry) {
         parent::__construct($registry, Venta::class);
     }

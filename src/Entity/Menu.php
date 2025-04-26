@@ -7,14 +7,10 @@ use ApiPlatform\Metadata\GraphQl\DeleteMutation;
 use ApiPlatform\Metadata\GraphQl\Mutation;
 use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\GraphQl\QueryCollection;
-use App\Attribute\AttributeUtil;
 use App\Attribute\ColumnTableList;
-use App\Attribute\ExcludeAttribute;
 use App\Attribute\PropertyOrder;
-use App\Attribute\FormKitDataReference;
+use App\Attribute\FormkitDataReference;
 use App\Attribute\FormkitLabel;
-use App\Attribute\FormkitSchema;
-use App\Attribute\FormKitType;
 use App\Entity\Base\Base;
 use App\Entity\Base\Traits\StatusTrait;
 use App\Repository\MenuRepository;
@@ -33,7 +29,7 @@ use Doctrine\ORM\Mapping as ORM;
         new QueryCollection(
             paginationType: 'page',
             filters: ['order.filter'],
-        )
+        ),
     ]
 )]
 
@@ -82,7 +78,7 @@ class Menu extends Base {
     #[ORM\ManyToMany(targetEntity: Permiso::class)]
     private Collection $permisos;
 
-    #[FormKitDataReference('$parent')]
+    #[FormkitDataReference('$parent')]
     #[FormkitLabel('Padre')]
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'children')]
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
@@ -92,7 +88,7 @@ class Menu extends Base {
      * @var Collection<int, self>
      */
     #[FormkitLabel('hijos')]
-    #[FormKitDataReference('$children')]
+    #[FormkitDataReference('$children')]
     #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'parent')]
     private ?Collection $children;
 
@@ -171,21 +167,29 @@ class Menu extends Base {
 
     public function getLabel() {
 
-        $class = \get_class($this);
-        $info = AttributeUtil::getExtractor();
-        $properties = $info->getProperties($class);
-        if (!empty(\array_intersect($properties, ['nombre', 'name']))) {
+        // $class = \get_class($this);
+        // $info = AttributeUtil::getExtractor();
+        // $properties = $info->getProperties($class);
+        // if (!empty(\array_intersect($properties, ['nombre', 'name']))) {
+        try {
+            return $this->getNombre() ?? \get_class($this);
+        } catch (\Throwable $th) {
             try {
-                return $this->getNombre();
+                return $this->getName();
             } catch (\Throwable $th) {
                 try {
-                    return $this->getName();
+                    return $this->getId();
                 } catch (\Throwable $th) {
-                    throw $th;
+                    try {
+                        return \get_class($this);
+                    } catch (\Throwable $th) {
+                        throw $th;
+                    }
                 }
             }
         }
-        return $this->getId();
+        // }
+        // return $this->getId();
     }
     public function __toString() {
 

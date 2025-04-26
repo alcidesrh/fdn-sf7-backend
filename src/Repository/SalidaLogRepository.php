@@ -7,14 +7,14 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<SalidaLog>
+ * @extends CustomEntityRepository<SalidaLog>
  *
  * @method SalidaLog|null find($id, $lockMode = null, $lockVersion = null)
  * @method SalidaLog|null findOneBy(array $criteria, array $orderBy = null)
  * @method SalidaLog[]    findAll()
  * @method SalidaLog[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class SalidaLogRepository extends ServiceEntityRepository {
+class SalidaLogRepository extends CustomEntityRepository {
     public function __construct(ManagerRegistry $registry) {
         parent::__construct($registry, SalidaLog::class);
     }

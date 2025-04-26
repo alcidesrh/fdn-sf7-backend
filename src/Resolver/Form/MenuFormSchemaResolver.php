@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Resolver;
+namespace App\Resolver\Form;
 
 use ApiPlatform\GraphQl\Resolver\QueryItemResolverInterface;
 use ApiPlatform\Metadata\IriConverterInterface;
@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 use function Symfony\Component\String\u;
 
-final class CreateFormResolver implements QueryItemResolverInterface {
+final class MenuFormSchemaResolver implements QueryItemResolverInterface {
 
   public function __construct(private ABAC $casbin, private Schema $schema) {
   }

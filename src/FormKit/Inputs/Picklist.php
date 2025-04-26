@@ -18,6 +18,14 @@ final class Picklist extends FieldsInput {
       'name' => self::TYPE,
       'id' => self::TYPE,
       ...self::PROPS
-    ], $props);
+    ], [
+      'name' => "picklist",
+      'icon' => 'material-symbols:person-off-outline',
+      'options' => '$options',
+      'allowItems' => 'allowItems',
+      'labelClass' => 'picklist-labelClass',
+      'label' => false,
+      ...$props
+    ]);
   }
 }

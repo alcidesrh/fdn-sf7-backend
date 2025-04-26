@@ -7,9 +7,9 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Menu>
+ * @extends CustomEntityRepository<Menu>
  */
-class MenuRepository extends ServiceEntityRepository {
+class MenuRepository extends CustomEntityRepository {
     public function __construct(ManagerRegistry $registry) {
         parent::__construct($registry, Menu::class);
     }

@@ -8,7 +8,7 @@ use ApiPlatform\Metadata\GraphQl\Mutation;
 use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\GraphQl\QueryCollection;
 use App\Attribute\ColumnTableList;
-use App\Attribute\FormKitDataReference;
+use App\Attribute\FormkitDataReference;
 use App\Attribute\PropertyOrder;
 use App\Entity\Base\NombreNotaStatusBase;
 use App\Repository\PermisoRepository;
@@ -54,14 +54,14 @@ class Permiso extends NombreNotaStatusBase {
     /**
      * @var Collection<int, self>
      */
-    #[FormKitDataReference('$parents')]
+    #[FormkitDataReference('$parents')]
     #[ORM\ManyToMany(targetEntity: self::class, inversedBy: 'children')]
     private ?Collection $parents;
 
     /**
      * @var Collection<int, self>
      */
-    #[FormKitDataReference('$children')]
+    #[FormkitDataReference('$children')]
     #[ORM\ManyToMany(targetEntity: self::class, mappedBy: 'parents')]
     private ?Collection $children;
 

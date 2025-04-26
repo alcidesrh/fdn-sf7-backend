@@ -2,7 +2,7 @@
 
 namespace App\Entity\Base\Traits;
 
-use App\Attribute\FormKitDataReference;
+use App\Attribute\FormkitDataReference;
 use App\Entity\Localidad;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -23,7 +23,7 @@ trait ContactoTrait {
   #[ORM\Column(length: 255, nullable: true)]
   protected ?string $direccion = null;
 
-  #[FormKitDataReference('$localidades')]
+  #[FormkitDataReference('$localidades')]
   #[ORM\ManyToOne]
   protected ?Localidad $localidad = null;
 

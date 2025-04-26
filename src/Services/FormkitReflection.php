@@ -10,29 +10,30 @@ use App\FormKit\Inputs\Number;
 use App\FormKit\Inputs\Picklist;
 use App\FormKit\Inputs\Select;
 use App\FormKit\Inputs\Text;
-use App\Services\ReflectionTrait;
 use Doctrine\ORM\EntityManagerInterface;
+use ReflectionClass;
 
 class FormkitReflection extends Collection {
 
-  use ReflectionTrait;
+  private ReflectionClass $reflection;
+  private string $entityPath;
 
-  protected ?EntityManagerInterface $entityManager;
-  protected ?IriConverterInterface $iriConverter;
   private static array $exclude = [];
 
-  public function __construct($className, ?EntityManagerInterface $entityManager, ?IriConverterInterface $iriConverter,) {
+  public function __construct(private EntityManagerInterface $entityManager, private IriConverterInterface $iriConverter, private Collection $properties) {
 
-    // parent::__construct();
+    parent::__construct();
 
     $this->entityManager = $entityManager;
     $this->iriConverter = $iriConverter;
-    $this->initReflectionTrait($className);
+    $this->properties = new Collection();
   }
 
 
 
-  static public function reflectionField($field, $entity = false) {
+
+
+  public function reflectionField($field, $entity = false) {
 
     if ($entity) {
       self::setEntityPath($entity);
@@ -40,7 +41,7 @@ class FormkitReflection extends Collection {
 
     $info = Reflection::getExtractor();
 
-    if (!$typeInfo = $info->getTypes(self::$entityPath, $field)[0] ?? null) {
+    if (!$typeInfo = $info->getTypes($this->entityPath, $field)[0] ?? null) {
       return false;
     }
     if ($collectionValueTypes = $typeInfo->getCollectionValueTypes()) {
@@ -49,12 +50,12 @@ class FormkitReflection extends Collection {
       $class = $typeInfo?->getClassName();
     }
 
-    $property = self::$reflection->getProperty($field);
+    $property = $this->reflection->getProperty($field);
 
     if ($type = $property->getAttributes(FormkitSchema::class)[0] ?? null) {
       $type = $type->newInstance()->data;
     } else {
-      $type = self::$reflection->getProperty($field)->getType()->getName();
+      $type = $this->reflection->getProperty($field)->getType()->getName();
     }
 
     $input = match ($type) {
@@ -73,8 +74,7 @@ class FormkitReflection extends Collection {
     if (!$typeInfo->isNullable()) {
       $input->validation();
     }
-
-    if (\in_array($input::class, ['Select', 'Multiselect'])) {
+    if (\in_array($input::class, [Select::class, MultiSelect::class])) {
 
       if (\enum_exists($class)) {
 
@@ -94,5 +94,32 @@ class FormkitReflection extends Collection {
     }
 
     return $input;
+  }
+
+  private function setProperties() {
+
+    $this->properties = new Collection($this->reflection->getProperties());
+
+    if ($attrsExclude = $this->reflection->getAttributes(ExcludeAttribute::class)) {
+      $exclude = \array_merge($this->exclude, $attrsExclude[0]->newInstance()->fields);
+    }
+
+    foreach ($this->reflection->getProperties() as $value) {
+      if ($value->getAttributes(ExcludeAttribute::class)) {
+        $exclude[] = $value->getName();
+      }
+    }
+
+    if (!empty($exclude)) {
+
+      $this->properties = $this->properties->filter(fn(ReflectionProperty $reflectionProperty) => !in_array($reflectionProperty->getName(), $this->exclude));
+    }
+
+    if ($order = $this->reflection->getAttributes(PropertyOrder::class)) {
+      $keys = $this->properties->getKeys();
+      $order = $order[0]->newInstance()->fields;
+      $keys = [...\array_intersect($order, $keys), ...\array_diff($keys, $order ?? [])];
+      $this->properties = new Collection(\array_map(fn($key) => $this->properties->get($key), $keys));
+    }
   }
 }

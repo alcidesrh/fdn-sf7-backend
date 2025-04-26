@@ -22,15 +22,15 @@ use DateTime;
   ],
 
   graphQlOperations: [
-    new Query(
-      name: 'get',
-      resolver: CreateFormResolver::class,
-      read: false,
-      output: MetadataDTO::class,
-      args: [
-        'resource' => ['type' => 'String'],
-      ]
-    ),
+    // new Query(
+    //   name: 'get',
+    //   resolver: CreateFormResolver::class,
+    //   read: false,
+    //   output: MetadataDTO::class,
+    //   args: [
+    //     'resource' => ['type' => 'String'],
+    //   ]
+    // ),
     new Query(
       name: 'columns',
       resolver: ColumnsMetadataResolver::class,

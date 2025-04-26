@@ -11,7 +11,7 @@ use ApiPlatform\Metadata\GraphQl\Mutation;
 use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\GraphQl\QueryCollection;
 use App\Attribute\ColumnTableList;
-use App\Attribute\FormKitDataReference;
+use App\Attribute\FormkitDataReference;
 use App\Attribute\FormkitLabel;
 use App\Entity\Base\Base;
 use App\Filter\OrFilter;
@@ -49,7 +49,7 @@ class Localidad extends Base {
     private ?string $nombre = null;
 
     #[FormkitLabel('pais')]
-    #[FormKitDataReference('$naciones')]
+    #[FormkitDataReference('$naciones')]
     #[ORM\ManyToOne]
     private ?Nacion $nacion = null;
 

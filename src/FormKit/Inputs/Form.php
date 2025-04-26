@@ -19,13 +19,21 @@ final class Form extends FormGroups {
 
   public function __construct(array|string $props = '') {
 
-    parent::__construct([
-      '$formkit' => self::TYPE,
-      'name' => self::TYPE,
-      'id' => self::TYPE,
-      'actions' => false,
-      'modelValue' => '$item'
-    ], $props);
+    $props['name'] = $props['id'] =
+      parent::__construct([
+        '$formkit' => self::TYPE,
+        'name' => self::TYPE,
+        'id' => self::TYPE,
+        'actions' => false,
+        'modelValue' => '$item',
+        'ref' => '$form'
+      ], [
+        'name' => $props['name'] ?? $props['id'] ?? 'form',
+        'id' => $props['id'] ?? $props['name'] ?? 'form',
+        'onSubmit' => '$submit',
+        'onNode' => '$onNode',
+        ...$props,
+      ]);
   }
 
 

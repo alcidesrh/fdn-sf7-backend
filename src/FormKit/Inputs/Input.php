@@ -2,13 +2,11 @@
 
 namespace App\FormKit\Inputs;
 
+use App\Entity\Menu;
 use App\Services\Collection;
 use App\Services\FormkitReflection;
-use function Symfony\Component\String\u;
 
 class Input extends Collection {
-
-  public static $inputBase = ['name' => '', 'label' => '', 'validation' => false];
 
   public Collection $children;
 
@@ -79,24 +77,6 @@ class Input extends Collection {
     return $this;
   }
 
-  public function children(mixed $data): self {
-
-    if (!is_array($data)) {
-      $data = [$data];
-    }
-    foreach ($data as $value) {
-      if (\is_a($value, Input::class)) {
-        $this->addChildren($value);
-      } else if (is_string($value)) {
-        $this->addChildren(FormkitReflection::reflectionField($value));
-      } else if (is_array($value)) {
-        $this->_children_($value);
-      }
-    }
-
-    return $this;
-  }
-
   public function props(array|string $args = [], ...$params): self {
 
     $props = $this->get('props');
@@ -158,9 +138,19 @@ class Input extends Collection {
     return $this->toArray();
   }
 
-  public function addChildren(Input $input): self {
-    $input->parent = $this;
-    $this->children->add($input);
+  public function addChildren(Input|array $input): self {
+
+    // $a = FormkitReflection::$entityManager2;
+    // $q = $a->getRepository(Menu::class)->find(3);
+    if (!is_array($input)) {
+      $input = [$input];
+    }
+    foreach ($input as $value) {
+      if (\is_a($value, Input::class)) {
+        $value->parent = $this;
+        $this->children->add($value);
+      }
+    }
     return $this;
   }
 
@@ -168,5 +158,32 @@ class Input extends Collection {
   public function validation($validation = 'required'): self {
     $this->set('validation', $validation);
     return $this;
+  }
+
+  public function inputFactory($data = [], ?Input $parent = null) {
+
+    $inputs = [];
+    if (!is_array($data)) {
+      $data = [$data];
+    }
+    foreach ($data as $key => $value) {
+      if (\is_array($value)) {
+        $group = Group::create();
+        $inputs[] = $group;
+        $this->inputFactory($value, $group);
+      } else {
+        if (is_string($value)) {
+          $value = $this->reflectionField($value);
+        }
+        if (\is_a($value, Input::class)) {
+          if ($parent) {
+            $parent->addChildren($value);
+          } else {
+            $inputs[] = $value;
+          }
+        }
+      }
+    }
+    return $inputs;
   }
 }

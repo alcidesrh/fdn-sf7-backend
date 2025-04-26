@@ -7,14 +7,14 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<BoletoLog>
+ * @extends CustomEntityRepository<BoletoLog>
  *
  * @method BoletoLog|null find($id, $lockMode = null, $lockVersion = null)
  * @method BoletoLog|null findOneBy(array $criteria, array $orderBy = null)
  * @method BoletoLog[]    findAll()
  * @method BoletoLog[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class BoletoLogRepository extends ServiceEntityRepository {
+class BoletoLogRepository extends CustomEntityRepository {
     public function __construct(ManagerRegistry $registry) {
         parent::__construct($registry, BoletoLog::class);
     }

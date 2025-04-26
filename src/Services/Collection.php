@@ -9,7 +9,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class Collection extends ArrayCollection {
 
-  public function __construct(array $elements = []) {
+  public function __construct(array|string $elements = []) {
+
+    if (!\is_array($elements)) {
+      $elements = [$elements];
+    }
 
     parent::__construct($elements);
   }
@@ -27,12 +31,5 @@ class Collection extends ArrayCollection {
 
   protected function createFrom(array $elements) {
     return new self($elements);
-  }
-
-  public function getSchema(): array {
-    // $return = array_map(fn(Input $v) => $v(), $this->getValues());
-    // $a = get_class($return[0]);
-    // $this->createFrom($return);
-    return $this->map(fn(Input $v) => $v())->toArray();
   }
 }

@@ -7,7 +7,7 @@ use ApiPlatform\Metadata\GraphQl\DeleteMutation;
 use ApiPlatform\Metadata\GraphQl\Mutation;
 use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\GraphQl\QueryCollection;
-use App\Attribute\ColumnTableList;
+use App\Attribute\CollectionMetadataAttribute;
 use App\Attribute\PropertyOrder;
 use App\Attribute\FormkitDataReference;
 use App\Attribute\FormkitLabel;
@@ -33,18 +33,21 @@ use Doctrine\ORM\Mapping as ORM;
     ]
 )]
 
-// #[FormkitSchema("nombre", "link", "posicion", "status", 'parent', 'children')]
+
 #[PropertyOrder('nombre', 'parent', 'children', 'link')]
-#[ColumnTableList(properties: [
-    'classes' => 'columns-wraper',
-    ['name' => 'id', 'class' => ' small-column'],
-    ['name' => 'nombre', 'class' => 'columns-wraper'],
-    ['name' => 'posicion'],
-    ['name' => 'tipo'],
-    ['name' => 'status'],
-    ['name' => 'parent', 'label' => 'Padre'],
-    ['name' => 'children', 'label' => 'Hijos'],
-])]
+#[CollectionMetadataAttribute(
+    class: 'columns-wraper',
+    props: [
+        ['name' => 'id', 'class' => ' small-column'],
+        ['name' => 'icon', 'class' => ' small-column'],
+        ['name' => 'nombre', 'class' => 'columns-wraper'],
+        ['name' => 'posicion'],
+        ['name' => 'tipo'],
+        ['name' => 'status'],
+        ['name' => 'parent', 'label' => 'Padre'],
+        ['name' => 'children', 'label' => 'Hijos'],
+    ]
+)]
 class Menu extends Base {
     use StatusTrait;
 
@@ -109,6 +112,10 @@ class Menu extends Base {
     #[ORM\ManyToMany(targetEntity: User::class)]
     private Collection $denyUsers;
 
+    #[ORM\ManyToOne]
+    private ?Action $action = null;
+
+
     public function __construct() {
         $this->children = new ArrayCollection();
         $this->roles = new ArrayCollection();
@@ -166,11 +173,6 @@ class Menu extends Base {
     }
 
     public function getLabel() {
-
-        // $class = \get_class($this);
-        // $info = AttributeUtil::getExtractor();
-        // $properties = $info->getProperties($class);
-        // if (!empty(\array_intersect($properties, ['nombre', 'name']))) {
         try {
             return $this->getNombre() ?? \get_class($this);
         } catch (\Throwable $th) {
@@ -188,11 +190,9 @@ class Menu extends Base {
                 }
             }
         }
-        // }
-        // return $this->getId();
     }
-    public function __toString() {
 
+    public function __toString() {
         return $this->getLabel();
     }
 
@@ -323,6 +323,16 @@ class Menu extends Base {
 
     public function removeDenyUser(User $denyUser): static {
         $this->denyUsers->removeElement($denyUser);
+
+        return $this;
+    }
+
+    public function getAction(): ?Action {
+        return $this->action;
+    }
+
+    public function setAction(?Action $action): static {
+        $this->action = $action;
 
         return $this;
     }

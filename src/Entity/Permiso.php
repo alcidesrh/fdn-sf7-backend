@@ -7,7 +7,7 @@ use ApiPlatform\Metadata\GraphQl\DeleteMutation;
 use ApiPlatform\Metadata\GraphQl\Mutation;
 use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\GraphQl\QueryCollection;
-use App\Attribute\ColumnTableList;
+use App\Attribute\CollectionMetadataAttribute;
 use App\Attribute\FormkitDataReference;
 use App\Attribute\PropertyOrder;
 use App\Entity\Base\NombreNotaStatusBase;
@@ -29,17 +29,19 @@ use Doctrine\ORM\Mapping as ORM;
         )
     ]
 )]
-// #[FormkitSchema("nombre", "link", "posicion", "status", 'parent', 'children')]
+// #[FormMetadataAttribute("nombre", "link", "posicion", "status", 'parent', 'children')]
 // #[PropertyOrder('nombre', 'parent', 'children', 'link')]
 
-#[ColumnTableList(properties: [
-    'classes' => 'columns-wraper',
-    ['name' => 'id', 'class' => ' small-column'],
-    ['name' => 'nombre', 'class' => 'columns-wraper'],
-    ['name' => 'parents', 'label' => 'Padre'],
-    ['name' => 'children', 'label' => 'Hijos'],
-    ['name' => 'roles']
-])]
+#[CollectionMetadataAttribute(
+    class: 'columns-wraper',
+    props: [
+        ['name' => 'id', 'class' => ' small-column'],
+        ['name' => 'nombre', 'class' => 'columns-wraper'],
+        ['name' => 'parents', 'label' => 'Padre'],
+        ['name' => 'children', 'label' => 'Hijos'],
+        ['name' => 'roles']
+    ]
+)]
 class Permiso extends NombreNotaStatusBase {
 
 

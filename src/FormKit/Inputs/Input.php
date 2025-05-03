@@ -2,9 +2,7 @@
 
 namespace App\FormKit\Inputs;
 
-use App\Entity\Menu;
 use App\Services\Collection;
-use App\Services\FormkitReflection;
 
 class Input extends Collection {
 
@@ -17,57 +15,6 @@ class Input extends Collection {
   public function __construct($elements) {
     $this->children = new Collection();
     parent::__construct($elements);
-  }
-
-  public function group($arg = []): self {
-    $input = (new self(['$formkit' => 'group']));
-    return $this->common($input, $arg);
-  }
-
-  public function html($self = true, $args = []): Input {
-    $input = new Html($args);
-    $this->addChildren($input);
-    return $self ? $input : $this;
-  }
-
-  public function fieldset($self = true, $args = []): Input {
-    $input = Component::createFieldset($args);
-    $this->addChildren($input);
-    return $self ? $input : $this;
-  }
-
-  public function picklist($self = true, $args = []): Input {
-    $input = Picklist::create($args);
-    $this->addChildren($input);
-    return $self ? $input : $this;
-  }
-
-
-  public function root($input = false) {
-    $input = $input ?: $this;
-    if ($input->parent) {
-      return $this->root($input);
-    } else {
-      return $this;
-    }
-  }
-
-
-  public function accordion($self = true, $args = []): Input {
-    $input = Component::createAccordion($args);
-    $this->addChildren($input);
-    return $self ? $input : $this;
-  }
-
-  public function ascend($up = 1): self {
-    $input = $this;
-    for ($i = 0; $i < $up; $i++) {
-      if ($input::class == Form::class) {
-        break;
-      }
-      $input = $input->parent;
-    }
-    return $input;
   }
   /**
    * {@inheritDoc}
@@ -126,22 +73,7 @@ class Input extends Collection {
     return $this;
   }
 
-  public function __invoke() {
-
-    if ($this->children->count()) {
-      $childs = [];
-      foreach ($this->children as $key => $value) {
-        $childs[] = $value();
-      }
-      $this->set('children', $childs);
-    }
-    return $this->toArray();
-  }
-
   public function addChildren(Input|array $input): self {
-
-    // $a = FormkitReflection::$entityManager2;
-    // $q = $a->getRepository(Menu::class)->find(3);
     if (!is_array($input)) {
       $input = [$input];
     }
@@ -154,36 +86,20 @@ class Input extends Collection {
     return $this;
   }
 
-
   public function validation($validation = 'required'): self {
     $this->set('validation', $validation);
     return $this;
   }
 
-  public function inputFactory($data = [], ?Input $parent = null) {
+  public function __invoke() {
 
-    $inputs = [];
-    if (!is_array($data)) {
-      $data = [$data];
-    }
-    foreach ($data as $key => $value) {
-      if (\is_array($value)) {
-        $group = Group::create();
-        $inputs[] = $group;
-        $this->inputFactory($value, $group);
-      } else {
-        if (is_string($value)) {
-          $value = $this->reflectionField($value);
-        }
-        if (\is_a($value, Input::class)) {
-          if ($parent) {
-            $parent->addChildren($value);
-          } else {
-            $inputs[] = $value;
-          }
-        }
+    if ($this->children->count()) {
+      $childs = [];
+      foreach ($this->children as $key => $value) {
+        $childs[] = $value();
       }
+      $this->set('children', $childs);
     }
-    return $inputs;
+    return $this->toArray();
   }
 }

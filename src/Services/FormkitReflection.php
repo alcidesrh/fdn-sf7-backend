@@ -4,7 +4,7 @@ namespace App\Services;
 
 use ApiPlatform\Metadata\IriConverterInterface;
 use App\Attribute\FormkitLabel;
-use App\Attribute\FormkitSchema;
+use App\Attribute\FormMetadataAttribute;
 use App\FormKit\Inputs\MultiSelect;
 use App\FormKit\Inputs\Number;
 use App\FormKit\Inputs\Picklist;
@@ -52,7 +52,7 @@ class FormkitReflection extends Collection {
 
     $property = $this->reflection->getProperty($field);
 
-    if ($type = $property->getAttributes(FormkitSchema::class)[0] ?? null) {
+    if ($type = $property->getAttributes(FormMetadataAttribute::class)[0] ?? null) {
       $type = $type->newInstance()->data;
     } else {
       $type = $this->reflection->getProperty($field)->getType()->getName();
@@ -83,7 +83,7 @@ class FormkitReflection extends Collection {
           $class::cases()
         ));
       } else {
-        if ($selfRelation = $property->getAttributes(FormkitSchema::class)[0] ?? null) {
+        if ($selfRelation = $property->getAttributes(FormMetadataAttribute::class)[0] ?? null) {
           $schema  = $selfRelation->newInstance()->data;
         } else {
           $options = (new Collection($this->entityManager->getRepository($class)->findAll()))

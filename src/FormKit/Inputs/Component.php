@@ -19,13 +19,7 @@ final class Component extends FormGroups {
 
     return new self(
       'AccordionPrimevue',
-      self::setInput(
-        [
-          'label' => 'role',
-          'icon' => 'ph:tree-structure',
-          ...$props
-        ]
-      )
+      self::setInput($props)
     );
   }
 

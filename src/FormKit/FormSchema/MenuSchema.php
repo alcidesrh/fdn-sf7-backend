@@ -1,34 +1,15 @@
 <?php
 
-namespace App\ApiResource;
+namespace App\FormKit\FormSchema;
 
-use ApiPlatform\GraphQl\Resolver\QueryItemResolverInterface;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\GraphQl\Query;
-use App\FormKit\EntitySchemaBase;
-use App\FormKit\SchemaInterface;
-
-#[ApiResource(
-
-  graphQlOperations: [
-    new Query(
-      name: 'get',
-      resolver: MenuSchema::class,
-      output: SchemaInterface::class,
-      read: false,
-      args: []
-    )
-  ]
-)]
-class MenuSchema extends EntitySchemaBase implements QueryItemResolverInterface {
-
+class MenuSchema {
   public $entitySchema = [
     'form' => [
       'props' => ['name' => 'menuForm'],
       'children' => [
         [
           'div' => [
-            'props' => ['class' => '$twoColumnClass'],
+            'props' => ['class' => 'form-flex'],
             'children' => [
               [
                 'fieldset' => [
@@ -77,11 +58,11 @@ class MenuSchema extends EntitySchemaBase implements QueryItemResolverInterface 
                         'children' => [
                           [
                             'accordion' => [
+                              'props' => ['label' => 'Roles', 'icon' => 'icon-park-twotone:people-safe'],
                               'children' => [[
                                 'picklist' => [
                                   'props' => [
                                     'name' => "roles",
-                                    'icon' => 'material-symbols:person-off-outline',
                                     'options' => '$roles',
                                     'allowItems' => '$allowRoles',
                                     'field' => 'roles'
@@ -99,7 +80,6 @@ class MenuSchema extends EntitySchemaBase implements QueryItemResolverInterface 
                                     'name' => "allowUsers",
                                     'options' => '$users',
                                     'allowItems' => '$allowUsers',
-                                    'icon' => 'icon-park-outline:every-user',
                                     'field' => 'allowUsers',
                                   ]
                                 ]
@@ -148,11 +128,4 @@ class MenuSchema extends EntitySchemaBase implements QueryItemResolverInterface 
       ]
     ]
   ];
-
-
-  public function __invoke(?object $item, array $context): object {
-
-
-    return $this->entitySchema getShema('Menu');
-  }
 }

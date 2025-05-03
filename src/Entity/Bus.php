@@ -10,7 +10,7 @@ use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\GraphQl\QueryCollection;
-use App\Attribute\ColumnTableList;
+use App\Attribute\CollectionMetadataAttribute;
 use App\Entity\Base\TimeLegacyStatusBase;
 use App\Entity\Base\Traits\StatusTrait;
 use App\Filter\OrFilter;
@@ -39,7 +39,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ApiFilter(OrderFilter::class, alias: 'bus.order.filter', properties: ['id', 'marca', 'placa', 'createdAt', 'status'], arguments: ['orderParameterName' => 'order'])]
 
-#[ColumnTableList(properties: [
+#[CollectionMetadataAttribute(properties: [
     ['name' => 'id', 'label' => 'Id', 'sort' => true, 'filter' => true],
     ['name' => 'marca', 'label' => 'Marca', 'sort' => true, 'filter' => true],
     ['name' => 'createdAt', 'label' => 'Fecha creación', 'sort' => 'fecha', 'filter' => true],

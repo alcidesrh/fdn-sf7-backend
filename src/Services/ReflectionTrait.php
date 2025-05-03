@@ -2,17 +2,21 @@
 
 namespace App\Services;
 
+use ApiPlatform\Metadata\IriConverterInterface;
 use App\Attribute\ExcludeAttribute;
 use App\Attribute\FormkitDataReference;
 use App\Attribute\FormkitLabel;
-use App\Attribute\FormkitSchema;
+use App\Attribute\FormMetadataAttribute;
 use App\Attribute\PropertyOrder;
+use App\FormKit\Inputs\Checkbox;
+use App\FormKit\Inputs\DateInput;
 use App\FormKit\Inputs\MultiSelect;
 use App\FormKit\Inputs\Number;
 use App\FormKit\Inputs\Picklist;
 use App\FormKit\Inputs\Select;
 use App\FormKit\Inputs\Text;
 use App\Services\Collection;
+use DateTime;
 use Doctrine\Common\Collections\Collection as CollectionsCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use ReflectionClass;
@@ -22,33 +26,38 @@ use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
 
 trait ReflectionTrait {
 
-  protected ?ReflectionClass $reflection;
-  protected ?Collection $properties;
-  protected ?string $entity;
+  protected ReflectionClass $reflection;
+  protected Collection $properties;
+  // protected string $entity;
   protected EntityManagerInterface $entityManager;
+  protected IriConverterInterface $iriConverter;
   private array $exclude = [];
-
-
-  static public function entityPath($entity) {
-    return "App\Entity\\" . $entity;
+  public string $entityName = "";
+  public string $entity = '' {
+    set(string $entity) {
+      $this->entityName = $entity;
+      $this->entity = "App\Entity\\" . $entity;
+    }
   }
+
+
+  // static public function entityPath($entity) {
+  //   return "App\Entity\\" . $entity;
+  // }
 
   public function reflectionField($field) {
 
-    if (!isset($this->reflection)) {
-      $this->reflection = new ReflectionClass(self::entityPath($this->entity));
-      $this->setProperties();
-    }
     $info =  new PropertyInfoExtractor(typeExtractors: [new ReflectionExtractor()]);
 
-    if (!$typeInfo = $info->getTypes(self::entityPath($this->entity), $field)[0] ?? null) {
+    if (!$typeInfo = $info->getTypes($this->entity, $field)[0] ?? null) {
       return false;
     }
+
     $class = ($typeInfo->getCollectionValueTypes()[0] ?? $typeInfo)->getClassName();
 
     $property = $this->reflection->getProperty($field);
 
-    if ($type = ($property->getAttributes(FormkitSchema::class)[0] ?? null)) {
+    if ($type = ($property->getAttributes(FormMetadataAttribute::class)[0] ?? null)) {
       $type = $type->newInstance()->data;
     } else {
       $type = $this->reflection->getProperty($field)->getType()->getName();
@@ -56,9 +65,10 @@ trait ReflectionTrait {
 
     $input = match ($type) {
       'string' => Text::create($field),
-      'int' => Number::create($field),
+      'bool' => Checkbox::create($field),
+      'int', 'float' => Number::create($field),
       'picklist' => Picklist::create($field),
-      // \in_array($class, [DateTimeInterface::class, DateTime::class]) => Input::create($field)->datepicker(),
+      \DateTimeInterface::class, \DateTime::class => DateInput::create($field),
       CollectionsCollection::class, 'array' => MultiSelect::create($field),
       default => Select::create($field)
     };
@@ -83,8 +93,9 @@ trait ReflectionTrait {
         if ($reference = $property->getAttributes(FormkitDataReference::class)[0] ?? null) {
           $options = $reference->newInstance()->label;
         } else {
-          $options = (new Collection($this->entityManager->getRepository($class)->findAll()))
-            ->map(fn($el) => ['label' => (string)$el, 'value' => $this->iriConverter->getIriFromResource($el)])->toArray();
+          $options = $class ? (new Collection($this->entityManager->getRepository($class)->findAll()))
+            ->map(fn($el) => ['label' => (string)$el, 'value' => $this->iriConverter->getIriFromResource($el)])->toArray()
+            : [];
         }
         $input->set('options', $options);
       }

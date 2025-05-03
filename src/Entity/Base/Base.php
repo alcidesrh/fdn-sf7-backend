@@ -2,6 +2,7 @@
 
 namespace App\Entity\Base;
 
+use ApiPlatform\Metadata\ApiProperty;
 use App\Attribute\AttributeUtil;
 use App\Attribute\ExcludeAttribute;
 use Doctrine\ORM\Mapping as ORM;
@@ -14,11 +15,18 @@ class Base {
     #[ORM\GeneratedValue]
     #[ORM\Column]
     #[ExcludeAttribute]
-    protected ?int $id = null;
+    #[ApiProperty(identifier: true)]
+    protected ?int $id;
 
     #[ExcludeAttribute]
     protected ?string $label = null;
-
+    public function setId($id): self {
+        $this->id = $id;
+        return $this;
+    }
+    public function __construct() {
+        $this->id = 9;
+    }
     public function getId(): ?int {
         return $this->id;
     }
@@ -29,16 +37,20 @@ class Base {
         $properties = $info->getProperties($class);
         if (!empty(\array_intersect($properties, ['nombre', 'name']))) {
             try {
-                return $this->getNombre();
+                if ($nombre =  $this->getNombre()) {
+                    return $nombre;
+                }
             } catch (\Throwable $th) {
                 try {
-                    return $this->getName();
+                    if ($name = $this->getName()) {
+                        return $name;
+                    }
                 } catch (\Throwable $th) {
                     throw $th;
                 }
             }
         }
-        return $this->getId();
+        return $this->getId() ?? $class;
     }
     public function __toString() {
 

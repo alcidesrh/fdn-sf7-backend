@@ -8,7 +8,9 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: RutaRepository::class)]
 class Ruta extends Recorrido {
 
-
+    public function __construct() {
+        parent::__construct();
+    }
     #[ORM\Column(length: 10, nullable: true)]
     private ?string $codigo = null;
 

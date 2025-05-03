@@ -10,7 +10,7 @@ use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\GraphQl\QueryCollection;
-use App\Attribute\ColumnTableList;
+use App\Attribute\CollectionMetadataAttribute;
 use App\Entity\Base\PersonaBase;
 use App\Filter\OrFilter;
 use App\Repository\PilotoRepository;
@@ -36,7 +36,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ApiFilter(OrderFilter::class, alias: 'piloto.order.filter', properties: ['id', 'nombre', 'email', 'createdAt', 'status'], arguments: ['orderParameterName' => 'order'])]
 
-#[ColumnTableList(properties: [
+#[CollectionMetadataAttribute(properties: [
     ['name' => 'id', 'label' => 'Id', 'sort' => true, 'filter' => true],
     ['name' => 'fullName', 'label' => 'Nombre', 'sort' => 'nombre', 'filter' => true, 'style' => 'max-width: 200px'],
     ['name' => 'email', 'label' => 'email', 'sort' => true, 'filter' => true],

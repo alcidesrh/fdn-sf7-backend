@@ -36,7 +36,7 @@ final class AttributeUtil {
     );
   }
 
-  public function getResources(bool $name = null) {
+  public function getResources(bool $name) {
 
     $finder = new Finder();
     // find all files in the current directory

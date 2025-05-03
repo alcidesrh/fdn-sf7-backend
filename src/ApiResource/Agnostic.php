@@ -9,7 +9,6 @@ use App\DTO\DeleteMultipleDTO;
 use App\DTO\MetadataDTO;
 use App\Resolver\CollectionResolver;
 use App\Resolver\DeleteMultipleMutationResolver;
-use GraphQL\Type\Definition\Type;
 
 #[ApiResource(
   graphQlOperations: [

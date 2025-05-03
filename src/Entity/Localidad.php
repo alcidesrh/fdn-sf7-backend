@@ -10,7 +10,7 @@ use ApiPlatform\Metadata\GraphQl\DeleteMutation;
 use ApiPlatform\Metadata\GraphQl\Mutation;
 use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\GraphQl\QueryCollection;
-use App\Attribute\ColumnTableList;
+use App\Attribute\CollectionMetadataAttribute;
 use App\Attribute\FormkitDataReference;
 use App\Attribute\FormkitLabel;
 use App\Entity\Base\Base;
@@ -36,12 +36,14 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ApiFilter(OrderFilter::class, alias: 'order.filter', properties: ['id'], arguments: ['orderParameterName' => 'order'])]
 
-#[ColumnTableList(properties: [
-    'classes' => 'columns-wraper',
-    ['name' => 'id', 'label' => 'Id', 'sort' => true, 'filter' => true,],
-    ['name' => 'nombre', 'label' => 'Nombre', 'sort' => true, 'filter' => true],
-    ['name' => 'nacion', 'label' => 'Pais', 'sort' => false],
-])]
+#[CollectionMetadataAttribute(
+    class: 'columns-wraper',
+    props: [
+        ['name' => 'id', 'label' => 'Id', 'sort' => true, 'filter' => true,],
+        ['name' => 'nombre', 'label' => 'Nombre', 'sort' => true, 'filter' => true],
+        ['name' => 'nacion', 'label' => 'Pais', 'sort' => false],
+    ]
+)]
 
 class Localidad extends Base {
 

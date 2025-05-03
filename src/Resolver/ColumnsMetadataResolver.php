@@ -3,13 +3,10 @@
 namespace App\Resolver;
 
 use ApiPlatform\GraphQl\Resolver\QueryItemResolverInterface;
-use App\ApiResource\ResourceBase;
-use App\Attribute\ColumnTableList;
+use App\Attribute\CollectionMetadataAttribute;
 use App\DTO\MetadataDTO;
 use App\Enum\Status;
-use App\Services\Collection;
 use App\Services\Reflection;
-use ReflectionClass;
 use ReflectionProperty;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -31,15 +28,13 @@ final class ColumnsMetadataResolver implements QueryItemResolverInterface {
 
     $reflection = new Reflection($className);
     $filter = false;
-    if ($attrClass = $reflection->classAttribute(ColumnTableList::class)) {
-      $metadata = $attrClass[0]->newInstance()->columns;
-      if ($classes = $metadata['classes'] ?? null) {
-        unset($metadata['classes']);
-      }
+    if ($attrClass = $reflection->reflection->getAttributes(CollectionMetadataAttribute::class)) {
+      $metadata = $attrClass[0]->newInstance()->data;
+      $class = $metadata['class'] ?? null;
       $data = [];
-      foreach ($metadata as $value) {
-        if ($classes) {
-          $value['class'] = isset($value['class']) ? $classes . ' ' . $value['class'] : $classes;
+      foreach ($metadata['props'] as $value) {
+        if ($class) {
+          $value['class'] = isset($value['class']) ? $class . ' ' . $value['class'] : $class;
         }
         if ((\is_array($value) && !empty($value['filter']))) {
           $schema = $this->getSchema($value, $reflection->reflection->getProperty($value['name']));
@@ -51,8 +46,6 @@ final class ColumnsMetadataResolver implements QueryItemResolverInterface {
       }
     } else {
 
-      // $properties = new Collection($reflection->getProperties());
-
       $collection = $reflection->properties->map(fn(ReflectionProperty $v) => ['name' => $v->getName(), 'class' => 'columns-wraper' . ($v->getName() == 'id' ? ' small-column' : '')]);
 
       if ($temp = $collection->findFirstKeyAndValue(fn($i, $v) => $v['name'] == 'id')) {
@@ -61,19 +54,7 @@ final class ColumnsMetadataResolver implements QueryItemResolverInterface {
       } else {
         $data = [...$collection->getValues()];
       }
-      // foreach ($collection->getValues() as $key => $value) {
-      //   $data[] = $value;
-      // }
-      // $data = $data->toArray();
-      // $data = array_map(function (ReflectionProperty $v) {
-
-      //   return [
-      //     'name' => $v->getName(),
-      //     'label' => $v->getName()
-      //   ];
-      // }, $reflection->getProperties());
     }
-
 
     return ['collection' => $data, 'filter' => $filter];
   }

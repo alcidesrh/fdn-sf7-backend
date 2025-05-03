@@ -10,7 +10,7 @@ use ApiPlatform\Metadata\GraphQl\DeleteMutation;
 use ApiPlatform\Metadata\GraphQl\Mutation;
 use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\GraphQl\QueryCollection;
-use App\Attribute\ColumnTableList;
+use App\Attribute\CollectionMetadataAttribute;
 use App\Entity\Base\Traits\LegacyTrait;
 use App\Entity\Base\Traits\SluggableTrait;
 use App\Filter\OrFilter;
@@ -50,7 +50,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ApiFilter(OrderFilter::class, alias: 'order.filter.estacion', properties: ['id', 'nombre', 'alias', 'status'], arguments: ['orderParameterName' => 'order'])]
 
-#[ColumnTableList(properties: [
+#[CollectionMetadataAttribute(properties: [
     ['name' => 'id', 'label' => 'Id', 'sort' => true, 'filter' => true],
     ['name' => 'nombre',  'sort' => true, 'filter' => true],
     ['name' => 'alias', 'sort' => true, 'filter' => true],

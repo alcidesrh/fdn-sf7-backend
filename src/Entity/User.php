@@ -20,7 +20,7 @@ use ApiPlatform\Metadata\GraphQl\DeleteMutation;
 use ApiPlatform\Metadata\GraphQl\Mutation;
 use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\GraphQl\QueryCollection;
-use App\Attribute\ColumnTableList;
+use App\Attribute\CollectionMetadataAttribute;
 use App\Attribute\FormkitLabel;
 use App\Entity\Base\UserBase;
 use App\Filter\OrFilter;
@@ -53,15 +53,17 @@ use App\Resolver\UserByUsernameResolver;
 
 #[ApiFilter(OrderFilter::class, alias: 'order.filter', properties: ['id', 'nombre', 'apellido', 'username', 'createdAt', 'status'], arguments: ['orderParameterName' => 'order'])]
 
-#[ColumnTableList(properties: [
-    'classes' => 'columns-wraper',
-    ['name' => 'id', 'label' => 'Id', 'sort' => true, 'filter' => true],
-    ['name' => 'username', 'label' => 'Usuario', 'sort' => true, 'filter' => true],
-    ['name' => 'nombre', 'label' => 'Nombre', 'sort' => true, 'filter' => true],
-    ['name' => 'apellido', 'label' => 'Apellido', 'sort' => true, 'filter' => true],
-    ['name' => 'createdAt', 'label' => 'Fecha creación', 'sort' => 'fecha', 'filter' => true],
-    ['name' => 'status', 'label' => 'Status', 'sort' => 'status']
-])]
+#[CollectionMetadataAttribute(
+    class: 'columns-wraper',
+    props: [
+        ['name' => 'id', 'label' => 'Id', 'sort' => true, 'filter' => true],
+        ['name' => 'username', 'label' => 'Usuario', 'sort' => true, 'filter' => true],
+        ['name' => 'nombre', 'label' => 'Nombre', 'sort' => true, 'filter' => true],
+        ['name' => 'apellido', 'label' => 'Apellido', 'sort' => true, 'filter' => true],
+        ['name' => 'createdAt', 'label' => 'Fecha creación', 'sort' => 'fecha', 'filter' => true],
+        ['name' => 'status', 'label' => 'Status', 'sort' => 'status']
+    ]
+)]
 
 class User extends UserBase implements UserInterface, PasswordAuthenticatedUserInterface {
 
@@ -79,11 +81,8 @@ class User extends UserBase implements UserInterface, PasswordAuthenticatedUserI
 
     private ?string $fullName;
 
-    #[FormkitLabel('tipos de token')]
     #[ORM\OneToMany(mappedBy: 'usuario', targetEntity: ApiToken::class)]
     private Collection $apiTokens;
-
-    private ?array $accessTokenScopes = null;
 
     /**
      * @var Collection<int, Role>
@@ -140,24 +139,7 @@ class User extends UserBase implements UserInterface, PasswordAuthenticatedUserI
     public function getRoles(): array {
         return $this->permisos->toArray();
     }
-    // public function getRoles(): array {
-    //     if (null === $this->accessTokenScopes) {
-    //         // logged in via the full user mechanism
-    //         $roles = $this->roles;
-    //         $roles[] = 'ROLE_FULL_USER';
-    //     } else {
-    //         $roles = $this->accessTokenScopes;
-    //     }
-    //     // guarantee every user at least has ROLE_USER
-    //     $roles[] = 'ROLE_USER';
-    //     return array_unique($roles);
-    // }
 
-    // public function setRoles(array $roles): static {
-    //     $this->roles = $roles;
-
-    //     return $this;
-    // }
 
     /**
      * @see PasswordAuthenticatedUserInterface

@@ -6,6 +6,7 @@ namespace App\Services;
 use App\FormKit\Input;
 use Closure;
 use Doctrine\Common\Collections\ArrayCollection;
+use ReflectionFunction;
 
 class Collection extends ArrayCollection {
 
@@ -31,5 +32,37 @@ class Collection extends ArrayCollection {
 
   protected function createFrom(array $elements) {
     return new self($elements);
+  }
+
+  public function clear(): self {
+    parent::clear();
+    return $this;
+  }
+
+  public function value($v): self {
+    $this->clear();
+    if (!\is_array($v)) {
+      $v = [$v];
+    }
+    foreach ($v as $value) {
+      $this->add($value);
+    }
+    return $this;
+  }
+
+  public function each(Closure $p): self {
+    $cant = (new ReflectionFunction($p))->getNumberOfParameters();
+    if ($cant == 1) {
+      $this->forAll(function ($k, $v) use ($p) {
+        $p($v);
+        return true;
+      });
+    } else if ($cant == 2) {
+      $this->forAll(function ($k, $v) use ($p) {
+        $p($k, $v);
+        return true;
+      });
+    }
+    return $this;
   }
 }

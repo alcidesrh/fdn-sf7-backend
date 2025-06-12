@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\GraphQl\QueryCollection;
 use App\Attribute\CollectionMetadataAttribute;
 use App\Attribute\FormkitDataReference;
+use App\Attribute\FormMetadataAttribute;
 use App\Attribute\PropertyOrder;
 use App\Entity\Base\NombreNotaStatusBase;
 use App\Repository\PermisoRepository;
@@ -29,8 +30,7 @@ use Doctrine\ORM\Mapping as ORM;
         )
     ]
 )]
-// #[FormMetadataAttribute("nombre", "link", "posicion", "status", 'parent', 'children')]
-// #[PropertyOrder('nombre', 'parent', 'children', 'link')]
+#[FormMetadataAttribute(order: ['nombre', 'roles', 'parents', 'children', 'status', 'nota'])]
 
 #[CollectionMetadataAttribute(
     class: 'columns-wraper',

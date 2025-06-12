@@ -21,7 +21,7 @@ use ApiPlatform\Metadata\GraphQl\Mutation;
 use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\GraphQl\QueryCollection;
 use App\Attribute\CollectionMetadataAttribute;
-use App\Attribute\FormkitLabel;
+use App\Attribute\FormMetadataAttribute;
 use App\Entity\Base\UserBase;
 use App\Filter\OrFilter;
 use App\Resolver\UserByUsernameResolver;
@@ -30,7 +30,10 @@ use App\Resolver\UserByUsernameResolver;
 #[ORM\Table(name: '`user`')]
 #[ApiResource(
     graphQlOperations: [
-        new Query(),
+        new Query(
+            filters: ['search.filter'],
+            args: ['username' => ['type' => 'String']],
+        ),
         new Mutation(name: 'create'),
         new Mutation(name: 'update'),
         new DeleteMutation(name: 'delete'),
@@ -56,14 +59,16 @@ use App\Resolver\UserByUsernameResolver;
 #[CollectionMetadataAttribute(
     class: 'columns-wraper',
     props: [
-        ['name' => 'id', 'label' => 'Id', 'sort' => true, 'filter' => true],
-        ['name' => 'username', 'label' => 'Usuario', 'sort' => true, 'filter' => true],
-        ['name' => 'nombre', 'label' => 'Nombre', 'sort' => true, 'filter' => true],
-        ['name' => 'apellido', 'label' => 'Apellido', 'sort' => true, 'filter' => true],
+        ['name' => 'id', 'label' => 'Id', 'sort' => true, 'filter' => true, 'outerClass' => 'small-column', 'columnClass' => 'small-column'],
+        ['name' => 'username', 'label' => 'Usuario', 'sort' => true, 'filter' => true, 'outerClass' => 'medium-column', 'columnClass' => 'medium-column'],
+        ['name' => 'nombre', 'label' => 'Nombre', 'sort' => true, 'filter' => true, 'outerClass' => 'medium-column', 'columnClass' => 'medium-column'],
+        ['name' => 'apellido', 'outerClass' => 'medium-column', 'columnClass' => 'medium-column', 'label' => 'Apellido', 'sort' => true, 'filter' => true],
         ['name' => 'createdAt', 'label' => 'Fecha creación', 'sort' => 'fecha', 'filter' => true],
         ['name' => 'status', 'label' => 'Status', 'sort' => 'status']
     ]
 )]
+
+#[FormMetadataAttribute(exclude: ['password', 'fullName', 'apiTokens', 'legacyId'], order: ['nombre', 'apellido', 'email', 'telefono', 'nit', 'direccion', 'localidad'], columns: [['fields' => 7, 'wrapper' => ['type' => 'fieldset', 'props' => ['legend' => 'Datos Personales']]], ['wrapper' => ['type' => 'fieldset', 'props' => ['legend' => 'Permisos & Privilegios']]]])]
 
 class User extends UserBase implements UserInterface, PasswordAuthenticatedUserInterface {
 
@@ -77,7 +82,6 @@ class User extends UserBase implements UserInterface, PasswordAuthenticatedUserI
      */
     #[ORM\Column(nullable: true)]
     private ?string $password = null;
-
 
     private ?string $fullName;
 
@@ -96,10 +100,11 @@ class User extends UserBase implements UserInterface, PasswordAuthenticatedUserI
     #[ORM\ManyToMany(targetEntity: Permiso::class)]
     private Collection $permisos;
 
+    public function __construct($data = []) {
 
-    public function __construct(string $userIdentifier = '', array $roles = []) {
-
-        $this->username = $userIdentifier;
+        if (!empty($data)) {
+            $this->loadData($data);
+        }
 
         $this->apiTokens = new ArrayCollection();
         $this->roles = new ArrayCollection();

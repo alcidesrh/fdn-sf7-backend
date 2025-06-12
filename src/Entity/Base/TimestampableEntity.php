@@ -24,12 +24,12 @@ use Gedmo\Mapping\Annotation as Gedmo;
 trait TimestampableEntity {
     #[ExcludeAttribute]
     #[Gedmo\Timestampable(on: 'create')]
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     protected \DateTime $createdAt;
 
     #[ExcludeAttribute]
     #[Gedmo\Timestampable(on: 'update')]
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     protected \DateTime $updatedAt;
 
     public function setCreatedAt(\DateTime $createdAt) {

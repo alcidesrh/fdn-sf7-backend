@@ -24,4 +24,5 @@
   "editor.suggest.preview": true,
   "php.suggest.basic": false,
   "editor.suggest.showWords": false,
+  "editor.fontSize": 16,
 }

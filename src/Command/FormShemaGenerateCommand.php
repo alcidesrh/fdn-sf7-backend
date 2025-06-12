@@ -26,9 +26,9 @@ use Symfony\Component\Finder\Finder;
 class FormShemaGenerateCommand extends Command {
 
     private ReflectionClass $reflection;
-    // private Schema $schema;
+    private Schema $schema;
 
-    public function __construct(protected FormSchemaRepository $repo, protected IriConverterInterface $iriConverter, protected Schema $schema, #[Autowire('%kernel.project_dir%/src/Entity')] private $entitiesPath) {
+    public function __construct(protected FormSchemaRepository $repo, protected IriConverterInterface $iriConverter, #[Autowire('%kernel.project_dir%/src/Entity')] private $entitiesPath) {
         parent::__construct();
 
         // $this->reflection = new ReflectionClass($this->entitiesPath);

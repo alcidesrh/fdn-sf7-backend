@@ -26,11 +26,12 @@ final class Form extends FormGroups {
         'id' => self::TYPE,
         'actions' => false,
         'modelValue' => '$item',
-        'ref' => '$form'
+        'ref' => '$form',
+        'onSubmit' => $props['submit'] ?? '$submit'
       ], [
         'name' => $props['name'] ?? $props['id'] ?? 'form',
         'id' => $props['id'] ?? $props['name'] ?? 'form',
-        'onSubmit' => '$submit',
+        'onSubmit' => $props['submit'] ?? '$submit',
         'onNode' => '$onNode',
         ...$props,
       ]);

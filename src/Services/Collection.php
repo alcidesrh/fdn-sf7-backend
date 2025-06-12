@@ -38,7 +38,13 @@ class Collection extends ArrayCollection {
     parent::clear();
     return $this;
   }
+  public function merge($v): self {
 
+    foreach ($v as $k => $value) {
+      $this->set($k, $value);
+    }
+    return $this;
+  }
   public function value($v): self {
     $this->clear();
     if (!\is_array($v)) {

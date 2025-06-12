@@ -12,7 +12,9 @@ class FormGroups extends Input {
   public function __construct(array $input, array|string $props = []) {
     $this->children = new Collection();
     if (!\is_array($props)) {
-      $input['name'] = $input['id'] = $input['label'] = u($props)->snake();
+      if (!(isset($input['$el']) && $input['$el'] == 'div')) {
+        $input['name'] = $input['id'] = $input['label'] = u($props)->snake();
+      }
     } else {
       $input = [...$input, ...$props];
     }

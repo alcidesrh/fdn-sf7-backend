@@ -12,7 +12,8 @@ use App\Attribute\FormMetadataAttribute;
 use App\Entity\Base\Base;
 use App\Entity\Base\Traits\StatusTrait;
 use App\Repository\ActionRepository;
-use Doctrine\DBAL\Types\Types;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ActionRepository::class)]
@@ -28,14 +29,14 @@ use Doctrine\ORM\Mapping as ORM;
         ),
     ]
 )]
-#[FormMetadataAttribute(order: ['icon', 'status', 'nota', 'nombre', 'ruta'], columns: 2)]
+#[FormMetadataAttribute(order: ['nombre', 'ruta', 'roles'])]
 #[CollectionMetadataAttribute(
     class: 'columns-wraper',
     props: [
         ['name' => 'id', 'class' => ' small-column'],
-        ['name' => 'icon', 'class' => ' small-column'],
         ['name' => 'nombre', 'class' => 'columns-wraper'],
-        ['name' => 'ruta']
+        ['name' => 'ruta'],
+        ['name' => 'roles']
     ]
 )]
 class Action extends Base {
@@ -46,14 +47,20 @@ class Action extends Base {
     private ?string $ruta = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $icon = null;
-
-
-    #[ORM\Column(length: 255, nullable: true)]
     protected ?string $nombre = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    protected ?string $nota = null;
+    /**
+     * @var Collection<int, Role>
+     */
+    #[ORM\ManyToMany(targetEntity: Role::class, inversedBy: 'actions')]
+    private Collection $roles;
+
+    public function __construct() {
+
+        parent::__construct();
+        $this->roles = new ArrayCollection();
+    }
+
 
 
     public function getId(): ?int {
@@ -68,15 +75,7 @@ class Action extends Base {
 
         return $this;
     }
-    public function getNota(): ?string {
-        return $this->nota;
-    }
 
-    public function setNota(string $nota): static {
-        $this->nota = $nota;
-
-        return $this;
-    }
 
 
 
@@ -90,12 +89,23 @@ class Action extends Base {
         return $this;
     }
 
-    public function getIcon(): ?string {
-        return $this->icon;
+    /**
+     * @return Collection<int, Role>
+     */
+    public function getRoles(): Collection {
+        return $this->roles;
     }
 
-    public function setIcon(?string $icon): static {
-        $this->icon = $icon;
+    public function addRole(Role $role): static {
+        if (!$this->roles->contains($role)) {
+            $this->roles->add($role);
+        }
+
+        return $this;
+    }
+
+    public function removeRole(Role $role): static {
+        $this->roles->removeElement($role);
 
         return $this;
     }

@@ -18,9 +18,6 @@ final class ColumnsMetadataResolver implements QueryItemResolverInterface {
   }
 
   public function __invoke(?object $item, array $context): object {
-
-    // $className = ResourceBase::entityNameParse($context['args']['resource']);
-
     return new MetadataDTO($this->collection($context['args']['resource']));
   }
 
@@ -61,19 +58,15 @@ final class ColumnsMetadataResolver implements QueryItemResolverInterface {
   public function getSchema(&$data, ReflectionProperty $reflection) {
 
     $type = $reflection->getType()->getName();
-    $schema = ['$formkit' => 'texticon_fdn', 'name' => $data['name'], 'placeholder' => $data['label'] ?? $data['name'], 'loading' => '$loading'];
+    $schema = ['$formkit' => 'texticon_primevue', 'name' => $data['name'], 'placeholder' => $data['label'] ?? $data['name'], 'loading' => '$loading', ...['outerClass' => \join(' ', ['mb-0! px-0!',  $data['outerClass'] ?? '', ...['class' => $data['class'] ?? '']])]];
 
-    $schema['bind'] = [...$data['bind'] ?? [], ...['outerClass' => \join(' ', ['mb-0!',  $data['bind']['outerClass'] ?? ''])]];
+    $data['class'] = \join(' ', [$data['class'] ?? '', $data['columnClass'] ?? '']);
 
-    if ($data['name'] == 'id') {
-      $data['class'] = \join(' ', [$data['class'] ?? '', 'small-column']);
-
-      $schema['bind'] = [...$schema['bind'] ?? [], ...['outerClass' => \join(' ', ['small-column-id', $schema['bind']['outerClass']])]];
-    }
     $schema = match ($type) {
+      in_array($type, ['float', 'int']) ? $type : false => [...$schema, '$formkit' => 'number_search_primevue'],
       in_array($type, ['string', 'int', Status::class]) ? $type : false => $schema,
-      'DateTime' => [...$schema, '$formkit' => 'datepicker_fdn', 'selectionMode' => 'range', 'hourFormat' => 12, 'showTime' => true],
-      'DateTimeInterface' => [...$schema, '$formkit' => 'datepicker_fdn', 'selectionMode' => 'range', 'hourFormat' => 12, 'showTime' => true],
+      'DateTime' => [...$schema, '$formkit' => 'datepicker_primevue', 'selectionMode' => 'range', 'hourFormat' => 12, 'showTime' => true],
+      'DateTimeInterface' => [...$schema, '$formkit' => 'datepicker_primevue', 'selectionMode' => 'range', 'hourFormat' => 12, 'showTime' => true],
     };
 
     return $schema;

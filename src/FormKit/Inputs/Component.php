@@ -28,8 +28,6 @@ final class Component extends FormGroups {
     return new self('FieldsetPrimevue', self::setInput([
       // 'legend' => 'Menus relacionados',
       'toggleable' => true,
-      'style' => 'float: left; min-width: 20em; max-width: 100%; overflow: scroll;',
-      // 'id' => 'menu_menus',
       ...$props
     ]));
   }
@@ -49,9 +47,7 @@ final class Component extends FormGroups {
       'props' => [
         'name' => $name,
         'id' => $name,
-        'value' => '$value',
-        'context' => '$node.context',
-        'attrs' => ['style' => 'margin-bottom: 20px', 'toggleable' => true, ...$props]
+        'attrs' => ['style' => 'margin-bottom: 20px', ...$props]
       ],
     ];
   }

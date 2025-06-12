@@ -7,7 +7,7 @@ use function Symfony\Component\String\u;
 
 class FieldsInput extends Input {
 
-  public static $inputBase = ['name' => '', 'label' => '', 'validation' => false];
+  public static $inputBase = ['name' => '', 'label' => ''];
 
   public function __construct(array $input, array|string $props = []) {
     $this->children = new Collection();

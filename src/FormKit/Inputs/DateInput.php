@@ -6,7 +6,7 @@ final class DateInput extends FieldsInput {
 
   use InputTrait;
 
-  const TYPE = 'primevue_datepicker';
+  const TYPE = 'datepicker_primevue';
 
   public function __construct(array|string $props = '') {
 

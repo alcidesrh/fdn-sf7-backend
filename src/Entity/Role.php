@@ -55,10 +55,17 @@ class Role extends Base {
     #[ORM\ManyToMany(targetEntity: Permiso::class, mappedBy: 'roles')]
     private ?Collection $permisos;
 
+    /**
+     * @var Collection<int, Action>
+     */
+    #[ORM\ManyToMany(targetEntity: Action::class, mappedBy: 'roles')]
+    private Collection $actions;
+
     public function __construct() {
         $this->parents = new ArrayCollection();
         $this->children = new ArrayCollection();
         $this->permisos = new ArrayCollection();
+        $this->actions = new ArrayCollection();
     }
 
     public function getId(): ?int {
@@ -139,6 +146,33 @@ class Role extends Base {
     public function removePermiso(Permiso $permiso): static {
         if ($this->permisos->removeElement($permiso)) {
             $permiso->removeRole($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Action>
+     */
+    public function getActions(): Collection
+    {
+        return $this->actions;
+    }
+
+    public function addAction(Action $action): static
+    {
+        if (!$this->actions->contains($action)) {
+            $this->actions->add($action);
+            $action->addRole($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAction(Action $action): static
+    {
+        if ($this->actions->removeElement($action)) {
+            $action->removeRole($this);
         }
 
         return $this;

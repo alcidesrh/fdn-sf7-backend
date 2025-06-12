@@ -3,13 +3,17 @@
 namespace App\Entity\Base;
 
 use ApiPlatform\Metadata\ApiProperty;
-use App\Attribute\AttributeUtil;
 use App\Attribute\ExcludeAttribute;
+use App\Entity\Base\Traits\DataLoader;
+use App\Useful\Reflection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
+use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
 
 #[ORM\MappedSuperclass]
 class Base {
 
+    use DataLoader;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -19,7 +23,7 @@ class Base {
     protected ?int $id;
 
     #[ExcludeAttribute]
-    protected ?string $label = null;
+    private ?string $label = null;
     public function setId($id): self {
         $this->id = $id;
         return $this;
@@ -32,8 +36,10 @@ class Base {
     }
     public function getLabel() {
 
-        $class = get_class($this);
-        $info = AttributeUtil::getExtractor();
+        $class = \get_class($this);
+
+        $info = Reflection::extractor();
+
         $properties = $info->getProperties($class);
         if (!empty(\array_intersect($properties, ['nombre', 'name']))) {
             try {

@@ -39,13 +39,16 @@ $aux = function ($variable, $temp2) {
 // foreach()"45.164.149.36"
 // $diff = array_diff(['181.174.89.205', '186.151.119.74', '186.151.119.25', '45.229.40.28', '190.56.130.8', '190.148.252.204', '190.149.166.58', '181.174.72.72', '181.174.74.174', '190.56.50.43', '190.106.197.177', '138.84.59.102', '190.149.4.221', '45.229.41.92', '190.149.186.202', '31.13.224.222', '190.148.157.68', '181.174.66.189', '181.174.67.236', '190.106.196.61', '190.61.91.89', '172.104.11.4', '190.56.54.48', '190.56.48.158', '190.56.54.14', '190.56.54.142', '190.56.50.222', '190.106.200.4', '181.174.89.160 ']);
 // echo join(" | ", array_keys($result1));
-$diff = array_diff($hoy, $user);
-$hoy_count = array_count_values($hoy);
-$hoy_count_diff = array_count_values($diff);
+// $diff = array_diff($hoy, $user);
+$hoy_count = array_count_values($ips);
+$hoy_count2 = array_count_values($user);
+$hoy_count_diff = array_count_values($hoy_count);
+$hoy_count_diff2 = array_count_values($hoy_count2);
 arsort($hoy_count);
-arsort($hoy_count_diff);
-$filter = $aux($hoy_count, $diff);
-arsort($filter);
+arsort($hoy_count2);
+// arsort($hoy_count_diff);
+// $filter = $aux($hoy_count, $diff);
+// arsort($filter);
 echo join("', '", array_keys($hoy_count));
 die;
 // arsort($temp5);

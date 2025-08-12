@@ -76,7 +76,7 @@ class Schema extends Collection {
     return $this;
   }
   public function ini(): self {
-    $this->attrs = [];
+    $this->attrs = $this->defaultAttrs;
     $this->reflection = $this->properties = null;
     parent::clear();
     $this->setReflection()->setFormSchema();
@@ -115,7 +115,7 @@ class Schema extends Collection {
           $div = Html::create(['class' => "form-columns-{$columns}"]);
           foreach (\array_chunk($this->toArray(), \round($this->count() / $this->attrs['columns'])) as $v) {
             $temp = Html::create();
-            $temp->children->value($v);
+            $temp->children->value($v, $temp);
             $div->addChildren($temp);
           }
         } else if (\is_array($columns)) {
@@ -139,6 +139,7 @@ class Schema extends Collection {
             $div->addChildren($wrap);
           }
         }
+
         $this->value($div);
       }
       $form = Form::create(['name' => $this->entityName . 'Form']);
@@ -181,7 +182,6 @@ class Schema extends Collection {
     });
     return $input;
   }
-
   public function hasChanged($path, $name = null): bool {
     $name = $name ?: $this->entityName . '.php';
 
@@ -195,7 +195,6 @@ class Schema extends Collection {
     }
     return false;
   }
-
   public function getShemaToObject(): object {
 
     return new class(
@@ -210,11 +209,9 @@ class Schema extends Collection {
       }
     };
   }
-
   public function getInput(ReflectionProperty $property) {
 
     $field = $property->getName();
-
 
     if (!$typeInfo = Reflection::getType($this->entity, $field)) {
       return false;
@@ -262,9 +259,11 @@ class Schema extends Collection {
         }
       }
     }
+    if ($input->findFirst(fn($k, $v) => $k == '$el')) {
+      $input->remove('$formkit');
+    }
     return $input;
   }
-
   public function setProperties() {
   }
 
@@ -273,9 +272,9 @@ class Schema extends Collection {
     if ($data = $reflector->getAttributes(FormMetadataAttribute::class)) {
       foreach ($data[0]->newInstance()->data as $key => $value) {
         if (\is_array($value)) {
-          $this->attrs[$key] = [...($this->defaultAttrs[$key] ?? []), ...($this->attrs[$key] ?? []), ...$value];
+          $this->attrs[$key] = [...($this->attrs[$key] ?? []), ...$value];
         } else {
-          $this->attrs[$key] = $value;
+          $this->attrs[$key] = [...($this->attrs[$key] ?? []), $value];
         }
       }
     }

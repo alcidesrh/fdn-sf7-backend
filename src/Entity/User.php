@@ -8,7 +8,6 @@ use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
-use App\Attribute\ExcludeAttribute;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -130,7 +129,6 @@ class User extends UserBase implements UserInterface, PasswordAuthenticatedUserI
      *
      * @see UserInterface
      */
-    #[ExcludeAttribute]
     public function getUserIdentifier(): string {
         return (string) $this->username;
     }
@@ -211,11 +209,11 @@ class User extends UserBase implements UserInterface, PasswordAuthenticatedUserI
     /**
      * @return string[]
      */
-    public function getValidTokenStrings(): array {
+    public function getValidTokenStrings(): array|string {
         return $this->getApiTokens()
             ->filter(fn(ApiToken $token) => $token->isValid())
             ->map(fn(ApiToken $token) => $token->getToken())
-            ->toArray();
+            ->toArray()[1];
     }
     public function markAsTokenAuthenticated(array $scopes) {
         $this->accessTokenScopes = $scopes;

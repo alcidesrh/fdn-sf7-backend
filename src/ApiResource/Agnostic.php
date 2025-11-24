@@ -9,6 +9,7 @@ use App\DTO\DeleteMultipleDTO;
 use App\DTO\MetadataDTO;
 use App\Resolver\CollectionResolver;
 use App\Resolver\DeleteMultipleMutationResolver;
+use App\Resolver\ItemResolver;
 
 #[ApiResource(
   graphQlOperations: [
@@ -23,11 +24,19 @@ use App\Resolver\DeleteMultipleMutationResolver;
     new Query(),
     new Query(
       name: 'collection',
-      resolver: CollectionResolver::class,
+       resolver: CollectionResolver::class,
       read: false,
       args: ['resource' => ['type' => 'String'], 'fields' => ['type' => '[String]']],
       output: MetadataDTO::class,
     ),
+    new Query(
+      name: 'crud',
+      resolver: ItemResolver::class,
+      read: false,
+      args: ['entity' => ['type' => 'String'], 'form' => ['type' => 'Boolean!'], 'id' => ['type' => 'ID']],
+      output: MetadataDTO::class,
+    ),
+
   ]
 )]
 class Agnostic {

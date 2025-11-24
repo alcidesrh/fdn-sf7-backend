@@ -1,22 +1,83 @@
 <?php
 
 include 'ips.php';
-// include '11_02_14_1534_pm.php';
-// include '06_02_09_11.php';
+
+// $texto = "La IP 192.168.1.1 aparece dos veces: 192.168.1.1. Otra IP es 10.0.0.1 y 8.8.8.8.";
+
+// Expresión regular para extraer IPs IPv4 válidas
+$regex = '/\b(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.){3}(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\b/';
+
+// Extraer todas las IPs coincidentes
+preg_match_all($regex, $texto, $coincidencias);
+
+preg_match_all($regex, $texto2, $coincidencias2);
+
+// Obtener el arreglo de IPs extraídas
+$ips = $coincidencias[0];
+$ips2 = $coincidencias2[0];
+
+$conteo_ips = array_count_values($ips);
+$conteo_ips2 = array_count_values($ips2);
+
+arsort($conteo_ips);
+arsort($conteo_ips2);
+// Imprimir el resultado para verificación
+
+echo "<div style='display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 10px;
+  grid-auto-rows: minmax(100px, auto);'><div>";
+
+foreach ($conteo_ips as $key => $value) {
+  echo "$key = $value <br>";
+}
+echo "</div>";
+
+echo "<div>";
+foreach ($conteo_ips2 as $key => $value) {
+  echo "$key = $value <br>";
+}
+echo "</div>";
+
+echo "</div>";
+die();
 
 
-
-// $ip_11_02_14_1534_pm_count = array_count_values($ip_11_02_14_1534_pm);
-// $ip_11_02_14_1534_pm__key = array_keys($ip_11_02_14_1534_pm_count);
-// $diff = array_diff($ip_11_02_14_1534_pm__key, $fdn_ips);
-
-// $ip_06_02_09_11_count = array_count_values($ip_06_02_09_11);
-// $ip_06_02_09_11__key = array_keys($ip_06_02_09_11_count);
-
-// $diff2 = array_diff($ip_06_02_09_11__key, $fdn_ips);
-
-// arsort($ip_11_02_14_1534_pm_count);
-// arsort($ip_06_02_09_11_count);
+$echo = function ($array, $interval) {
+  echo "<div>";
+  echo $interval . ' suma ' . array_sum($array) . "<br><br>";
+  foreach ($array as $key => $value) {
+    echo "$key = $value <br>";
+  }
+  echo "</div>";
+};
+$diff = function ($array, $i, $j) use ($echo, $ips_8_9, $ips_9_10, $ips_10_11, $ips_11_12, $ips_12_13, $ips_13_14) {
+  $arrays = [];
+  for ($i2 = 8, $j2 = 9; $i2 < 14; $i2++, $j2++) {
+    if ($i2 != $i && $j2 != $j) {
+      $temp = array_count_values(${"ips_{$i2}_{$j2}"});
+      arsort($temp);
+      $arrays[] = $temp;
+    }
+  }
+  $aux = array_diff_key($array, ...$arrays);
+  $echo($aux, "$i a $j Diferencia");
+};
+echo "<div style='display: flex; justify-content: space-around;'>";
+for ($i = 8, $j = 9; $i < 14; $i++, $j++) {
+  $hoy_count = array_count_values(${"ips_{$i}_{$j}"});
+  arsort($hoy_count);
+  $echo($hoy_count, "$i a $j");
+}
+echo "</div>";
+echo "<div style='display: flex; justify-content: space-around;'>";
+for ($i = 8, $j = 9; $i < 14; $i++, $j++) {
+  $hoy_count = array_count_values(${"ips_{$i}_{$j}"});
+  arsort($hoy_count);
+  $diff($hoy_count, $i, $j);
+}
+echo "</div>";
+die();
 $aux = function ($variable, $temp2) {
   $temp = [];
   foreach ($variable as $key => $value) {
@@ -26,30 +87,34 @@ $aux = function ($variable, $temp2) {
   }
   return $temp;
 };
-// $result1 = $aux($ip_11_02_14_1534_pm_count, $diff);
-// $result2 = $aux($ip_06_02_09_11_count, $diff2);
-// $result3 = $aux($ip_06_02_09_11_count, $diff2);
-// $diff = [...array_diff($ip_11_02_14_1534_pm__key, $ip_06_02_09_11__key), ...array_diff($ip_06_02_09_11__key, $ip_11_02_14_1534_pm__key)];
 
-// arsort($result1);
-// arsort($result2);
-// $result2 = $aux($temp11, $temp5);
-// $result3 = $aux($temp2, $temp5);
-// $result4 = $aux($temp12, $temp5);
-// foreach()"45.164.149.36"
-// $diff = array_diff(['181.174.89.205', '186.151.119.74', '186.151.119.25', '45.229.40.28', '190.56.130.8', '190.148.252.204', '190.149.166.58', '181.174.72.72', '181.174.74.174', '190.56.50.43', '190.106.197.177', '138.84.59.102', '190.149.4.221', '45.229.41.92', '190.149.186.202', '31.13.224.222', '190.148.157.68', '181.174.66.189', '181.174.67.236', '190.106.196.61', '190.61.91.89', '172.104.11.4', '190.56.54.48', '190.56.48.158', '190.56.54.14', '190.56.54.142', '190.56.50.222', '190.106.200.4', '181.174.89.160 ']);
-// echo join(" | ", array_keys($result1));
-// $diff = array_diff($hoy, $user);
+
 $hoy_count = array_count_values($ips);
-$hoy_count2 = array_count_values($user);
+$hoy_count2 = array_count_values($ips2);
 $hoy_count_diff = array_count_values($hoy_count);
 $hoy_count_diff2 = array_count_values($hoy_count2);
 arsort($hoy_count);
 arsort($hoy_count2);
-// arsort($hoy_count_diff);
+arsort($hoy_count_diff);
 // $filter = $aux($hoy_count, $diff);
 // arsort($filter);
-echo join("', '", array_keys($hoy_count));
+$echo = function ($array) {
+  foreach ($array as $key => $value) {
+    echo "$key = $value <br>";
+  }
+};
+$diff = array_diff_key($hoy_count2, $hoy_count);
+
+echo "<div style='display: flex; justify-content: space-around;'><div>";
+$echo($hoy_count);
+echo "</div><div>";
+$echo($hoy_count2);
+echo "</div><div>";
+$echo($diff);
+echo "</div></div>";
+
+// echo
+// join("\n", array_keys($hoy_count));
 die;
 // arsort($temp5);
 //190.149.166.62 ronal peten

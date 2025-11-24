@@ -86,8 +86,8 @@ class ApiToken extends Base {
         return $this;
     }
 
-    public function isValid(): bool {
-        return $this->expira === null || $this->expira > new \DateTimeInterface() || $this->isActivo();
+    public function isValid(): ?bool {
+        return $this->activo; //($this->expira === null || $this->expira > new \DateTimeInterface()) && $this->activo;
     }
 
     public function isActivo(): ?bool {
@@ -100,6 +100,6 @@ class ApiToken extends Base {
         return $this;
     }
     public function __toString(): string {
-        return $this->usuario->getFullName();
+        return $this->token;
     }
 }

@@ -7,12 +7,12 @@ use function Symfony\Component\String\u;
 
 class FieldsInput extends Input {
 
-  public static $inputBase = ['name' => '', 'label' => ''];
+  public static $inputBase = ['name' => '', 'label' => '', 'fluid' => true];
 
   public function __construct(array $input, array|string $props = []) {
     $this->children = new Collection();
     if (!\is_array($props)) {
-      $input['name'] = $input['id'] = $input['label'] = u($props)->snake();
+      $input['name'] = $input['id'] = $input['label'] = $props; //u($props)->snake();
     } else {
       $input = [...$input, ...$props];
     }

@@ -3,6 +3,9 @@
 namespace App\Controller;
 
 use ApiPlatform\Metadata\IriConverterInterface;
+use App\Entity\Role;
+use App\Repository\ApiTokenRepository;
+use App\Repository\RoleRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -10,23 +13,35 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 class SecurityController extends AbstractController {
 
+  public function __construct(private ApiTokenRepository $apiTokenRepository, private RoleRepository $roleRepo) {
+  }
+
   #[Route('/login', name: 'app_login', methods: ['POST'])]
   public function login(IriConverterInterface $iriConverter, #[CurrentUser] $user = null): Response {
 
     if (!$user) {
       return $this->json([
         'error' => 'Acceso denegado',
+        2
       ], 401);
     }
+
+    if (!$user->getRoles()) {
+      $user->addUserRole($this->roleRepo->findOneBy(['nombre' => Role::user]));
+      $this->roleRepo->flush();
+    }
+    $token = $user->getToken();
+    $token->setActivo(true);
+    $this->apiTokenRepository->persist($token)->flush();
     return $this->json([
-      'token' => $user->getValidTokenStrings(),
+      'token' => $token->getToken(),
       'username' => $user->getUsername(),
       'uri' => $iriConverter->getIriFromResource($user)
 
     ], 200);
   }
 
-  #[Route('/logout', name: 'app_logout', methods: ['POST'])]
+  #[Route('/logout', name: 'app_logout')]
   public function logout(Security $security): Response {
     // logout the user in on the current firewall
     $response = $security->logout();
@@ -39,7 +54,6 @@ class SecurityController extends AbstractController {
 
   #[Route('/auth', name: 'auth', methods: ['POST'])]
   public function auth(#[CurrentUser] $user = null): Response {
-
     if (!$user = $this->getUser()) {
       return $this->json([
         'error' => 'Acceso denegado',
@@ -48,6 +62,19 @@ class SecurityController extends AbstractController {
     return $this->json([
       'token' => $user->getValidTokenStrings(),
       'username' => $user->getUsername()
+
+    ], 200);
+  }
+
+  #[Route('/user-invalid', name: 'user_invalid')]
+  public function userInvalid(#[CurrentUser] $user = null): Response {
+
+    if ($token = $user->getToken()) {
+      $token->setActivo(false);
+      $this->apiTokenRepository->persist($token)->flush();
+    }
+    return $this->json([
+      'logout' => true
 
     ], 200);
   }

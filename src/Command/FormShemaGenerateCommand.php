@@ -49,7 +49,7 @@ class FormShemaGenerateCommand extends Command {
         $this->repo->all()->remove();
         foreach ($finder as $file) {
             $entity = $file->getFilenameWithoutExtension();
-            $schema = $this->schema->clear()->getShema($entity);
+            $schema = $this->schema->clear()->getSchema($entity);
             $this->repo->persist((new FormSchema())->setEntity($entity)->setSchema($schema));
         }
         $this->repo->flush();

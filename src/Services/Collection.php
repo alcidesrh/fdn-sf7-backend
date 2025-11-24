@@ -31,7 +31,7 @@ class Collection extends ArrayCollection {
 
 
   protected function createFrom(array $elements) {
-    return new self($elements);
+    return new static($elements);
   }
 
   public function clear(): self {
@@ -70,5 +70,11 @@ class Collection extends ArrayCollection {
       });
     }
     return $this;
+  }
+
+  public function getPropertyByName($name) {
+    return $this->findFirst(
+      fn($k, $v) => $v->getName() == $name
+    );
   }
 }

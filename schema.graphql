@@ -1,0 +1,2924 @@
+type Query {
+    node(id: ID!): Node
+    agnostic(id: ID!): Agnostic
+    collectionAgnostic(resource: String, fields: [String]): Agnostic
+    crudAgnostic(entity: String, form: Boolean!, id: ID): Agnostic
+    getFormResource(entity: String): FormResource
+    columnsMetadataResource(resource: String): MetadataResource
+    entitiesSettingResource: SettingResource
+    action(id: ID!): Action
+    actions(
+        "Returns the current page."
+        page: Int
+
+        "Returns the number of items per page."
+        itemsPerPage: Int
+
+        order: [ActionFilter_order]
+    ): ActionPageConnection
+    agencia(id: ID!): Agencia
+    agencias(
+        "Returns the first n elements from the list."
+        first: Int
+
+        "Returns the last n elements from the list."
+        last: Int
+
+        "Returns the elements in the list that come before the specified cursor."
+        before: String
+
+        "Returns the elements in the list that come after the specified cursor."
+        after: String
+    ): AgenciaCursorConnection
+    asiento(id: ID!): Asiento
+    asientos(
+        "Returns the first n elements from the list."
+        first: Int
+
+        "Returns the last n elements from the list."
+        last: Int
+
+        "Returns the elements in the list that come before the specified cursor."
+        before: String
+
+        "Returns the elements in the list that come after the specified cursor."
+        after: String
+    ): AsientoCursorConnection
+    boleto(id: ID!): Boleto
+    boletos(
+        "Returns the first n elements from the list."
+        first: Int
+
+        "Returns the last n elements from the list."
+        last: Int
+
+        "Returns the elements in the list that come before the specified cursor."
+        before: String
+
+        "Returns the elements in the list that come after the specified cursor."
+        after: String
+    ): BoletoCursorConnection
+    boletoLog(id: ID!): BoletoLog
+    boletoLogs(
+        "Returns the first n elements from the list."
+        first: Int
+
+        "Returns the last n elements from the list."
+        last: Int
+
+        "Returns the elements in the list that come before the specified cursor."
+        before: String
+
+        "Returns the elements in the list that come after the specified cursor."
+        after: String
+    ): BoletoLogCursorConnection
+    bus(id: ID!): Bus
+    buses(
+        "Returns the current page."
+        page: Int
+
+        "Returns the number of items per page."
+        itemsPerPage: Int
+
+        id: Int
+        id_list: [Int]
+        marca: String
+        marca_list: [String]
+        placa: String
+        placa_list: [String]
+        status: String
+        status_list: [String]
+        createdAt: [BusFilter_createdAt]
+        order: [BusFilter_order]
+    ): BusPageConnection
+    cliente(id: ID!): Cliente
+    clientes(
+        "Returns the first n elements from the list."
+        first: Int
+
+        "Returns the last n elements from the list."
+        last: Int
+
+        "Returns the elements in the list that come before the specified cursor."
+        before: String
+
+        "Returns the elements in the list that come after the specified cursor."
+        after: String
+    ): ClienteCursorConnection
+    empresa(id: ID!): Empresa
+    empresas(
+        "Returns the current page."
+        page: Int
+
+        "Returns the number of items per page."
+        itemsPerPage: Int
+    ): EmpresaPageConnection
+    enclave(id: ID!): Enclave
+    enclaves(
+        "Returns the first n elements from the list."
+        first: Int
+
+        "Returns the last n elements from the list."
+        last: Int
+
+        "Returns the elements in the list that come before the specified cursor."
+        before: String
+
+        "Returns the elements in the list that come after the specified cursor."
+        after: String
+    ): EnclaveCursorConnection
+    estacion(id: ID!): Estacion
+    estacions(
+        "Returns the current page."
+        page: Int
+
+        "Returns the number of items per page."
+        itemsPerPage: Int
+
+        id: Int
+        id_list: [Int]
+        nombre: String
+        nombre_list: [String]
+        alias: String
+        alias_list: [String]
+        order: [EstacionFilter_order]
+    ): EstacionPageConnection
+    fDN(id: ID!): FDN
+    fDNs(
+        "Returns the first n elements from the list."
+        first: Int
+
+        "Returns the last n elements from the list."
+        last: Int
+
+        "Returns the elements in the list that come before the specified cursor."
+        before: String
+
+        "Returns the elements in the list that come after the specified cursor."
+        after: String
+    ): FDNCursorConnection
+    factura(id: ID!): Factura
+    facturas(
+        "Returns the first n elements from the list."
+        first: Int
+
+        "Returns the last n elements from the list."
+        last: Int
+
+        "Returns the elements in the list that come before the specified cursor."
+        before: String
+
+        "Returns the elements in the list that come after the specified cursor."
+        after: String
+    ): FacturaCursorConnection
+    localidad(id: ID!): Localidad
+    localidads(
+        id: Int
+        id_list: [Int]
+        nombre: String
+        nombre_list: [String]
+        order: [LocalidadFilter_order]
+    ): [Localidad]
+    menu(id: ID!): Menu
+    menus(
+        "Returns the current page."
+        page: Int
+
+        "Returns the number of items per page."
+        itemsPerPage: Int
+
+        order: [MenuFilter_order]
+        tipo: String
+        tipo_list: [String]
+    ): MenuPageConnection
+    getMenu(params: Iterable): Menu
+    nacion(id: ID!): Nacion
+    nacions(
+        "Returns the current page."
+        page: Int
+
+        "Returns the number of items per page."
+        itemsPerPage: Int
+    ): NacionPageConnection
+    parada(id: ID!): Parada
+    paradas(
+        "Returns the first n elements from the list."
+        first: Int
+
+        "Returns the last n elements from the list."
+        last: Int
+
+        "Returns the elements in the list that come before the specified cursor."
+        before: String
+
+        "Returns the elements in the list that come after the specified cursor."
+        after: String
+    ): ParadaCursorConnection
+    permiso(id: ID!): Permiso
+    permisos(order: [PermisoFilter_order]): [Permiso]
+    piloto(id: ID!): Piloto
+    pilotos(
+        "Returns the current page."
+        page: Int
+
+        "Returns the number of items per page."
+        itemsPerPage: Int
+
+        id: Int
+        id_list: [Int]
+        email: String
+        email_list: [String]
+        status: String
+        status_list: [String]
+        licencia: String
+        licencia_list: [String]
+        telefono: String
+        telefono_list: [String]
+        createdAt: [PilotoFilter_createdAt]
+        order: [PilotoFilter_order]
+        fullName: String
+    ): PilotoPageConnection
+    recorrido(id: ID!): Recorrido
+    recorridos(
+        "Returns the first n elements from the list."
+        first: Int
+
+        "Returns the last n elements from the list."
+        last: Int
+
+        "Returns the elements in the list that come before the specified cursor."
+        before: String
+
+        "Returns the elements in the list that come after the specified cursor."
+        after: String
+    ): RecorridoCursorConnection
+    recorridoAsientoPrecio(id: ID!): RecorridoAsientoPrecio
+    recorridoAsientoPrecios(
+        "Returns the first n elements from the list."
+        first: Int
+
+        "Returns the last n elements from the list."
+        last: Int
+
+        "Returns the elements in the list that come before the specified cursor."
+        before: String
+
+        "Returns the elements in the list that come after the specified cursor."
+        after: String
+    ): RecorridoAsientoPrecioCursorConnection
+    role(id: ID!): Role
+    roles(order: [RoleFilter_order]): [Role]
+    route(id: ID!): Route
+    routes(
+        "Returns the first n elements from the list."
+        first: Int
+
+        "Returns the last n elements from the list."
+        last: Int
+
+        "Returns the elements in the list that come before the specified cursor."
+        before: String
+
+        "Returns the elements in the list that come after the specified cursor."
+        after: String
+    ): RouteCursorConnection
+    salida(id: ID!): Salida
+    salidas(
+        "Returns the first n elements from the list."
+        first: Int
+
+        "Returns the last n elements from the list."
+        last: Int
+
+        "Returns the elements in the list that come before the specified cursor."
+        before: String
+
+        "Returns the elements in the list that come after the specified cursor."
+        after: String
+    ): SalidaCursorConnection
+    salidaLog(id: ID!): SalidaLog
+    salidaLogs(
+        "Returns the first n elements from the list."
+        first: Int
+
+        "Returns the last n elements from the list."
+        last: Int
+
+        "Returns the elements in the list that come before the specified cursor."
+        before: String
+
+        "Returns the elements in the list that come after the specified cursor."
+        after: String
+    ): SalidaLogCursorConnection
+    taxon(id: ID!): Taxon
+    taxa(
+        "Returns the first n elements from the list."
+        first: Int
+
+        "Returns the last n elements from the list."
+        last: Int
+
+        "Returns the elements in the list that come before the specified cursor."
+        before: String
+
+        "Returns the elements in the list that come after the specified cursor."
+        after: String
+    ): TaxonCursorConnection
+    user(id: ID!): User
+    usernameUser(id: ID!): User
+    users(
+        "Returns the first n elements from the list."
+        first: Int
+
+        "Returns the last n elements from the list."
+        last: Int
+
+        "Returns the elements in the list that come before the specified cursor."
+        before: String
+
+        "Returns the elements in the list that come after the specified cursor."
+        after: String
+
+        createdAt: [UserFilter_createdAt]
+        order: [UserFilter_order]
+        id: String
+        username: String
+        nombre: String
+        apellido: String
+    ): UserCursorConnection
+    getUserByUsernameUser(username: String): User
+    venta(id: ID!): Venta
+    ventas(
+        "Returns the first n elements from the list."
+        first: Int
+
+        "Returns the last n elements from the list."
+        last: Int
+
+        "Returns the elements in the list that come before the specified cursor."
+        before: String
+
+        "Returns the elements in the list that come after the specified cursor."
+        after: String
+    ): VentaCursorConnection
+}
+
+"A node, according to the Relay specification."
+interface Node {
+    "The id of this node."
+    id: ID!
+}
+
+type Agnostic implements Node {
+    id: ID!
+    data: Iterable!
+}
+
+"The `Iterable` scalar type represents an array or a Traversable with any kind of data."
+scalar Iterable
+
+type FormResource implements Node {
+    id: ID!
+    schema: Iterable!
+}
+
+type MetadataResource implements Node {
+    id: ID!
+    data: Iterable!
+    _id: String!
+}
+
+type SettingResource implements Node {
+    id: ID!
+    list: Iterable!
+}
+
+type Action implements Node {
+    id: ID!
+    ruta: String
+    nombre: String
+    roles(order: [RoleFilter_order]): [Role]
+    _id: Int!
+    status: Status
+}
+
+input RoleFilter_order {
+    id: String
+}
+
+type Role implements Node {
+    id: ID!
+    nombre: String!
+    parents(order: [RoleFilter_order]): [Role]
+    children(order: [RoleFilter_order]): [Role]
+    permisos(order: [PermisoFilter_order]): [Permiso]
+    actions(
+        "Returns the current page."
+        page: Int
+
+        "Returns the number of items per page."
+        itemsPerPage: Int
+
+        order: [ActionFilter_order]
+    ): ActionPageConnection
+    _id: Int!
+}
+
+input PermisoFilter_order {
+    id: String
+}
+
+type Permiso implements Node {
+    id: ID!
+    roles(order: [RoleFilter_order]): [Role]
+    parents(order: [PermisoFilter_order]): [Permiso]
+    children(order: [PermisoFilter_order]): [Permiso]
+    nombre: String
+    nota: String
+    _id: Int!
+    status: Status
+}
+
+enum Status {
+    creado
+    progreso
+    finalizado
+    activo
+    inactivo
+    cancelado
+    error
+    pausa
+    confirmado
+    expirado
+    reasignado
+}
+
+input ActionFilter_order {
+    id: String
+}
+
+"Page connection for Action."
+type ActionPageConnection {
+    collection: [Action]
+    paginationInfo: ActionPaginationInfo!
+}
+
+"Information about the pagination."
+type ActionPaginationInfo {
+    itemsPerPage: Int!
+    lastPage: Int!
+    totalCount: Int!
+    currentPage: Int!
+    hasNextPage: Boolean!
+}
+
+type Agencia implements Node {
+    id: ID!
+    users(
+        "Returns the first n elements from the list."
+        first: Int
+
+        "Returns the last n elements from the list."
+        last: Int
+
+        "Returns the elements in the list that come before the specified cursor."
+        before: String
+
+        "Returns the elements in the list that come after the specified cursor."
+        after: String
+
+        createdAt: [UserFilter_createdAt]
+        order: [UserFilter_order]
+    ): UserCursorConnection
+    alias: String!
+    email: String
+    telefono: String
+    direccion: String
+    localidad: Localidad
+    nombre: String
+    nota: String
+    _id: Int!
+    status: Status
+    legacyId: Int
+}
+
+input UserFilter_createdAt {
+    before: String
+    strictly_before: String
+    after: String
+    strictly_after: String
+}
+
+input UserFilter_order {
+    id: String
+    nombre: String
+    apellido: String
+    username: String
+    createdAt: String
+    status: String
+}
+
+"Cursor connection for User."
+type UserCursorConnection {
+    edges: [UserEdge]
+    pageInfo: UserPageInfo!
+    totalCount: Int!
+}
+
+"Edge of User."
+type UserEdge {
+    node: User
+    cursor: String!
+}
+
+type User implements Node {
+    id: ID!
+    username: String!
+
+    "The hashed password"
+    password: String
+
+    fullName: String
+    userRoles(order: [RoleFilter_order]): [Role]
+    permisos(order: [PermisoFilter_order]): [Permiso]
+    _id: Int!
+    createdAt: String
+
+    "Returns updatedAt."
+    updatedAt: String
+
+    status: Status
+    legacyId: Int
+    apellido: String
+    nombre: String!
+    email: String
+    nit: String
+    telefono: String
+    direccion: String
+    localidad: Localidad
+    userIdentifier: String!
+    roles: Iterable!
+    validTokenStrings: String!
+}
+
+type Localidad implements Node {
+    id: ID!
+    nombre: String!
+    nacion: Nacion
+    _id: Int!
+}
+
+type Nacion implements Node {
+    id: ID!
+    nombre: String!
+    _id: Int!
+}
+
+"Information about the current page."
+type UserPageInfo {
+    endCursor: String
+    startCursor: String
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+}
+
+"Cursor connection for Agencia."
+type AgenciaCursorConnection {
+    edges: [AgenciaEdge]
+    pageInfo: AgenciaPageInfo!
+    totalCount: Int!
+}
+
+"Edge of Agencia."
+type AgenciaEdge {
+    node: Agencia
+    cursor: String!
+}
+
+"Information about the current page."
+type AgenciaPageInfo {
+    endCursor: String
+    startCursor: String
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+}
+
+type Asiento implements Node {
+    id: ID!
+    numero: Int!
+    bus: Bus!
+    clase: String
+    _id: Int!
+}
+
+type Bus implements Node {
+    id: ID!
+    codigo: String
+    asientos(
+        "Returns the first n elements from the list."
+        first: Int
+
+        "Returns the last n elements from the list."
+        last: Int
+
+        "Returns the elements in the list that come before the specified cursor."
+        before: String
+
+        "Returns the elements in the list that come after the specified cursor."
+        after: String
+    ): AsientoCursorConnection
+    precioVariacionAsientoA: Float
+    precioVariacionAsientoB: Float
+    empresa: Empresa
+    piloto: Piloto
+    marca: String
+    placa: String
+    _id: Int!
+    createdAt: String
+
+    "Returns updatedAt."
+    updatedAt: String
+
+    status: Status
+    legacyId: Int
+}
+
+"Cursor connection for Asiento."
+type AsientoCursorConnection {
+    edges: [AsientoEdge]
+    pageInfo: AsientoPageInfo!
+    totalCount: Int!
+}
+
+"Edge of Asiento."
+type AsientoEdge {
+    node: Asiento
+    cursor: String!
+}
+
+"Information about the current page."
+type AsientoPageInfo {
+    endCursor: String
+    startCursor: String
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+}
+
+type Empresa implements Node {
+    id: ID!
+    nombreComercial: String
+    denominacionSocial: String
+    alias: String
+    _id: Int!
+    createdAt: String
+
+    "Returns updatedAt."
+    updatedAt: String
+
+    status: Status
+    legacyId: Int
+    nombre: String!
+    email: String
+    nit: String
+    telefono: String
+    direccion: String
+    localidad: Localidad
+}
+
+type Piloto implements Node {
+    id: ID!
+    licencia: String
+    licenciaVencimiento: String
+    dpi: String
+    sexo: String
+    fechaNacimiento: String
+    seguroSocial: String
+    nacionalidad: String
+    fullName: String
+    _id: Int!
+    createdAt: String
+
+    "Returns updatedAt."
+    updatedAt: String
+
+    status: Status
+    legacyId: Int
+    apellido: String
+    nombre: String!
+    email: String
+    nit: String
+    telefono: String
+    direccion: String
+    localidad: Localidad
+}
+
+type Boleto implements Node {
+    id: ID!
+    cliente: Cliente!
+    precio: Float
+    boletoLogs(
+        "Returns the first n elements from the list."
+        first: Int
+
+        "Returns the last n elements from the list."
+        last: Int
+
+        "Returns the elements in the list that come before the specified cursor."
+        before: String
+
+        "Returns the elements in the list that come after the specified cursor."
+        after: String
+    ): BoletoLogCursorConnection
+    asiento: Asiento!
+    salida: Salida!
+    _id: Int!
+    status: Status
+    createdAt: String
+
+    "Returns updatedAt."
+    updatedAt: String
+}
+
+type Cliente implements Node {
+    id: ID!
+    dpi: String
+    _id: Int!
+    createdAt: String
+
+    "Returns updatedAt."
+    updatedAt: String
+
+    status: Status
+    legacyId: Int
+    apellido: String
+    nombre: String!
+    email: String
+    nit: String
+    telefono: String
+    direccion: String
+    localidad: Localidad
+}
+
+"Cursor connection for BoletoLog."
+type BoletoLogCursorConnection {
+    edges: [BoletoLogEdge]
+    pageInfo: BoletoLogPageInfo!
+    totalCount: Int!
+}
+
+"Edge of BoletoLog."
+type BoletoLogEdge {
+    node: BoletoLog
+    cursor: String!
+}
+
+type BoletoLog implements Node {
+    id: ID!
+    boleto: Boleto!
+    tipo: Int
+    _id: Int!
+    createdAt: String
+
+    "Returns updatedAt."
+    updatedAt: String
+
+    descripcion: String
+    user: User
+}
+
+"Information about the current page."
+type BoletoLogPageInfo {
+    endCursor: String
+    startCursor: String
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+}
+
+type Salida implements Node {
+    id: ID!
+    fecha: String
+    bus: Bus
+    recorrido: Recorrido!
+    empresa: Empresa
+    salidaLogs(
+        "Returns the first n elements from the list."
+        first: Int
+
+        "Returns the last n elements from the list."
+        last: Int
+
+        "Returns the elements in the list that come before the specified cursor."
+        before: String
+
+        "Returns the elements in the list that come after the specified cursor."
+        after: String
+    ): SalidaLogCursorConnection
+    boletos(
+        "Returns the first n elements from the list."
+        first: Int
+
+        "Returns the last n elements from the list."
+        last: Int
+
+        "Returns the elements in the list that come before the specified cursor."
+        before: String
+
+        "Returns the elements in the list that come after the specified cursor."
+        after: String
+    ): BoletoCursorConnection
+    _id: Int!
+    createdAt: String
+
+    "Returns updatedAt."
+    updatedAt: String
+
+    status: Status
+}
+
+type Recorrido implements Node {
+    id: ID!
+    tiempo: String
+    distancia: Float
+    inicio: Parada
+    final: Parada
+    nombre: String
+    nota: String
+    _id: Int!
+    status: Status
+    legacyId: Int
+}
+
+type Parada implements Node {
+    id: ID!
+    enclave: Enclave
+    recorridos(
+        "Returns the first n elements from the list."
+        first: Int
+
+        "Returns the last n elements from the list."
+        last: Int
+
+        "Returns the elements in the list that come before the specified cursor."
+        before: String
+
+        "Returns the elements in the list that come after the specified cursor."
+        after: String
+    ): RecorridoCursorConnection
+    nombre: String
+    nota: String
+    _id: Int!
+    status: Status
+}
+
+type Enclave implements Node {
+    id: ID!
+    email: String
+    telefono: String
+    direccion: String
+    localidad: Localidad
+    nombre: String
+    nota: String
+    _id: Int!
+    status: Status
+}
+
+"Cursor connection for Recorrido."
+type RecorridoCursorConnection {
+    edges: [RecorridoEdge]
+    pageInfo: RecorridoPageInfo!
+    totalCount: Int!
+}
+
+"Edge of Recorrido."
+type RecorridoEdge {
+    node: Recorrido
+    cursor: String!
+}
+
+"Information about the current page."
+type RecorridoPageInfo {
+    endCursor: String
+    startCursor: String
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+}
+
+"Cursor connection for SalidaLog."
+type SalidaLogCursorConnection {
+    edges: [SalidaLogEdge]
+    pageInfo: SalidaLogPageInfo!
+    totalCount: Int!
+}
+
+"Edge of SalidaLog."
+type SalidaLogEdge {
+    node: SalidaLog
+    cursor: String!
+}
+
+type SalidaLog implements Node {
+    id: ID!
+    tipo: String
+    salida: Salida!
+    _id: Int!
+    createdAt: String
+
+    "Returns updatedAt."
+    updatedAt: String
+
+    descripcion: String
+    user: User
+}
+
+"Information about the current page."
+type SalidaLogPageInfo {
+    endCursor: String
+    startCursor: String
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+}
+
+"Cursor connection for Boleto."
+type BoletoCursorConnection {
+    edges: [BoletoEdge]
+    pageInfo: BoletoPageInfo!
+    totalCount: Int!
+}
+
+"Edge of Boleto."
+type BoletoEdge {
+    node: Boleto
+    cursor: String!
+}
+
+"Information about the current page."
+type BoletoPageInfo {
+    endCursor: String
+    startCursor: String
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+}
+
+input BusFilter_createdAt {
+    before: String
+    strictly_before: String
+    after: String
+    strictly_after: String
+}
+
+input BusFilter_order {
+    id: String
+    marca: String
+    placa: String
+    createdAt: String
+    status: String
+}
+
+"Page connection for Bus."
+type BusPageConnection {
+    collection: [Bus]
+    paginationInfo: BusPaginationInfo!
+}
+
+"Information about the pagination."
+type BusPaginationInfo {
+    itemsPerPage: Int!
+    lastPage: Int!
+    totalCount: Int!
+    currentPage: Int!
+    hasNextPage: Boolean!
+}
+
+"Cursor connection for Cliente."
+type ClienteCursorConnection {
+    edges: [ClienteEdge]
+    pageInfo: ClientePageInfo!
+    totalCount: Int!
+}
+
+"Edge of Cliente."
+type ClienteEdge {
+    node: Cliente
+    cursor: String!
+}
+
+"Information about the current page."
+type ClientePageInfo {
+    endCursor: String
+    startCursor: String
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+}
+
+"Page connection for Empresa."
+type EmpresaPageConnection {
+    collection: [Empresa]
+    paginationInfo: EmpresaPaginationInfo!
+}
+
+"Information about the pagination."
+type EmpresaPaginationInfo {
+    itemsPerPage: Int!
+    lastPage: Int!
+    totalCount: Int!
+    currentPage: Int!
+    hasNextPage: Boolean!
+}
+
+"Cursor connection for Enclave."
+type EnclaveCursorConnection {
+    edges: [EnclaveEdge]
+    pageInfo: EnclavePageInfo!
+    totalCount: Int!
+}
+
+"Edge of Enclave."
+type EnclaveEdge {
+    node: Enclave
+    cursor: String!
+}
+
+"Information about the current page."
+type EnclavePageInfo {
+    endCursor: String
+    startCursor: String
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+}
+
+type Estacion implements Node {
+    id: ID!
+    users(
+        "Returns the first n elements from the list."
+        first: Int
+
+        "Returns the last n elements from the list."
+        last: Int
+
+        "Returns the elements in the list that come before the specified cursor."
+        before: String
+
+        "Returns the elements in the list that come after the specified cursor."
+        after: String
+
+        createdAt: [UserFilter_createdAt]
+        order: [UserFilter_order]
+    ): UserCursorConnection
+    alias: String!
+    email: String
+    telefono: String
+    direccion: String
+    localidad: Localidad
+    nombre: String
+    nota: String
+    _id: Int!
+    status: Status
+    legacyId: Int
+    slug: String
+}
+
+input EstacionFilter_order {
+    id: String
+    nombre: String
+    alias: String
+    status: String
+}
+
+"Page connection for Estacion."
+type EstacionPageConnection {
+    collection: [Estacion]
+    paginationInfo: EstacionPaginationInfo!
+}
+
+"Information about the pagination."
+type EstacionPaginationInfo {
+    itemsPerPage: Int!
+    lastPage: Int!
+    totalCount: Int!
+    currentPage: Int!
+    hasNextPage: Boolean!
+}
+
+type FDN implements Node {
+    id: ID!
+    _id: Int!
+}
+
+"Cursor connection for FDN."
+type FDNCursorConnection {
+    edges: [FDNEdge]
+    pageInfo: FDNPageInfo!
+    totalCount: Int!
+}
+
+"Edge of FDN."
+type FDNEdge {
+    node: FDN
+    cursor: String!
+}
+
+"Information about the current page."
+type FDNPageInfo {
+    endCursor: String
+    startCursor: String
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+}
+
+type Factura implements Node {
+    id: ID!
+    dte: String
+    uuid: String
+    fecha: String
+    serie: String
+    venta: Venta
+    _id: Int!
+    createdAt: String
+
+    "Returns updatedAt."
+    updatedAt: String
+
+    status: Status
+}
+
+type Venta implements Node {
+    id: ID!
+    ida: Salida!
+    regreso: Salida!
+    user: User!
+    precio: Float
+    factura: Factura
+    _id: Int!
+    createdAt: String
+
+    "Returns updatedAt."
+    updatedAt: String
+
+    status: Status
+}
+
+"Cursor connection for Factura."
+type FacturaCursorConnection {
+    edges: [FacturaEdge]
+    pageInfo: FacturaPageInfo!
+    totalCount: Int!
+}
+
+"Edge of Factura."
+type FacturaEdge {
+    node: Factura
+    cursor: String!
+}
+
+"Information about the current page."
+type FacturaPageInfo {
+    endCursor: String
+    startCursor: String
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+}
+
+input LocalidadFilter_order {
+    id: String
+}
+
+type Menu implements Node {
+    id: ID!
+    posicion: Int
+    tipo: String
+    nombre: String
+    icon: String
+    parent: Menu
+    children(
+        "Returns the current page."
+        page: Int
+
+        "Returns the number of items per page."
+        itemsPerPage: Int
+
+        order: [MenuFilter_order]
+        tipo: String
+        tipo_list: [String]
+    ): MenuPageConnection
+    action: Action
+    _id: Int!
+    status: Status
+}
+
+input MenuFilter_order {
+    id: String
+}
+
+"Page connection for Menu."
+type MenuPageConnection {
+    collection: [Menu]
+    paginationInfo: MenuPaginationInfo!
+}
+
+"Information about the pagination."
+type MenuPaginationInfo {
+    itemsPerPage: Int!
+    lastPage: Int!
+    totalCount: Int!
+    currentPage: Int!
+    hasNextPage: Boolean!
+}
+
+"Page connection for Nacion."
+type NacionPageConnection {
+    collection: [Nacion]
+    paginationInfo: NacionPaginationInfo!
+}
+
+"Information about the pagination."
+type NacionPaginationInfo {
+    itemsPerPage: Int!
+    lastPage: Int!
+    totalCount: Int!
+    currentPage: Int!
+    hasNextPage: Boolean!
+}
+
+"Cursor connection for Parada."
+type ParadaCursorConnection {
+    edges: [ParadaEdge]
+    pageInfo: ParadaPageInfo!
+    totalCount: Int!
+}
+
+"Edge of Parada."
+type ParadaEdge {
+    node: Parada
+    cursor: String!
+}
+
+"Information about the current page."
+type ParadaPageInfo {
+    endCursor: String
+    startCursor: String
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+}
+
+input PilotoFilter_createdAt {
+    before: String
+    strictly_before: String
+    after: String
+    strictly_after: String
+}
+
+input PilotoFilter_order {
+    id: String
+    nombre: String
+    email: String
+    createdAt: String
+    status: String
+}
+
+"Page connection for Piloto."
+type PilotoPageConnection {
+    collection: [Piloto]
+    paginationInfo: PilotoPaginationInfo!
+}
+
+"Information about the pagination."
+type PilotoPaginationInfo {
+    itemsPerPage: Int!
+    lastPage: Int!
+    totalCount: Int!
+    currentPage: Int!
+    hasNextPage: Boolean!
+}
+
+type RecorridoAsientoPrecio implements Node {
+    id: ID!
+    _id: Int!
+    recorrido: Recorrido!
+    precioAsientoA: Float
+    precioAsientoB: Float
+}
+
+"Cursor connection for RecorridoAsientoPrecio."
+type RecorridoAsientoPrecioCursorConnection {
+    edges: [RecorridoAsientoPrecioEdge]
+    pageInfo: RecorridoAsientoPrecioPageInfo!
+    totalCount: Int!
+}
+
+"Edge of RecorridoAsientoPrecio."
+type RecorridoAsientoPrecioEdge {
+    node: RecorridoAsientoPrecio
+    cursor: String!
+}
+
+"Information about the current page."
+type RecorridoAsientoPrecioPageInfo {
+    endCursor: String
+    startCursor: String
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+}
+
+type Route implements Node {
+    id: ID!
+    _id: Int!
+}
+
+"Cursor connection for Route."
+type RouteCursorConnection {
+    edges: [RouteEdge]
+    pageInfo: RoutePageInfo!
+    totalCount: Int!
+}
+
+"Edge of Route."
+type RouteEdge {
+    node: Route
+    cursor: String!
+}
+
+"Information about the current page."
+type RoutePageInfo {
+    endCursor: String
+    startCursor: String
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+}
+
+"Cursor connection for Salida."
+type SalidaCursorConnection {
+    edges: [SalidaEdge]
+    pageInfo: SalidaPageInfo!
+    totalCount: Int!
+}
+
+"Edge of Salida."
+type SalidaEdge {
+    node: Salida
+    cursor: String!
+}
+
+"Information about the current page."
+type SalidaPageInfo {
+    endCursor: String
+    startCursor: String
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+}
+
+type Taxon implements Node {
+    id: ID!
+    parent: Taxon
+    posicion: Int
+    children(
+        "Returns the first n elements from the list."
+        first: Int
+
+        "Returns the last n elements from the list."
+        last: Int
+
+        "Returns the elements in the list that come before the specified cursor."
+        before: String
+
+        "Returns the elements in the list that come after the specified cursor."
+        after: String
+    ): TaxonCursorConnection
+    nombre: String
+    nota: String
+    _id: Int!
+    status: Status
+}
+
+"Cursor connection for Taxon."
+type TaxonCursorConnection {
+    edges: [TaxonEdge]
+    pageInfo: TaxonPageInfo!
+    totalCount: Int!
+}
+
+"Edge of Taxon."
+type TaxonEdge {
+    node: Taxon
+    cursor: String!
+}
+
+"Information about the current page."
+type TaxonPageInfo {
+    endCursor: String
+    startCursor: String
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+}
+
+"Cursor connection for Venta."
+type VentaCursorConnection {
+    edges: [VentaEdge]
+    pageInfo: VentaPageInfo!
+    totalCount: Int!
+}
+
+"Edge of Venta."
+type VentaEdge {
+    node: Venta
+    cursor: String!
+}
+
+"Information about the current page."
+type VentaPageInfo {
+    endCursor: String
+    startCursor: String
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+}
+
+type Mutation {
+    "Deletes a Agnostic."
+    deleteAgnostic(input: deleteAgnosticInput!): deleteAgnosticPayload
+
+    "Creates a Action."
+    createAction(input: createActionInput!): createActionPayload
+
+    "Updates a Action."
+    updateAction(input: updateActionInput!): updateActionPayload
+
+    "Deletes a Action."
+    deleteAction(input: deleteActionInput!): deleteActionPayload
+
+    "Updates a Agencia."
+    updateAgencia(input: updateAgenciaInput!): updateAgenciaPayload
+
+    "Deletes a Agencia."
+    deleteAgencia(input: deleteAgenciaInput!): deleteAgenciaPayload
+
+    "Creates a Agencia."
+    createAgencia(input: createAgenciaInput!): createAgenciaPayload
+
+    "Updates a Asiento."
+    updateAsiento(input: updateAsientoInput!): updateAsientoPayload
+
+    "Deletes a Asiento."
+    deleteAsiento(input: deleteAsientoInput!): deleteAsientoPayload
+
+    "Creates a Asiento."
+    createAsiento(input: createAsientoInput!): createAsientoPayload
+
+    "Updates a Boleto."
+    updateBoleto(input: updateBoletoInput!): updateBoletoPayload
+
+    "Deletes a Boleto."
+    deleteBoleto(input: deleteBoletoInput!): deleteBoletoPayload
+
+    "Creates a Boleto."
+    createBoleto(input: createBoletoInput!): createBoletoPayload
+
+    "Updates a BoletoLog."
+    updateBoletoLog(input: updateBoletoLogInput!): updateBoletoLogPayload
+
+    "Deletes a BoletoLog."
+    deleteBoletoLog(input: deleteBoletoLogInput!): deleteBoletoLogPayload
+
+    "Creates a BoletoLog."
+    createBoletoLog(input: createBoletoLogInput!): createBoletoLogPayload
+
+    "Updates a Cliente."
+    updateCliente(input: updateClienteInput!): updateClientePayload
+
+    "Deletes a Cliente."
+    deleteCliente(input: deleteClienteInput!): deleteClientePayload
+
+    "Creates a Cliente."
+    createCliente(input: createClienteInput!): createClientePayload
+
+    "Creates a Empresa."
+    createEmpresa(input: createEmpresaInput!): createEmpresaPayload
+
+    "Updates a Empresa."
+    updateEmpresa(input: updateEmpresaInput!): updateEmpresaPayload
+
+    "Deletes a Empresa."
+    deleteEmpresa(input: deleteEmpresaInput!): deleteEmpresaPayload
+
+    "Updates a Enclave."
+    updateEnclave(input: updateEnclaveInput!): updateEnclavePayload
+
+    "Deletes a Enclave."
+    deleteEnclave(input: deleteEnclaveInput!): deleteEnclavePayload
+
+    "Creates a Enclave."
+    createEnclave(input: createEnclaveInput!): createEnclavePayload
+
+    "Creates a Estacion."
+    createEstacion(input: createEstacionInput!): createEstacionPayload
+
+    "Updates a Estacion."
+    updateEstacion(input: updateEstacionInput!): updateEstacionPayload
+
+    "Deletes a Estacion."
+    deleteEstacion(input: deleteEstacionInput!): deleteEstacionPayload
+
+    "Updates a FDN."
+    updateFDN(input: updateFDNInput!): updateFDNPayload
+
+    "Deletes a FDN."
+    deleteFDN(input: deleteFDNInput!): deleteFDNPayload
+
+    "Creates a FDN."
+    createFDN(input: createFDNInput!): createFDNPayload
+
+    "Updates a Factura."
+    updateFactura(input: updateFacturaInput!): updateFacturaPayload
+
+    "Deletes a Factura."
+    deleteFactura(input: deleteFacturaInput!): deleteFacturaPayload
+
+    "Creates a Factura."
+    createFactura(input: createFacturaInput!): createFacturaPayload
+
+    "Creates a Localidad."
+    createLocalidad(input: createLocalidadInput!): createLocalidadPayload
+
+    "Updates a Localidad."
+    updateLocalidad(input: updateLocalidadInput!): updateLocalidadPayload
+
+    "Deletes a Localidad."
+    deleteLocalidad(input: deleteLocalidadInput!): deleteLocalidadPayload
+
+    "Creates a Menu."
+    createMenu(input: createMenuInput!): createMenuPayload
+
+    "Updates a Menu."
+    updateMenu(input: updateMenuInput!): updateMenuPayload
+
+    "Deletes a Menu."
+    deleteMenu(input: deleteMenuInput!): deleteMenuPayload
+
+    "Creates a Nacion."
+    createNacion(input: createNacionInput!): createNacionPayload
+
+    "Updates a Nacion."
+    updateNacion(input: updateNacionInput!): updateNacionPayload
+
+    "Deletes a Nacion."
+    deleteNacion(input: deleteNacionInput!): deleteNacionPayload
+
+    "Updates a Parada."
+    updateParada(input: updateParadaInput!): updateParadaPayload
+
+    "Deletes a Parada."
+    deleteParada(input: deleteParadaInput!): deleteParadaPayload
+
+    "Creates a Parada."
+    createParada(input: createParadaInput!): createParadaPayload
+
+    "Creates a Permiso."
+    createPermiso(input: createPermisoInput!): createPermisoPayload
+
+    "Updates a Permiso."
+    updatePermiso(input: updatePermisoInput!): updatePermisoPayload
+
+    "Deletes a Permiso."
+    deletePermiso(input: deletePermisoInput!): deletePermisoPayload
+
+    "Updates a Recorrido."
+    updateRecorrido(input: updateRecorridoInput!): updateRecorridoPayload
+
+    "Deletes a Recorrido."
+    deleteRecorrido(input: deleteRecorridoInput!): deleteRecorridoPayload
+
+    "Creates a Recorrido."
+    createRecorrido(input: createRecorridoInput!): createRecorridoPayload
+
+    "Updates a RecorridoAsientoPrecio."
+    updateRecorridoAsientoPrecio(
+        input: updateRecorridoAsientoPrecioInput!
+    ): updateRecorridoAsientoPrecioPayload
+
+    "Deletes a RecorridoAsientoPrecio."
+    deleteRecorridoAsientoPrecio(
+        input: deleteRecorridoAsientoPrecioInput!
+    ): deleteRecorridoAsientoPrecioPayload
+
+    "Creates a RecorridoAsientoPrecio."
+    createRecorridoAsientoPrecio(
+        input: createRecorridoAsientoPrecioInput!
+    ): createRecorridoAsientoPrecioPayload
+
+    "Creates a Role."
+    createRole(input: createRoleInput!): createRolePayload
+
+    "Updates a Role."
+    updateRole(input: updateRoleInput!): updateRolePayload
+
+    "Deletes a Role."
+    deleteRole(input: deleteRoleInput!): deleteRolePayload
+
+    "Updates a Route."
+    updateRoute(input: updateRouteInput!): updateRoutePayload
+
+    "Deletes a Route."
+    deleteRoute(input: deleteRouteInput!): deleteRoutePayload
+
+    "Creates a Route."
+    createRoute(input: createRouteInput!): createRoutePayload
+
+    "Updates a Salida."
+    updateSalida(input: updateSalidaInput!): updateSalidaPayload
+
+    "Deletes a Salida."
+    deleteSalida(input: deleteSalidaInput!): deleteSalidaPayload
+
+    "Creates a Salida."
+    createSalida(input: createSalidaInput!): createSalidaPayload
+
+    "Updates a SalidaLog."
+    updateSalidaLog(input: updateSalidaLogInput!): updateSalidaLogPayload
+
+    "Deletes a SalidaLog."
+    deleteSalidaLog(input: deleteSalidaLogInput!): deleteSalidaLogPayload
+
+    "Creates a SalidaLog."
+    createSalidaLog(input: createSalidaLogInput!): createSalidaLogPayload
+
+    "Updates a Taxon."
+    updateTaxon(input: updateTaxonInput!): updateTaxonPayload
+
+    "Deletes a Taxon."
+    deleteTaxon(input: deleteTaxonInput!): deleteTaxonPayload
+
+    "Creates a Taxon."
+    createTaxon(input: createTaxonInput!): createTaxonPayload
+
+    "Creates a User."
+    createUser(input: createUserInput!): createUserPayload
+
+    "Updates a User."
+    updateUser(input: updateUserInput!): updateUserPayload
+
+    "Deletes a User."
+    deleteUser(input: deleteUserInput!): deleteUserPayload
+
+    "Updates a Venta."
+    updateVenta(input: updateVentaInput!): updateVentaPayload
+
+    "Deletes a Venta."
+    deleteVenta(input: deleteVentaInput!): deleteVentaPayload
+
+    "Creates a Venta."
+    createVenta(input: createVentaInput!): createVentaPayload
+}
+
+"Deletes a Agnostic."
+input deleteAgnosticInput {
+    ids: [ID]
+    resource: String
+    clientMutationId: String
+}
+
+"Deletes a Agnostic."
+type deleteAgnosticPayload {
+    agnostic: Agnostic
+    clientMutationId: String
+}
+
+"Creates a Action."
+input createActionInput {
+    ruta: String
+    nombre: String
+    roles: [String]
+    status: Status
+    clientMutationId: String
+}
+
+"Creates a Action."
+type createActionPayload {
+    action: Action
+    clientMutationId: String
+}
+
+"Updates a Action."
+input updateActionInput {
+    id: ID!
+    ruta: String
+    nombre: String
+    roles: [String]
+    status: Status
+    clientMutationId: String
+}
+
+"Updates a Action."
+type updateActionPayload {
+    action: Action
+    clientMutationId: String
+}
+
+"Deletes a Action."
+input deleteActionInput {
+    id: ID!
+    clientMutationId: String
+}
+
+"Deletes a Action."
+type deleteActionPayload {
+    action: Action
+    clientMutationId: String
+}
+
+"Updates a Agencia."
+input updateAgenciaInput {
+    id: ID!
+    users: [String]
+    alias: String
+    email: String
+    telefono: String
+    direccion: String
+    localidad: String
+    nombre: String
+    nota: String
+    status: Status
+    legacyId: Int
+    clientMutationId: String
+}
+
+"Updates a Agencia."
+type updateAgenciaPayload {
+    agencia: Agencia
+    clientMutationId: String
+}
+
+"Deletes a Agencia."
+input deleteAgenciaInput {
+    id: ID!
+    clientMutationId: String
+}
+
+"Deletes a Agencia."
+type deleteAgenciaPayload {
+    agencia: Agencia
+    clientMutationId: String
+}
+
+"Creates a Agencia."
+input createAgenciaInput {
+    users: [String]
+    alias: String!
+    email: String
+    telefono: String
+    direccion: String
+    localidad: String
+    nombre: String
+    nota: String
+    status: Status
+    legacyId: Int
+    clientMutationId: String
+}
+
+"Creates a Agencia."
+type createAgenciaPayload {
+    agencia: Agencia
+    clientMutationId: String
+}
+
+"Updates a Asiento."
+input updateAsientoInput {
+    id: ID!
+    numero: Int
+    bus: String
+    clase: String
+    clientMutationId: String
+}
+
+"Updates a Asiento."
+type updateAsientoPayload {
+    asiento: Asiento
+    clientMutationId: String
+}
+
+"Deletes a Asiento."
+input deleteAsientoInput {
+    id: ID!
+    clientMutationId: String
+}
+
+"Deletes a Asiento."
+type deleteAsientoPayload {
+    asiento: Asiento
+    clientMutationId: String
+}
+
+"Creates a Asiento."
+input createAsientoInput {
+    numero: Int!
+    bus: String!
+    clase: String
+    clientMutationId: String
+}
+
+"Creates a Asiento."
+type createAsientoPayload {
+    asiento: Asiento
+    clientMutationId: String
+}
+
+"Updates a Boleto."
+input updateBoletoInput {
+    id: ID!
+    cliente: String
+    precio: Float
+    boletoLogs: [String]
+    asiento: String
+    salida: String
+    status: Status
+    createdAt: String
+
+    "Returns updatedAt."
+    updatedAt: String
+    clientMutationId: String
+}
+
+"Updates a Boleto."
+type updateBoletoPayload {
+    boleto: Boleto
+    clientMutationId: String
+}
+
+"Deletes a Boleto."
+input deleteBoletoInput {
+    id: ID!
+    clientMutationId: String
+}
+
+"Deletes a Boleto."
+type deleteBoletoPayload {
+    boleto: Boleto
+    clientMutationId: String
+}
+
+"Creates a Boleto."
+input createBoletoInput {
+    cliente: String!
+    precio: Float
+    boletoLogs: [String]
+    asiento: String!
+    salida: String!
+    status: Status
+    createdAt: String
+
+    "Returns updatedAt."
+    updatedAt: String
+    clientMutationId: String
+}
+
+"Creates a Boleto."
+type createBoletoPayload {
+    boleto: Boleto
+    clientMutationId: String
+}
+
+"Updates a BoletoLog."
+input updateBoletoLogInput {
+    id: ID!
+    boleto: String
+    tipo: Int
+    createdAt: String
+
+    "Returns updatedAt."
+    updatedAt: String
+    descripcion: String
+    user: String
+    clientMutationId: String
+}
+
+"Updates a BoletoLog."
+type updateBoletoLogPayload {
+    boletoLog: BoletoLog
+    clientMutationId: String
+}
+
+"Deletes a BoletoLog."
+input deleteBoletoLogInput {
+    id: ID!
+    clientMutationId: String
+}
+
+"Deletes a BoletoLog."
+type deleteBoletoLogPayload {
+    boletoLog: BoletoLog
+    clientMutationId: String
+}
+
+"Creates a BoletoLog."
+input createBoletoLogInput {
+    boleto: String!
+    tipo: Int
+    createdAt: String
+
+    "Returns updatedAt."
+    updatedAt: String
+    descripcion: String
+    user: String
+    clientMutationId: String
+}
+
+"Creates a BoletoLog."
+type createBoletoLogPayload {
+    boletoLog: BoletoLog
+    clientMutationId: String
+}
+
+"Updates a Cliente."
+input updateClienteInput {
+    id: ID!
+    dpi: String
+    createdAt: String
+
+    "Returns updatedAt."
+    updatedAt: String
+    status: Status
+    legacyId: Int
+    apellido: String
+    nombre: String
+    email: String
+    nit: String
+    telefono: String
+    direccion: String
+    localidad: String
+    clientMutationId: String
+}
+
+"Updates a Cliente."
+type updateClientePayload {
+    cliente: Cliente
+    clientMutationId: String
+}
+
+"Deletes a Cliente."
+input deleteClienteInput {
+    id: ID!
+    clientMutationId: String
+}
+
+"Deletes a Cliente."
+type deleteClientePayload {
+    cliente: Cliente
+    clientMutationId: String
+}
+
+"Creates a Cliente."
+input createClienteInput {
+    dpi: String
+    createdAt: String
+
+    "Returns updatedAt."
+    updatedAt: String
+    status: Status
+    legacyId: Int
+    apellido: String
+    nombre: String!
+    email: String
+    nit: String
+    telefono: String
+    direccion: String
+    localidad: String
+    clientMutationId: String
+}
+
+"Creates a Cliente."
+type createClientePayload {
+    cliente: Cliente
+    clientMutationId: String
+}
+
+"Creates a Empresa."
+input createEmpresaInput {
+    nombreComercial: String
+    denominacionSocial: String
+    alias: String
+    createdAt: String
+
+    "Returns updatedAt."
+    updatedAt: String
+    status: Status
+    legacyId: Int
+    nombre: String!
+    email: String
+    nit: String
+    telefono: String
+    direccion: String
+    localidad: String
+    clientMutationId: String
+}
+
+"Creates a Empresa."
+type createEmpresaPayload {
+    empresa: Empresa
+    clientMutationId: String
+}
+
+"Updates a Empresa."
+input updateEmpresaInput {
+    id: ID!
+    nombreComercial: String
+    denominacionSocial: String
+    alias: String
+    createdAt: String
+
+    "Returns updatedAt."
+    updatedAt: String
+    status: Status
+    legacyId: Int
+    nombre: String
+    email: String
+    nit: String
+    telefono: String
+    direccion: String
+    localidad: String
+    clientMutationId: String
+}
+
+"Updates a Empresa."
+type updateEmpresaPayload {
+    empresa: Empresa
+    clientMutationId: String
+}
+
+"Deletes a Empresa."
+input deleteEmpresaInput {
+    id: ID!
+    clientMutationId: String
+}
+
+"Deletes a Empresa."
+type deleteEmpresaPayload {
+    empresa: Empresa
+    clientMutationId: String
+}
+
+"Updates a Enclave."
+input updateEnclaveInput {
+    id: ID!
+    email: String
+    telefono: String
+    direccion: String
+    localidad: String
+    nombre: String
+    nota: String
+    status: Status
+    clientMutationId: String
+}
+
+"Updates a Enclave."
+type updateEnclavePayload {
+    enclave: Enclave
+    clientMutationId: String
+}
+
+"Deletes a Enclave."
+input deleteEnclaveInput {
+    id: ID!
+    clientMutationId: String
+}
+
+"Deletes a Enclave."
+type deleteEnclavePayload {
+    enclave: Enclave
+    clientMutationId: String
+}
+
+"Creates a Enclave."
+input createEnclaveInput {
+    email: String
+    telefono: String
+    direccion: String
+    localidad: String
+    nombre: String
+    nota: String
+    status: Status
+    clientMutationId: String
+}
+
+"Creates a Enclave."
+type createEnclavePayload {
+    enclave: Enclave
+    clientMutationId: String
+}
+
+"Creates a Estacion."
+input createEstacionInput {
+    users: [String]
+    alias: String!
+    email: String
+    telefono: String
+    direccion: String
+    localidad: String
+    nombre: String
+    nota: String
+    status: Status
+    legacyId: Int
+    slug: String
+    clientMutationId: String
+}
+
+"Creates a Estacion."
+type createEstacionPayload {
+    estacion: Estacion
+    clientMutationId: String
+}
+
+"Updates a Estacion."
+input updateEstacionInput {
+    id: ID!
+    users: [String]
+    alias: String
+    email: String
+    telefono: String
+    direccion: String
+    localidad: String
+    nombre: String
+    nota: String
+    status: Status
+    legacyId: Int
+    slug: String
+    clientMutationId: String
+}
+
+"Updates a Estacion."
+type updateEstacionPayload {
+    estacion: Estacion
+    clientMutationId: String
+}
+
+"Deletes a Estacion."
+input deleteEstacionInput {
+    id: ID!
+    clientMutationId: String
+}
+
+"Deletes a Estacion."
+type deleteEstacionPayload {
+    estacion: Estacion
+    clientMutationId: String
+}
+
+"Updates a FDN."
+input updateFDNInput {
+    id: ID!
+    clientMutationId: String
+}
+
+"Updates a FDN."
+type updateFDNPayload {
+    fDN: FDN
+    clientMutationId: String
+}
+
+"Deletes a FDN."
+input deleteFDNInput {
+    id: ID!
+    clientMutationId: String
+}
+
+"Deletes a FDN."
+type deleteFDNPayload {
+    fDN: FDN
+    clientMutationId: String
+}
+
+"Creates a FDN."
+input createFDNInput {
+    clientMutationId: String
+}
+
+"Creates a FDN."
+type createFDNPayload {
+    fDN: FDN
+    clientMutationId: String
+}
+
+"Updates a Factura."
+input updateFacturaInput {
+    id: ID!
+    dte: String
+    uuid: String
+    fecha: String
+    serie: String
+    venta: String
+    createdAt: String
+
+    "Returns updatedAt."
+    updatedAt: String
+    status: Status
+    clientMutationId: String
+}
+
+"Updates a Factura."
+type updateFacturaPayload {
+    factura: Factura
+    clientMutationId: String
+}
+
+"Deletes a Factura."
+input deleteFacturaInput {
+    id: ID!
+    clientMutationId: String
+}
+
+"Deletes a Factura."
+type deleteFacturaPayload {
+    factura: Factura
+    clientMutationId: String
+}
+
+"Creates a Factura."
+input createFacturaInput {
+    dte: String
+    uuid: String
+    fecha: String
+    serie: String
+    venta: String
+    createdAt: String
+
+    "Returns updatedAt."
+    updatedAt: String
+    status: Status
+    clientMutationId: String
+}
+
+"Creates a Factura."
+type createFacturaPayload {
+    factura: Factura
+    clientMutationId: String
+}
+
+"Creates a Localidad."
+input createLocalidadInput {
+    nombre: String!
+    nacion: String
+    clientMutationId: String
+}
+
+"Creates a Localidad."
+type createLocalidadPayload {
+    localidad: Localidad
+    clientMutationId: String
+}
+
+"Updates a Localidad."
+input updateLocalidadInput {
+    id: ID!
+    nombre: String
+    nacion: String
+    clientMutationId: String
+}
+
+"Updates a Localidad."
+type updateLocalidadPayload {
+    localidad: Localidad
+    clientMutationId: String
+}
+
+"Deletes a Localidad."
+input deleteLocalidadInput {
+    id: ID!
+    clientMutationId: String
+}
+
+"Deletes a Localidad."
+type deleteLocalidadPayload {
+    localidad: Localidad
+    clientMutationId: String
+}
+
+"Creates a Menu."
+input createMenuInput {
+    posicion: Int
+    tipo: String
+    nombre: String
+    icon: String
+    parent: String
+    children: [String]
+    action: String
+    status: Status
+    clientMutationId: String
+}
+
+"Creates a Menu."
+type createMenuPayload {
+    menu: Menu
+    clientMutationId: String
+}
+
+"Updates a Menu."
+input updateMenuInput {
+    id: ID!
+    posicion: Int
+    tipo: String
+    nombre: String
+    icon: String
+    parent: String
+    children: [String]
+    action: String
+    status: Status
+    clientMutationId: String
+}
+
+"Updates a Menu."
+type updateMenuPayload {
+    menu: Menu
+    clientMutationId: String
+}
+
+"Deletes a Menu."
+input deleteMenuInput {
+    id: ID!
+    clientMutationId: String
+}
+
+"Deletes a Menu."
+type deleteMenuPayload {
+    menu: Menu
+    clientMutationId: String
+}
+
+"Creates a Nacion."
+input createNacionInput {
+    nombre: String!
+    clientMutationId: String
+}
+
+"Creates a Nacion."
+type createNacionPayload {
+    nacion: Nacion
+    clientMutationId: String
+}
+
+"Updates a Nacion."
+input updateNacionInput {
+    id: ID!
+    nombre: String
+    clientMutationId: String
+}
+
+"Updates a Nacion."
+type updateNacionPayload {
+    nacion: Nacion
+    clientMutationId: String
+}
+
+"Deletes a Nacion."
+input deleteNacionInput {
+    id: ID!
+    clientMutationId: String
+}
+
+"Deletes a Nacion."
+type deleteNacionPayload {
+    nacion: Nacion
+    clientMutationId: String
+}
+
+"Updates a Parada."
+input updateParadaInput {
+    id: ID!
+    enclave: String
+    recorridos: [String]
+    nombre: String
+    nota: String
+    status: Status
+    clientMutationId: String
+}
+
+"Updates a Parada."
+type updateParadaPayload {
+    parada: Parada
+    clientMutationId: String
+}
+
+"Deletes a Parada."
+input deleteParadaInput {
+    id: ID!
+    clientMutationId: String
+}
+
+"Deletes a Parada."
+type deleteParadaPayload {
+    parada: Parada
+    clientMutationId: String
+}
+
+"Creates a Parada."
+input createParadaInput {
+    enclave: String
+    recorridos: [String]
+    nombre: String
+    nota: String
+    status: Status
+    clientMutationId: String
+}
+
+"Creates a Parada."
+type createParadaPayload {
+    parada: Parada
+    clientMutationId: String
+}
+
+"Creates a Permiso."
+input createPermisoInput {
+    roles: [String]
+    parents: [String]
+    children: [String]
+    nombre: String
+    nota: String
+    status: Status
+    clientMutationId: String
+}
+
+"Creates a Permiso."
+type createPermisoPayload {
+    permiso: Permiso
+    clientMutationId: String
+}
+
+"Updates a Permiso."
+input updatePermisoInput {
+    id: ID!
+    roles: [String]
+    parents: [String]
+    children: [String]
+    nombre: String
+    nota: String
+    status: Status
+    clientMutationId: String
+}
+
+"Updates a Permiso."
+type updatePermisoPayload {
+    permiso: Permiso
+    clientMutationId: String
+}
+
+"Deletes a Permiso."
+input deletePermisoInput {
+    id: ID!
+    clientMutationId: String
+}
+
+"Deletes a Permiso."
+type deletePermisoPayload {
+    permiso: Permiso
+    clientMutationId: String
+}
+
+"Updates a Recorrido."
+input updateRecorridoInput {
+    id: ID!
+    tiempo: String
+    distancia: Float
+    inicio: String
+    final: String
+    nombre: String
+    nota: String
+    status: Status
+    legacyId: Int
+    clientMutationId: String
+}
+
+"Updates a Recorrido."
+type updateRecorridoPayload {
+    recorrido: Recorrido
+    clientMutationId: String
+}
+
+"Deletes a Recorrido."
+input deleteRecorridoInput {
+    id: ID!
+    clientMutationId: String
+}
+
+"Deletes a Recorrido."
+type deleteRecorridoPayload {
+    recorrido: Recorrido
+    clientMutationId: String
+}
+
+"Creates a Recorrido."
+input createRecorridoInput {
+    tiempo: String
+    distancia: Float
+    inicio: String
+    final: String
+    nombre: String
+    nota: String
+    status: Status
+    legacyId: Int
+    clientMutationId: String
+}
+
+"Creates a Recorrido."
+type createRecorridoPayload {
+    recorrido: Recorrido
+    clientMutationId: String
+}
+
+"Updates a RecorridoAsientoPrecio."
+input updateRecorridoAsientoPrecioInput {
+    id: ID!
+    recorrido: String
+    precioAsientoA: Float
+    precioAsientoB: Float
+    clientMutationId: String
+}
+
+"Updates a RecorridoAsientoPrecio."
+type updateRecorridoAsientoPrecioPayload {
+    recorridoAsientoPrecio: RecorridoAsientoPrecio
+    clientMutationId: String
+}
+
+"Deletes a RecorridoAsientoPrecio."
+input deleteRecorridoAsientoPrecioInput {
+    id: ID!
+    clientMutationId: String
+}
+
+"Deletes a RecorridoAsientoPrecio."
+type deleteRecorridoAsientoPrecioPayload {
+    recorridoAsientoPrecio: RecorridoAsientoPrecio
+    clientMutationId: String
+}
+
+"Creates a RecorridoAsientoPrecio."
+input createRecorridoAsientoPrecioInput {
+    recorrido: String!
+    precioAsientoA: Float
+    precioAsientoB: Float
+    clientMutationId: String
+}
+
+"Creates a RecorridoAsientoPrecio."
+type createRecorridoAsientoPrecioPayload {
+    recorridoAsientoPrecio: RecorridoAsientoPrecio
+    clientMutationId: String
+}
+
+"Creates a Role."
+input createRoleInput {
+    nombre: String!
+    parents: [String]
+    children: [String]
+    permisos: [String]
+    actions: [String]
+    clientMutationId: String
+}
+
+"Creates a Role."
+type createRolePayload {
+    role: Role
+    clientMutationId: String
+}
+
+"Updates a Role."
+input updateRoleInput {
+    id: ID!
+    nombre: String
+    parents: [String]
+    children: [String]
+    permisos: [String]
+    actions: [String]
+    clientMutationId: String
+}
+
+"Updates a Role."
+type updateRolePayload {
+    role: Role
+    clientMutationId: String
+}
+
+"Deletes a Role."
+input deleteRoleInput {
+    id: ID!
+    clientMutationId: String
+}
+
+"Deletes a Role."
+type deleteRolePayload {
+    role: Role
+    clientMutationId: String
+}
+
+"Updates a Route."
+input updateRouteInput {
+    id: ID!
+    clientMutationId: String
+}
+
+"Updates a Route."
+type updateRoutePayload {
+    route: Route
+    clientMutationId: String
+}
+
+"Deletes a Route."
+input deleteRouteInput {
+    id: ID!
+    clientMutationId: String
+}
+
+"Deletes a Route."
+type deleteRoutePayload {
+    route: Route
+    clientMutationId: String
+}
+
+"Creates a Route."
+input createRouteInput {
+    clientMutationId: String
+}
+
+"Creates a Route."
+type createRoutePayload {
+    route: Route
+    clientMutationId: String
+}
+
+"Updates a Salida."
+input updateSalidaInput {
+    id: ID!
+    fecha: String
+    bus: String
+    recorrido: String
+    empresa: String
+    salidaLogs: [String]
+    boletos: [String]
+    createdAt: String
+
+    "Returns updatedAt."
+    updatedAt: String
+    status: Status
+    clientMutationId: String
+}
+
+"Updates a Salida."
+type updateSalidaPayload {
+    salida: Salida
+    clientMutationId: String
+}
+
+"Deletes a Salida."
+input deleteSalidaInput {
+    id: ID!
+    clientMutationId: String
+}
+
+"Deletes a Salida."
+type deleteSalidaPayload {
+    salida: Salida
+    clientMutationId: String
+}
+
+"Creates a Salida."
+input createSalidaInput {
+    fecha: String
+    bus: String
+    recorrido: String!
+    empresa: String
+    salidaLogs: [String]
+    boletos: [String]
+    createdAt: String
+
+    "Returns updatedAt."
+    updatedAt: String
+    status: Status
+    clientMutationId: String
+}
+
+"Creates a Salida."
+type createSalidaPayload {
+    salida: Salida
+    clientMutationId: String
+}
+
+"Updates a SalidaLog."
+input updateSalidaLogInput {
+    id: ID!
+    tipo: String
+    salida: String
+    createdAt: String
+
+    "Returns updatedAt."
+    updatedAt: String
+    descripcion: String
+    user: String
+    clientMutationId: String
+}
+
+"Updates a SalidaLog."
+type updateSalidaLogPayload {
+    salidaLog: SalidaLog
+    clientMutationId: String
+}
+
+"Deletes a SalidaLog."
+input deleteSalidaLogInput {
+    id: ID!
+    clientMutationId: String
+}
+
+"Deletes a SalidaLog."
+type deleteSalidaLogPayload {
+    salidaLog: SalidaLog
+    clientMutationId: String
+}
+
+"Creates a SalidaLog."
+input createSalidaLogInput {
+    tipo: String
+    salida: String!
+    createdAt: String
+
+    "Returns updatedAt."
+    updatedAt: String
+    descripcion: String
+    user: String
+    clientMutationId: String
+}
+
+"Creates a SalidaLog."
+type createSalidaLogPayload {
+    salidaLog: SalidaLog
+    clientMutationId: String
+}
+
+"Updates a Taxon."
+input updateTaxonInput {
+    id: ID!
+    parent: String
+    posicion: Int
+    children: [String]
+    nombre: String
+    nota: String
+    status: Status
+    clientMutationId: String
+}
+
+"Updates a Taxon."
+type updateTaxonPayload {
+    taxon: Taxon
+    clientMutationId: String
+}
+
+"Deletes a Taxon."
+input deleteTaxonInput {
+    id: ID!
+    clientMutationId: String
+}
+
+"Deletes a Taxon."
+type deleteTaxonPayload {
+    taxon: Taxon
+    clientMutationId: String
+}
+
+"Creates a Taxon."
+input createTaxonInput {
+    parent: String
+    posicion: Int
+    children: [String]
+    nombre: String
+    nota: String
+    status: Status
+    clientMutationId: String
+}
+
+"Creates a Taxon."
+type createTaxonPayload {
+    taxon: Taxon
+    clientMutationId: String
+}
+
+"Creates a User."
+input createUserInput {
+    username: String!
+
+    "The hashed password"
+    password: String
+    userRoles: [String]
+    permisos: [String]
+    createdAt: String
+
+    "Returns updatedAt."
+    updatedAt: String
+    status: Status
+    legacyId: Int
+    apellido: String
+    nombre: String!
+    email: String
+    nit: String
+    telefono: String
+    direccion: String
+    localidad: String
+    clientMutationId: String
+}
+
+"Creates a User."
+type createUserPayload {
+    user: User
+    clientMutationId: String
+}
+
+"Updates a User."
+input updateUserInput {
+    id: ID!
+    username: String
+
+    "The hashed password"
+    password: String
+    userRoles: [String]
+    permisos: [String]
+    createdAt: String
+
+    "Returns updatedAt."
+    updatedAt: String
+    status: Status
+    legacyId: Int
+    apellido: String
+    nombre: String
+    email: String
+    nit: String
+    telefono: String
+    direccion: String
+    localidad: String
+    clientMutationId: String
+}
+
+"Updates a User."
+type updateUserPayload {
+    user: User
+    clientMutationId: String
+}
+
+"Deletes a User."
+input deleteUserInput {
+    id: ID!
+    clientMutationId: String
+}
+
+"Deletes a User."
+type deleteUserPayload {
+    user: User
+    clientMutationId: String
+}
+
+"Updates a Venta."
+input updateVentaInput {
+    id: ID!
+    ida: String
+    regreso: String
+    user: String
+    precio: Float
+    factura: String
+    createdAt: String
+
+    "Returns updatedAt."
+    updatedAt: String
+    status: Status
+    clientMutationId: String
+}
+
+"Updates a Venta."
+type updateVentaPayload {
+    venta: Venta
+    clientMutationId: String
+}
+
+"Deletes a Venta."
+input deleteVentaInput {
+    id: ID!
+    clientMutationId: String
+}
+
+"Deletes a Venta."
+type deleteVentaPayload {
+    venta: Venta
+    clientMutationId: String
+}
+
+"Creates a Venta."
+input createVentaInput {
+    ida: String!
+    regreso: String!
+    user: String!
+    precio: Float
+    factura: String
+    createdAt: String
+
+    "Returns updatedAt."
+    updatedAt: String
+    status: Status
+    clientMutationId: String
+}
+
+"Creates a Venta."
+type createVentaPayload {
+    venta: Venta
+    clientMutationId: String
+}

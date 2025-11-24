@@ -2,7 +2,7 @@
 
 namespace App\Entity\Base\Traits;
 
-use App\Attribute\FormkitDataReference;
+use App\Attribute\FormMetadataAttribute;
 use App\Entity\Localidad;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -11,6 +11,7 @@ trait ContactoTrait {
   #[ORM\Column(length: 255)]
   protected ?string $nombre = null;
 
+  #[Assert\Email(message: 'The email {{ value }} is not a valid email.')]
   #[ORM\Column(length: 50, nullable: true)]
   protected ?string $email = null;
 
@@ -23,7 +24,7 @@ trait ContactoTrait {
   #[ORM\Column(length: 255, nullable: true)]
   protected ?string $direccion = null;
 
-  #[FormkitDataReference('$localidades')]
+  #[FormMetadataAttribute(merge: ['options' => '$localidades'])]
   #[ORM\ManyToOne]
   protected ?Localidad $localidad = null;
 

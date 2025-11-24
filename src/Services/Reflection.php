@@ -64,8 +64,14 @@ class Reflection {
     }
   }
 
-  public function getExtractor() {
+  public static function extractor(): PropertyInfoExtractor {
 
-    return new PropertyInfoExtractor(typeExtractors: [new ReflectionExtractor()]);
+    $extractor = [new ReflectionExtractor()];
+    return new PropertyInfoExtractor(typeExtractors: $extractor, accessExtractors: $extractor, initializableExtractors: $extractor, listExtractors: $extractor);
+  }
+
+  public static function getType(string $entity, string $property) {
+
+    return Reflection::extractor()->getTypes($entity, $property)[0] ?? null;
   }
 }

@@ -6,12 +6,21 @@ use ApiPlatform\GraphQl\Resolver\QueryItemResolverInterface;
 use App\Attribute\CollectionMetadataAttribute;
 use App\DTO\MetadataDTO;
 use App\Enum\Status;
+use App\FormKit\Schema;
 use App\Services\Reflection;
 use ReflectionProperty;
 use Doctrine\ORM\EntityManagerInterface;
 
 final class ColumnsMetadataResolver implements QueryItemResolverInterface {
 
+
+  const FORMKIT = [
+    'int' => 'number_search_primevue',
+    'string' => 'texticon_primevue',
+    'DateTime' => 'datepicker_primevue',
+    'DateTimeInterface' => 'datepicker_primevue',
+    Status::class => 'selecticon_primevue',
+  ];
 
 
   public function __construct(private EntityManagerInterface $entityManagerInterface) {
@@ -58,16 +67,11 @@ final class ColumnsMetadataResolver implements QueryItemResolverInterface {
   public function getSchema(&$data, ReflectionProperty $reflection) {
 
     $type = $reflection->getType()->getName();
-    $schema = ['$formkit' => 'texticon_primevue', 'name' => $data['name'], 'placeholder' => $data['label'] ?? $data['name'], 'loading' => '$loading', ...['outerClass' => \join(' ', ['mb-0! px-0!',  $data['outerClass'] ?? '', ...['class' => $data['class'] ?? '']])]];
+    $schema = ['$formkit' => self::FORMKIT[$type], 'name' => $data['name'], 'loading' => '$loading', ...['outerClass' => \join(' ', ['mb-0! px-0!',  $data['outerClass'] ?? '', ...['class' => $data['class'] ?? '']])]];
 
     $data['class'] = \join(' ', [$data['class'] ?? '', $data['columnClass'] ?? '']);
 
-    $schema = match ($type) {
-      in_array($type, ['float', 'int']) ? $type : false => [...$schema, '$formkit' => 'number_search_primevue'],
-      in_array($type, ['string', 'int', Status::class]) ? $type : false => $schema,
-      'DateTime' => [...$schema, '$formkit' => 'datepicker_primevue', 'selectionMode' => 'range', 'hourFormat' => 12, 'showTime' => true],
-      'DateTimeInterface' => [...$schema, '$formkit' => 'datepicker_primevue', 'selectionMode' => 'range', 'hourFormat' => 12, 'showTime' => true],
-    };
+    $schema = Schema::input($type, $schema);
 
     return $schema;
   }

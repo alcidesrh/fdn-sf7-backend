@@ -4,7 +4,7 @@ namespace App\FormKit\Inputs;
 
 use App\Services\Collection;
 
-class Input extends Collection {
+class  Input extends Collection {
 
   public Collection $children;
 
@@ -73,15 +73,15 @@ class Input extends Collection {
     return $this;
   }
 
-  public function addChildren(Input|array $input): self {
+  public function addChildren(Input|array|string $input): self {
     if (!is_array($input)) {
       $input = [$input];
     }
     foreach ($input as $value) {
       if (\is_a($value, Input::class)) {
         $value->parent = $this;
-        $this->children->add($value);
       }
+      $this->children->add($value);
     }
     return $this;
   }
@@ -96,7 +96,7 @@ class Input extends Collection {
     if ($this->children->count()) {
       $childs = [];
       foreach ($this->children as $key => $value) {
-        $childs[] = $value();
+        $childs[] = \is_string($value) ? $value : $value();
       }
       $this->set('children', $childs);
     }

@@ -32,7 +32,7 @@ final class Form extends FormGroups {
         'name' => $props['name'] ?? $props['id'] ?? 'form',
         'id' => $props['id'] ?? $props['name'] ?? 'form',
         'onSubmit' => $props['submit'] ?? '$submit',
-        'onNode' => '$onNode',
+        // 'onNode' => '$onNode',
         ...$props,
       ]);
   }

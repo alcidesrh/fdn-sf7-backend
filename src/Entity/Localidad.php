@@ -11,8 +11,7 @@ use ApiPlatform\Metadata\GraphQl\Mutation;
 use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\GraphQl\QueryCollection;
 use App\Attribute\CollectionMetadataAttribute;
-use App\Attribute\FormkitDataReference;
-use App\Attribute\FormkitLabel;
+use App\Attribute\FormMetadataAttribute;
 use App\Entity\Base\Base;
 use App\Filter\OrFilter;
 use App\Repository\LocalidadRepository;
@@ -20,6 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: LocalidadRepository::class)]
 #[ApiResource(
+    paginationEnabled: false,
     graphQlOperations: [
         new Query(),
         new Mutation(name: 'create'),
@@ -50,8 +50,7 @@ class Localidad extends Base {
     #[ORM\Column(length: 255)]
     private ?string $nombre = null;
 
-    #[FormkitLabel('pais')]
-    #[FormkitDataReference('$naciones')]
+    #[FormMetadataAttribute(merge: ['options' => '$naciones', 'label' => 'país'])]
     #[ORM\ManyToOne]
     private ?Nacion $nacion = null;
 

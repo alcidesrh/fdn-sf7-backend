@@ -7,8 +7,9 @@ use ApiPlatform\Metadata\GraphQl\DeleteMutation;
 use ApiPlatform\Metadata\GraphQl\Mutation;
 use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\GraphQl\QueryCollection;
-use App\Attribute\FormkitDataReference;
+use App\Attribute\FormMetadataAttribute;
 use App\Entity\Base\Base;
+use App\Entity\Base\Constants\RolesTrait;
 use App\Repository\RoleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -16,13 +17,14 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RoleRepository::class)]
 #[ApiResource(
+    paginationEnabled: false,
     graphQlOperations: [
         new Query(),
         new Mutation(name: 'create'),
         new Mutation(name: 'update'),
         new DeleteMutation(name: 'delete'),
         new QueryCollection(
-            paginationType: 'page',
+            // paginationType: 'page',
             filters: ['order.filter'],
         )
     ]
@@ -30,6 +32,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 class Role extends Base {
 
+    use RolesTrait;
 
     #[ORM\Column(length: 255)]
     private ?string $nombre = null;
@@ -37,21 +40,21 @@ class Role extends Base {
     /**
      * @var Collection<int, self>
      */
-    #[FormkitDataReference('$parents')]
+    #[FormMetadataAttribute(merge: ['options' => '$parents'])]
     #[ORM\ManyToMany(targetEntity: self::class, inversedBy: 'children')]
     private ?Collection $parents;
 
     /**
      * @var Collection<int, self>
      */
-    #[FormkitDataReference('$children')]
+    #[FormMetadataAttribute(merge: ['options' => '$children'])]
     #[ORM\ManyToMany(targetEntity: self::class, mappedBy: 'parents')]
     private ?Collection $children;
 
     /**
      * @var Collection<int, Permiso>
      */
-    #[FormkitDataReference('$permisos')]
+    #[FormMetadataAttribute(merge: ['options' => '$permisos'])]
     #[ORM\ManyToMany(targetEntity: Permiso::class, mappedBy: 'roles')]
     private ?Collection $permisos;
 
@@ -62,10 +65,10 @@ class Role extends Base {
     private Collection $actions;
 
     public function __construct() {
-        $this->parents = new ArrayCollection();
-        $this->children = new ArrayCollection();
-        $this->permisos = new ArrayCollection();
-        $this->actions = new ArrayCollection();
+        $this->parents = new Collection();
+        $this->children = new Collection();
+        $this->permisos = new Collection();
+        $this->actions = new Collection();
     }
 
     public function getId(): ?int {
@@ -154,13 +157,11 @@ class Role extends Base {
     /**
      * @return Collection<int, Action>
      */
-    public function getActions(): Collection
-    {
+    public function getActions(): Collection {
         return $this->actions;
     }
 
-    public function addAction(Action $action): static
-    {
+    public function addAction(Action $action): static {
         if (!$this->actions->contains($action)) {
             $this->actions->add($action);
             $action->addRole($this);
@@ -169,12 +170,15 @@ class Role extends Base {
         return $this;
     }
 
-    public function removeAction(Action $action): static
-    {
+    public function removeAction(Action $action): static {
         if ($this->actions->removeElement($action)) {
             $action->removeRole($this);
         }
 
         return $this;
+    }
+
+    public function __toString(): string {
+        return $this->getNombre() ?? '';
     }
 }

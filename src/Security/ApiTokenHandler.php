@@ -2,6 +2,8 @@
 
 namespace App\Security;
 
+use App\Error\ErrorHandler;
+use App\Error\GraphqlErrorHandler;
 use App\Repository\ApiTokenRepository;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
@@ -18,10 +20,9 @@ class ApiTokenHandler implements AccessTokenHandlerInterface {
     if (!$token) {
       throw new BadCredentialsException();
     }
-
     if (!$token->isValid()) {
       throw new CustomUserMessageAuthenticationException('La sessión a caducado.');
     }
-    return new UserBadge($token->getUsuario()->getUserIdentifier(), fn () => $token->getUsuario());
+    return new UserBadge($token->getUsuario()->getUserIdentifier(), fn() => $token->getUsuario());
   }
 }

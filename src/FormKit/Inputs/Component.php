@@ -15,21 +15,10 @@ final class Component extends FormGroups {
     ], $props);
   }
 
-  public static function createAccordion(array|string $props = ''): self {
 
-    return new self(
-      'AccordionPrimevue',
-      self::setInput($props)
-    );
-  }
+  public static function createComponent($name): self {
 
-  public static function createFieldset(array|string $props = ''): self {
-
-    return new self('FieldsetPrimevue', self::setInput([
-      // 'legend' => 'Menus relacionados',
-      'toggleable' => true,
-      ...$props
-    ]));
+    return new self($name);
   }
 
   public static function setInput($props) {
@@ -46,8 +35,7 @@ final class Component extends FormGroups {
     return  [
       'props' => [
         'name' => $name,
-        'id' => $name,
-        'attrs' => ['style' => 'margin-bottom: 20px', ...$props]
+        'attrs' => [...$props]
       ],
     ];
   }

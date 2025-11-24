@@ -1,28 +1,36 @@
 {
   "workbench.colorCustomizations": {
-    "activityBar.activeBackground": "#1e293b",
-    "activityBar.background": "#1e293b",
-    "activityBar.foreground": "#f8fafc",
-    "activityBar.inactiveForeground": "#f8fafc99",
-    "activityBarBadge.background": "#f8fafc",
-    "activityBarBadge.foreground": "#15202b",
-    "commandCenter.border": "#f8fafc99",
-    "sash.hoverBorder": "#1e293b",
-    "statusBar.background": "#334155",
-    "statusBar.foreground": "#f8fafc",
-    "statusBarItem.hoverBackground": "#1e293b",
-    "statusBarItem.remoteBackground": "#334155",
-    "statusBarItem.remoteForeground": "#f8fafc",
-    "titleBar.activeBackground": "#1e293b",
-    "titleBar.activeForeground": "#f8fafc",
-    "titleBar.inactiveBackground": "#1e293b",
-    "titleBar.inactiveForeground": "#f8fafc99"
+    // "editor.background": "#F5F5F5", // Light gray background for readability
+    // "editor.foreground": "#1A1A1A", // Dark gray for general text
+    // "editorLineNumber.foreground": "#6B7280", // Subtle gray for line numbers
+    // "editorLineNumber.activeForeground": "#111827", // Darker gray for active line
+    // "editorCursor.foreground": "#2563EB", // Blue cursor for visibility
+    // "editor.selectionBackground": "#BFDBFE80", // Semi-transparent blue for selections
+    // "editor.selectionHighlightBackground": "#E5E7EB80", // Light gray for similar word highlights
+    // "editor.findMatchBackground": "#FBBF2480", // Soft yellow for search matches
+    // "editor.findMatchHighlightBackground": "#FBBF2433", // Lighter yellow for all matches
+    // Syntax highlighting for TypeScript and PHP
   },
-  "editor.inlineSuggest.enabled": true,
-  "editor.inlineSuggest.suppressSuggestions": false,
-  "editor.snippetSuggestions": "bottom",
-  "editor.suggest.preview": true,
-  "php.suggest.basic": false,
-  "editor.suggest.showWords": false,
-  "editor.fontSize": 16,
+  "files.exclude": {
+    "**/var": true
+  },
+  "files.watcherExclude": {
+    "**/var": true
+  },
+  "search.exclude": {
+    "**/var/**": true
+  },
+  "intelephense.files.exclude": [
+    "**/.git/**",
+    "**/.svn/**",
+    "**/.hg/**",
+    "**/CVS/**",
+    "**/.DS_Store/**",
+    "**/node_modules/**",
+    "**/bower_components/**",
+    "**/vendor/**/{Tests,tests}/**",
+    "**/.history/**"
+  ],
+  "intelephense.references.exclude": [],
+  "editor.hover.above": true,
 }

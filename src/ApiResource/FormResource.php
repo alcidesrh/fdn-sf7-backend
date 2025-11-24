@@ -9,14 +9,14 @@ use ApiPlatform\Metadata\IriConverterInterface;
 use App\FormKit\Schema;
 use App\FormKit\SchemaInterface;
 use App\Repository\FormSchemaRepository;
+use App\Resolver\FormResourceResolver;
 use Doctrine\ORM\EntityManagerInterface;
 
 #[ApiResource(
-
   graphQlOperations: [
     new Query(
       name: 'get',
-      resolver: FormResource::class,
+      resolver: FormResourceResolver::class,
       output: SchemaInterface::class,
       read: false,
       args: [
@@ -32,6 +32,6 @@ class FormResource implements QueryItemResolverInterface {
 
   public function __invoke(?object $item, array $context): object {
 
-    return (new Schema($this->entityManager, $this->iriConverter, $this->repo, $context['args']['entity']))->getShema();
+    return (new Schema($this->entityManager, $this->iriConverter, $this->repo, $context['args']['entity']))->getSchema();
   }
 }

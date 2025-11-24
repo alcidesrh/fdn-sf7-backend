@@ -4,7 +4,6 @@ namespace App\Resolver;
 
 use ApiPlatform\GraphQl\Resolver\QueryItemResolverInterface;
 use App\Repository\MenuRepository;
-use App\Services\ServerSentEvent;
 
 
 final class MenuResolver implements QueryItemResolverInterface {

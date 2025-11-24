@@ -2,14 +2,12 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Doctrine\Common\Filter\DateFilterInterface;
-use ApiPlatform\Doctrine\Common\Filter\SearchFilterInterface;
 use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
-use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Doctrine\Orm\Filter\OrFilter as FilterOrFilter;
+use ApiPlatform\Doctrine\Orm\Filter\PartialSearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -19,83 +17,201 @@ use ApiPlatform\Metadata\GraphQl\DeleteMutation;
 use ApiPlatform\Metadata\GraphQl\Mutation;
 use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\GraphQl\QueryCollection;
+use ApiPlatform\Metadata\QueryParameter;
 use App\Attribute\CollectionMetadataAttribute;
 use App\Attribute\FormMetadataAttribute;
 use App\Entity\Base\UserBase;
-use App\Filter\OrFilter;
+use App\Filter\IdPartialSearchFilter;
 use App\Resolver\UserByUsernameResolver;
+use App\Services\Collection as ServicesCollection;
+use App\State\UserPasswordHasher;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[ApiResource(
     graphQlOperations: [
-        new Query(
-            filters: ['search.filter'],
-            args: ['username' => ['type' => 'String']],
-        ),
-        new Mutation(name: 'create'),
-        new Mutation(name: 'update'),
+        new Query(),
+        new Mutation(name: 'create', processor: UserPasswordHasher::class),
+        new Mutation(name: 'update', processor: UserPasswordHasher::class),
         new DeleteMutation(name: 'delete'),
         new QueryCollection(
             paginationType: 'page',
-            filters: ['or.filter', 'date.filter', 'order.filter']
+            parameters: [
+                // 'search[:property]' => new QueryParameter(
+                //     properties: ['username', 'nombre', 'apellido', 'email'], // Only these properties get parameters created
+                //     filter: new FilterOrFilter(new PartialSearchFilter())
+                // ),
+                'id' => new QueryParameter(
+                    filter: new FilterOrFilter(new IdPartialSearchFilter()),
+                    property: 'id',
+                ),
+                'username' => new QueryParameter(
+                    filter: new FilterOrFilter(new PartialSearchFilter()),
+                    property: 'username'
+                ),
+                'nombre' => new QueryParameter(
+                    filter: new FilterOrFilter(new PartialSearchFilter()),
+                    property: 'nombre'
+                ),
+                'apellido' => new QueryParameter(
+                    filter: new FilterOrFilter(new PartialSearchFilter()),
+                    property: 'apellido'
+                ),
+                'email' => new QueryParameter(
+                    filter: new FilterOrFilter(new PartialSearchFilter()),
+                    property: 'email'
+                ),
+            ],
         ),
         new Query(
-            name: 'getUserByUsername',
+            name: 'getByUsername',
             resolver: UserByUsernameResolver::class,
             args: ['username' => ['type' => 'String']],
         ),
     ]
 )]
-#[ApiFilter(SearchFilter::class, alias: 'search.filter',  properties: ['username' => SearchFilterInterface::STRATEGY_EXACT])]
-
-#[ApiFilter(OrFilter::class, alias: 'or.filter', properties: ['id', 'fullName', 'username', 'status', 'nombre', 'apellido'], arguments: ['searchFilterProperties' => ['id' => SearchFilterInterface::STRATEGY_EXACT, 'fullName' => SearchFilterInterface::STRATEGY_IPARTIAL, 'username' => SearchFilterInterface::STRATEGY_IPARTIAL, 'nombre' => SearchFilterInterface::STRATEGY_IPARTIAL, 'apellido' => SearchFilterInterface::STRATEGY_IPARTIAL, 'status' => SearchFilterInterface::STRATEGY_EXACT, 'createdAt' => DateFilterInterface::INCLUDE_NULL_BEFORE_AND_AFTER]])]
-
-#[ApiFilter(DateFilter::class, alias: 'date.filter', properties: ['createdAt' => DateFilterInterface::EXCLUDE_NULL])]
-
-#[ApiFilter(OrderFilter::class, alias: 'order.filter', properties: ['id', 'nombre', 'apellido', 'username', 'createdAt', 'status'], arguments: ['orderParameterName' => 'order'])]
+#[ApiFilter(DateFilter::class, properties: ['createdAt'])]
+#[ApiFilter(OrderFilter::class, properties: ['id', 'nombre', 'apellido', 'username', 'createdAt', 'status'], arguments: ['orderParameterName' => 'order'])]
 
 #[CollectionMetadataAttribute(
     class: 'columns-wraper',
     props: [
         ['name' => 'id', 'label' => 'Id', 'sort' => true, 'filter' => true, 'outerClass' => 'small-column', 'columnClass' => 'small-column'],
         ['name' => 'username', 'label' => 'Usuario', 'sort' => true, 'filter' => true, 'outerClass' => 'medium-column', 'columnClass' => 'medium-column'],
+        ['name' => 'email', 'label' => 'Correo', 'sort' => true, 'filter' => true, 'outerClass' => 'medium-column', 'columnClass' => 'medium-column'],
         ['name' => 'nombre', 'label' => 'Nombre', 'sort' => true, 'filter' => true, 'outerClass' => 'medium-column', 'columnClass' => 'medium-column'],
         ['name' => 'apellido', 'outerClass' => 'medium-column', 'columnClass' => 'medium-column', 'label' => 'Apellido', 'sort' => true, 'filter' => true],
         ['name' => 'createdAt', 'label' => 'Fecha creación', 'sort' => 'fecha', 'filter' => true],
-        ['name' => 'status', 'label' => 'Status', 'sort' => 'status']
+        ['name' => 'status', 'label' => 'Status',]
     ]
 )]
 
-#[FormMetadataAttribute(exclude: ['password', 'fullName', 'apiTokens', 'legacyId'], order: ['nombre', 'apellido', 'email', 'telefono', 'nit', 'direccion', 'localidad'], columns: [['fields' => 7, 'wrapper' => ['type' => 'fieldset', 'props' => ['legend' => 'Datos Personales']]], ['wrapper' => ['type' => 'fieldset', 'props' => ['legend' => 'Permisos & Privilegios']]]])]
+#[FormMetadataAttribute(
+    exclude: ['fullName', 'apiTokens', 'legacyId'],
+    order: ['nombre', 'apellido', 'email', 'telefono', 'nit', 'direccion', 'localidad', 'status', 'userRoles', 'permisos'],
+    schema: [
+        // 'form' =>  [
+        //     'plugins' => '$filterprop',
+        //     'children' => [
+        [
+            'div' =>
+            [
+                'class' => 'form-header',
+                'children' => [
+                    [
+                        'span' =>
+                        [
+                            'class' => 'font-medium u-text-1',
+                            'children' => '$slots.header'
+                        ]
+                    ],
+                    [
+                        'div' => [
+                            'ignore' => true,
+                            'children' => '$slots.crudBtn'
+                        ]
+                    ],
+                ]
+            ]
+        ],
+        [
+            'div' => [
+                'class' => 'divider'
+            ]
+        ],
+        [
+            'div' => [
+                'class' => 'toast-error-form',
+                'children' => [
+                    'component' => 'FormKitMessages'
+                ]
+            ]
+        ],
+        [
+            'div' => [
+                'class' => 'form-row',
+                'children' => [
+                    'div' => [
+                        'class' => 'form-col',
+
+                        'children' => [
+                            [
+                                'fieldset' => [
+                                    'props' => [
+                                        'legend' => 'Datos Personales',
+                                    ],
+                                    'children' => 7
+                                ]
+                            ],
+
+                            [
+                                'fieldset' => [
+                                    'props' => [
+                                        'legend' => 'Roles & Privilegios',
+                                    ],
+                                    'children' => 3
+                                ]
+                            ],
+                            [
+                                'fieldset' => [
+                                    'props' => [
+                                        'legend' => 'Credenciales',
+                                    ],
+                                    'children' => [
+                                        'div' => [
+                                            'children' => [
+                                                ['username' => ['label' => 'Usuario']],
+                                                ['plainPassword' => ['validation' => false, 'type' => 'password', 'label' => 'Nueva contraseña', 'inputProps' => ['autocomplete' => 'new-password']]],
+                                                ['plainPassword' => ['type' => 'password', 'name' => 'password_confirm', 'label' => 'Repita la contraseña', 'validation' => 'confirm']]
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ],
+                        ]
+                    ]
+                ]
+            ]
+        ]
+        // ]
+        // ],
+    ]
+)]
 
 class User extends UserBase implements UserInterface, PasswordAuthenticatedUserInterface {
 
 
-    #[ORM\Column(length: 180, unique: true)]
-    private ?string $username = null;
-
+    #[ORM\Column(length: 180, unique: true, nullable: false)]
+    private string $username;
 
     /**
      * @var string The hashed password
      */
+    #[ApiProperty(readable: false)]
     #[ORM\Column(nullable: true)]
     private ?string $password = null;
+
+    #[Assert\NotBlank()]
+    private ?string $plainPassword = null;
+
 
     private ?string $fullName;
 
     #[ORM\OneToMany(mappedBy: 'usuario', targetEntity: ApiToken::class)]
     private Collection $apiTokens;
 
-    /**
-     * @var Collection<int, Role>
-     */
+    #[FormMetadataAttribute(merge: ['options' => '$roles', 'label' => 'Roles'])]
+    #[ORM\JoinTable(name: 'user_role')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'role_id', referencedColumnName: 'id')]
     #[ORM\ManyToMany(targetEntity: Role::class)]
-    private Collection $roles;
+    private Collection $userRoles;
 
     /**
      * @var Collection<int, Permiso>
      */
+
+    #[FormMetadataAttribute(merge: ['options' => '$permisos'])]
     #[ORM\ManyToMany(targetEntity: Permiso::class)]
     private Collection $permisos;
 
@@ -105,9 +221,9 @@ class User extends UserBase implements UserInterface, PasswordAuthenticatedUserI
             $this->loadData($data);
         }
 
-        $this->apiTokens = new ArrayCollection();
-        $this->roles = new ArrayCollection();
-        $this->permisos = new ArrayCollection();
+        $this->apiTokens = new ServicesCollection();
+        $this->userRoles = new ServicesCollection();
+        $this->permisos = new ServicesCollection();
     }
 
     public function getFullName() {
@@ -125,7 +241,6 @@ class User extends UserBase implements UserInterface, PasswordAuthenticatedUserI
     }
 
     /**
-     * A visual identifier that represents this user.
      *
      * @see UserInterface
      */
@@ -136,11 +251,13 @@ class User extends UserBase implements UserInterface, PasswordAuthenticatedUserI
     /**
      * @see UserInterface
      */
-    /**
-     * @return Collection<int, Permiso>
-     */
+
+    public function getUserRoles(): Collection {
+        return $this->userRoles;
+    }
+    #[Ignore]
     public function getRoles(): array {
-        return $this->permisos->toArray();
+        return $this->userRoles->map(fn(Role $role) => $role->getNombre())->toArray();
     }
 
 
@@ -157,6 +274,17 @@ class User extends UserBase implements UserInterface, PasswordAuthenticatedUserI
         return $this;
     }
 
+    public function getPlainPassword(): ?string {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(?string $plainPassword): self {
+        $this->plainPassword = $plainPassword;
+
+        return $this;
+    }
+
+
     /**
      * @see UserInterface
      */
@@ -170,7 +298,7 @@ class User extends UserBase implements UserInterface, PasswordAuthenticatedUserI
     // public static function createFromPayload($username, array $payload): User {
     //     return new self(
     //         $username,
-    //         $payload['roles'] ?? [], // Added by default
+    //         $payload['userRoles'] ?? [], // Added by default
     //         $payload['username'] ?? [] // Custom
     //     );
     // }
@@ -197,38 +325,42 @@ class User extends UserBase implements UserInterface, PasswordAuthenticatedUserI
 
     public function removeApiToken(ApiToken $apiToken): static {
         if ($this->apiTokens->removeElement($apiToken)) {
-            // set the owning side to null (unless already changed)
             if ($apiToken->getUsuario() === $this) {
                 $apiToken->setUsuario(null);
             }
         }
-
         return $this;
     }
 
+    public function getToken(): ?ApiToken {
+        return $this->getApiTokens()
+            // ->filter(
+            //     fn(ApiToken $apiToken) => $apiToken->isActivo()
+            // )
+            ->first() ?: null;
+    }
+
     /**
-     * @return string[]
+     * @return string
      */
-    public function getValidTokenStrings(): array|string {
+    public function getValidTokenStrings(): ?string {
         return $this->getApiTokens()
             ->filter(fn(ApiToken $token) => $token->isValid())
             ->map(fn(ApiToken $token) => $token->getToken())
-            ->toArray()[1];
-    }
-    public function markAsTokenAuthenticated(array $scopes) {
-        $this->accessTokenScopes = $scopes;
+            ->first();
     }
 
-    public function addRole(Role $role): static {
-        if (!$this->roles->contains($role)) {
-            $this->roles->add($role);
+
+    public function addUserRole(Role $role): static {
+        if (!$this->userRoles->contains($role)) {
+            $this->userRoles->add($role);
         }
 
         return $this;
     }
 
-    public function removeRole(Role $role): static {
-        $this->roles->removeElement($role);
+    public function removeUserRole(Role $role): static {
+        $this->userRoles->removeElement($role);
 
         return $this;
     }

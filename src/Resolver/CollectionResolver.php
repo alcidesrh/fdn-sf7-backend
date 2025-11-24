@@ -18,7 +18,7 @@ final class CollectionResolver implements QueryItemResolverInterface {
    */
   public function __invoke(?object $item, array $context): object {
     $metadata = new MetadataDTO();
-    $metadata->data = ['collection' => (new ArrayCollection($this->entityManagerInterface->getRepository(Doctrine::entityNamespace($context['args']['resource']))->findAll()))->map(fn($v) => ['value' => $this->iriConverter->getIriFromResource($v), 'label' => $v->getLabel()])];
+    $metadata->data = ['collection' => (new ArrayCollection($this->entityManagerInterface->getRepository(Doctrine::entityNamespace($context['args']['resource']))->findAll()))->map(fn($v) => ['id' => $this->iriConverter->getIriFromResource($v), 'label' => $v->getLabel()])];
 
     return $metadata;
   }

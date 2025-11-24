@@ -58,6 +58,20 @@ class ServerSentEvent {
         ]);
     }
 
+    public function form($form) {
+
+        $this->hubInterface->publish(
+            new Update(
+                $this->sessionID . 'form',
+                $this->encoderInterface->encode($form, 'json')
+            )
+        );
+
+        return new Response(null, Response::HTTP_FORBIDDEN, [
+            'error-form' => true,
+        ]);
+    }
+
     public function publish(string|array $topic, array|string $param, ?string $view = null) {
 
         try {

@@ -26,8 +26,9 @@ class CustomEntityRepository extends ServiceEntityRepository {
     $this->em->persist($object);
     $this->flush();
   }
-  public function persist($object) {
+  public function persist($object): self {
     $this->em->persist($object);
+    return $this;
   }
   public function flush() {
     $this->em->flush();

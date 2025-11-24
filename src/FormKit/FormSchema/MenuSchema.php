@@ -9,7 +9,7 @@ class MenuSchema {
       'children' => [
         [
           'div' => [
-            'props' => ['class' => 'form-flex', 'style' => 'max-width: 60em'],
+            'props' => ['class' => 'row-float-left'],
             'children' => [
               [
                 'fieldset' => [
@@ -30,7 +30,6 @@ class MenuSchema {
                       ]
                     ]]
                   ],
-
                 ],
               ],
               [
@@ -38,7 +37,6 @@ class MenuSchema {
                   'props' => [
                     'legend' => 'Menus relacionados',
                     'class' => 'form-column'
-
                   ],
                   'children' => [
                     'parent',

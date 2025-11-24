@@ -7,7 +7,7 @@ final class Group extends FormGroups {
 
   use InputTrait;
 
-  const TYPE = 'group_primevue';
+  const TYPE = 'group';
 
   public function __construct(array|string $props = '') {
 

@@ -15,7 +15,10 @@ final class Select extends FieldsInput {
       [
         '$formkit' => self::TYPE,
         'name' => self::TYPE,
-        'id' => self::TYPE
+        'id' => self::TYPE,
+        'optionLabel' => 'label',
+        'optionValue' => 'id',
+        'placeholder' => 'Seleccionar'
       ],
       $props
     );

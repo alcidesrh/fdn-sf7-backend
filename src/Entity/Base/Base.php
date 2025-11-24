@@ -5,10 +5,8 @@ namespace App\Entity\Base;
 use ApiPlatform\Metadata\ApiProperty;
 use App\Attribute\ExcludeAttribute;
 use App\Entity\Base\Traits\DataLoader;
-use App\Useful\Reflection;
+use App\Services\Reflection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
-use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
 
 #[ORM\MappedSuperclass]
 class Base {
@@ -23,7 +21,7 @@ class Base {
     protected ?int $id;
 
     #[ExcludeAttribute]
-    private ?string $label = null;
+    public ?string $label = null;
     public function setId($id): self {
         $this->id = $id;
         return $this;

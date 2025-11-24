@@ -8,9 +8,7 @@ use ApiPlatform\Metadata\GraphQl\Mutation;
 use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\GraphQl\QueryCollection;
 use App\Attribute\CollectionMetadataAttribute;
-use App\Attribute\FormkitDataReference;
 use App\Attribute\FormMetadataAttribute;
-use App\Attribute\PropertyOrder;
 use App\Entity\Base\NombreNotaStatusBase;
 use App\Repository\PermisoRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -19,6 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PermisoRepository::class)]
 #[ApiResource(
+    paginationEnabled: false,
     graphQlOperations: [
         new Query(),
         new Mutation(name: 'create'),
@@ -56,14 +55,14 @@ class Permiso extends NombreNotaStatusBase {
     /**
      * @var Collection<int, self>
      */
-    #[FormkitDataReference('$parents')]
+    #[FormMetadataAttribute(merge: ['options' => '$parents'])]
     #[ORM\ManyToMany(targetEntity: self::class, inversedBy: 'children')]
     private ?Collection $parents;
 
     /**
      * @var Collection<int, self>
      */
-    #[FormkitDataReference('$children')]
+    #[FormMetadataAttribute(merge: ['options' => '$children'])]
     #[ORM\ManyToMany(targetEntity: self::class, mappedBy: 'parents')]
     private ?Collection $children;
 

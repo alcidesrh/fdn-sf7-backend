@@ -3,6 +3,7 @@
 namespace App\Entity\Base\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 trait PersonaTrait {
 

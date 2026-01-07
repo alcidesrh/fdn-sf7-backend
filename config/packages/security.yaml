@@ -45,19 +45,19 @@ security:
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
-    # access_control:
-    # - { path: "^/api/graphiql*", roles: PUBLIC_ACCESS }
-    # - { path: "^/_wdt*", roles: PUBLIC_ACCESS }
-    # - { path: "^/docs/graphql*", roles: PUBLIC_ACCESS }
-    # - { path: "^/api/graphql*", roles: PUBLIC_ACCESS }
+    access_control:
+        # - { path: "^/api/graphiql*", roles: PUBLIC_ACCESS }
+        # - { path: "^/_wdt*", roles: PUBLIC_ACCESS }
+        # - { path: "^/docs/graphql*", roles: PUBLIC_ACCESS }
+        # # - { path: "^/api/graphql*", roles: PUBLIC_ACCESS }
 
-    # - { path: "^/_profiler*", roles: PUBLIC_ACCESS }
-    # - { path: "^/bundles*", roles: PUBLIC_ACCESS }
-    # - { path: "^/docs*", roles: PUBLIC_ACCESS }
-    # - { path: "^/login*", roles: PUBLIC_ACCESS }
-    # - { path: "^/.*", roles: ROLE_USER }
-    # - { path: ^/admin, roles: ROLE_ADMIN }
-    # - { path: ^/(^logout), roles: ROLE_USER }
+        # - { path: "^/_profiler*", roles: PUBLIC_ACCESS }
+        # - { path: "^/bundles*", roles: PUBLIC_ACCESS }
+        # - { path: "^/docs*", roles: PUBLIC_ACCESS }
+        # - { path: "^/login*", roles: PUBLIC_ACCESS }
+        # - { path: "^/.*", roles: ROLE_USER }
+        # - { path: ^/admin, roles: ROLE_ADMIN }
+        # - { path: ^/(^logout), roles: ROLE_USER }
 
 when@test:
     security:

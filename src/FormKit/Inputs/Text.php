@@ -6,7 +6,7 @@ final class Text extends FieldsInput {
 
   use InputTrait;
 
-  const TYPE = 'text_primevue';
+  const TYPE = 'text';
 
   public function __construct(array|string $props = '') {
 

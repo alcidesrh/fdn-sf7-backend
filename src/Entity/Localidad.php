@@ -37,7 +37,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ApiFilter(OrderFilter::class, alias: 'order.filter', properties: ['id'], arguments: ['orderParameterName' => 'order'])]
 
 #[CollectionMetadataAttribute(
-    class: 'columns-wraper',
+    class: 'col-wraper',
     props: [
         ['name' => 'id', 'label' => 'Id', 'sort' => true, 'filter' => true,],
         ['name' => 'nombre', 'label' => 'Nombre', 'sort' => true, 'filter' => true],

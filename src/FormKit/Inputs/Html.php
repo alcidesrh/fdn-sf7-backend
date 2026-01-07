@@ -6,7 +6,7 @@ final class Html extends FormGroups {
 
   use InputTrait;
 
-  const TYPE = 'html_primevue';
+  const TYPE = 'html';
 
   public static $inputBase = [];
 

@@ -5,6 +5,5 @@ doctrine_migrations:
         'DoctrineMigrations': '%kernel.project_dir%/migrations'
     enable_profiler: false 
     
-    services:
-         'Doctrine\Migrations\Version\MigrationFactory': 'App\Factory\MigrationFactoryDecorator'
+    
 

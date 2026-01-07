@@ -7,7 +7,7 @@ final class MultiSelect extends FieldsInput {
 
   use InputTrait;
 
-  const TYPE = 'multiselect_primevue';
+  const TYPE = 'multiselect';
 
   const DEFAULT = ['display' => "chip", 'optionLabel' => "label",  'filter' => true, 'placeholder' => "Seleccionar"];
 

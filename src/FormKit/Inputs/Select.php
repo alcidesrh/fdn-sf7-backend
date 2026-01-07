@@ -7,7 +7,7 @@ final class Select extends FieldsInput {
 
   use InputTrait;
 
-  const TYPE = 'select_primevue';
+  const TYPE = 'select';
 
   public function __construct(array|string $props = '') {
 

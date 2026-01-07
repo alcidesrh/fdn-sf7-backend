@@ -15,11 +15,11 @@ final class ColumnsMetadataResolver implements QueryItemResolverInterface {
 
 
   const FORMKIT = [
-    'int' => 'number_search_primevue',
-    'string' => 'texticon_primevue',
-    'DateTime' => 'datepicker_primevue',
-    'DateTimeInterface' => 'datepicker_primevue',
-    Status::class => 'selecticon_primevue',
+    'int' => 'number',
+    'string' => 'text',
+    'DateTime' => 'datepicker',
+    'DateTimeInterface' => 'datepicker',
+    Status::class => 'selecticon',
   ];
 
 
@@ -39,6 +39,7 @@ final class ColumnsMetadataResolver implements QueryItemResolverInterface {
       $class = $metadata['class'] ?? null;
       $data = [];
       foreach ($metadata['props'] as $value) {
+        $value['field'] = $value['name'];
         if ($class) {
           $value['class'] = isset($value['class']) ? $class . ' ' . $value['class'] : $class;
         }
@@ -52,7 +53,7 @@ final class ColumnsMetadataResolver implements QueryItemResolverInterface {
       }
     } else {
 
-      $collection = $reflection->properties->map(fn(ReflectionProperty $v) => ['name' => $v->getName(), 'class' => 'columns-wraper' . ($v->getName() == 'id' ? ' small-column' : '')]);
+      $collection = $reflection->properties->map(fn(ReflectionProperty $v) => ['name' => $v->getName(), 'class' => 'col-wraper' . ($v->getName() == 'id' ? ' col-small' : '')]);
 
       if ($temp = $collection->findFirstKeyAndValue(fn($i, $v) => $v['name'] == 'id')) {
 
@@ -67,7 +68,7 @@ final class ColumnsMetadataResolver implements QueryItemResolverInterface {
   public function getSchema(&$data, ReflectionProperty $reflection) {
 
     $type = $reflection->getType()->getName();
-    $schema = ['$formkit' => self::FORMKIT[$type], 'name' => $data['name'], 'loading' => '$loading', ...['outerClass' => \join(' ', ['mb-0! px-0!',  $data['outerClass'] ?? '', ...['class' => $data['class'] ?? '']])]];
+    $schema = ['$formkit' => self::FORMKIT[$type], 'name' => $data['name'], 'loading' => '$loading', ...['outerClass' => \join(' ', ['mb-0! px-0!',  $data['outerClass'] ?? ''])]];
 
     $data['class'] = \join(' ', [$data['class'] ?? '', $data['columnClass'] ?? '']);
 

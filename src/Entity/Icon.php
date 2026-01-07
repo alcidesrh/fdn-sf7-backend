@@ -1,0 +1,44 @@
+<?php
+
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiResource;
+use App\Entity\Base\Base;
+use App\Repository\IconRepository;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
+
+#[ORM\Entity(repositoryClass: IconRepository::class)]
+#[ApiResource(
+    paginationEnabled: false
+)]
+class Icon extends Base {
+
+    #[Groups(['iconcategory:read', 'iconcategory:write'])]
+    #[ORM\Column(length: 50)]
+    private ?string $icon = null;
+
+    #[Groups(['iconcategory:read', 'iconcategory:write'])]
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $name = null;
+
+    public function getIcon(): ?string {
+        return $this->icon;
+    }
+
+    public function setIcon(string $icon): static {
+        $this->icon = $icon;
+
+        return $this;
+    }
+
+    public function getName(): ?string {
+        return $this->name;
+    }
+
+    public function setName(?string $name): static {
+        $this->name = $name;
+
+        return $this;
+    }
+}

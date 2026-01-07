@@ -6,7 +6,7 @@ final class Password extends FieldsInput {
 
   use InputTrait;
 
-  const TYPE = 'password_primevue';
+  const TYPE = 'password';
 
   const DEFAULT = ['toggleMask' => true, 'feedback' => false];
 

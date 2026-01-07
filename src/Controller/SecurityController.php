@@ -27,7 +27,11 @@ class SecurityController extends AbstractController {
     }
 
     if (!$user->getRoles()) {
-      $user->addUserRole($this->roleRepo->findOneBy(['nombre' => Role::user]));
+      if (!$role = $this->roleRepo->findOneBy(['nombre' => Role::user])) {
+        $role = (new Role())->setNombre(Role::user);
+        $this->roleRepo->save($role);
+      }
+      $user->addUserRole($role);
       $this->roleRepo->flush();
     }
     $token = $user->getToken();

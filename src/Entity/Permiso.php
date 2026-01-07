@@ -32,10 +32,10 @@ use Doctrine\ORM\Mapping as ORM;
 #[FormMetadataAttribute(order: ['nombre', 'roles', 'parents', 'children', 'status', 'nota'])]
 
 #[CollectionMetadataAttribute(
-    class: 'columns-wraper',
+    class: 'col-wraper',
     props: [
-        ['name' => 'id', 'class' => ' small-column'],
-        ['name' => 'nombre', 'class' => 'columns-wraper'],
+        ['name' => 'id', 'class' => ' col-small'],
+        ['name' => 'nombre', 'class' => 'col-wraper'],
         ['name' => 'parents', 'label' => 'Padre'],
         ['name' => 'children', 'label' => 'Hijos'],
         ['name' => 'roles']

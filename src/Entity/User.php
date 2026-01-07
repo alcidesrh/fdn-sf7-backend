@@ -74,13 +74,13 @@ use App\State\UserPasswordHasher;
 #[ApiFilter(OrderFilter::class, properties: ['id', 'nombre', 'apellido', 'username', 'createdAt', 'status'], arguments: ['orderParameterName' => 'order'])]
 
 #[CollectionMetadataAttribute(
-    class: 'columns-wraper',
+    class: 'col-wraper',
     props: [
-        ['name' => 'id', 'label' => 'Id', 'sort' => true, 'filter' => true, 'outerClass' => 'small-column', 'columnClass' => 'small-column'],
-        ['name' => 'username', 'label' => 'Usuario', 'sort' => true, 'filter' => true, 'outerClass' => 'medium-column', 'columnClass' => 'medium-column'],
-        ['name' => 'email', 'label' => 'Correo', 'sort' => true, 'filter' => true, 'outerClass' => 'medium-column', 'columnClass' => 'medium-column'],
-        ['name' => 'nombre', 'label' => 'Nombre', 'sort' => true, 'filter' => true, 'outerClass' => 'medium-column', 'columnClass' => 'medium-column'],
-        ['name' => 'apellido', 'outerClass' => 'medium-column', 'columnClass' => 'medium-column', 'label' => 'Apellido', 'sort' => true, 'filter' => true],
+        ['name' => 'id', 'label' => 'Id', 'sort' => true, 'filter' => true, 'columnClass' => 'col-small'],
+        ['name' => 'username', 'label' => 'Usuario', 'sort' => true, 'filter' => true, 'columnClass' => 'col-medium'],
+        ['name' => 'nombre', 'label' => 'Nombre', 'sort' => true, 'filter' => true, 'columnClass' => 'col-medium'],
+        ['name' => 'apellido', 'columnClass' => 'col-medium', 'label' => 'Apellido', 'sort' => true, 'filter' => true],
+        ['name' => 'email', 'label' => 'Correo', 'sort' => true, 'filter' => true, 'columnClass' => 'col-medium'],
         ['name' => 'createdAt', 'label' => 'Fecha creación', 'sort' => 'fecha', 'filter' => true],
         ['name' => 'status', 'label' => 'Status',]
     ]
@@ -107,7 +107,6 @@ use App\State\UserPasswordHasher;
                     ],
                     [
                         'div' => [
-                            'ignore' => true,
                             'children' => '$slots.crudBtn'
                         ]
                     ],

@@ -7,7 +7,7 @@ final class Number extends FieldsInput {
 
   use InputTrait;
 
-  const TYPE = 'number_primevue';
+  const TYPE = 'number';
 
   public function __construct(array|string $props = '') {
 

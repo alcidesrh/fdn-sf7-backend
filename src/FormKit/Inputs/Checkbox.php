@@ -6,7 +6,7 @@ final class Checkbox extends FieldsInput {
 
   use InputTrait;
 
-  const TYPE = 'checkbox_primevue';
+  const TYPE = 'checkbox';
 
   public function __construct(array|string $props = '') {
 

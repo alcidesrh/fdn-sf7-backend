@@ -65,10 +65,10 @@ class Role extends Base {
     private Collection $actions;
 
     public function __construct() {
-        $this->parents = new Collection();
-        $this->children = new Collection();
-        $this->permisos = new Collection();
-        $this->actions = new Collection();
+        $this->parents = new ArrayCollection();
+        $this->children = new ArrayCollection();
+        $this->permisos = new ArrayCollection();
+        $this->actions = new ArrayCollection();
     }
 
     public function getId(): ?int {

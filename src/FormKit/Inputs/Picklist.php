@@ -7,7 +7,7 @@ final class Picklist extends FieldsInput {
 
   use InputTrait;
 
-  const TYPE = 'picklist_primevue';
+  const TYPE = 'picklist';
 
   const PROPS = ['outerClass' => 'picklist-outerClass'];
 

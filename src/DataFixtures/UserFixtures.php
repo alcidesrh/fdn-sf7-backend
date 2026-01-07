@@ -10,11 +10,11 @@ class UserFixtures extends Fixture {
     public function load(ObjectManager $manager): void {
         // $product = new Product();
         // $manager->persist($product);
-        foreach ($manager->getRepository(EntityUser::class)->findAll() as $value) {
-            $value->setApiID($value->getId());
-            # code...
-        }
+        // foreach ($manager->getRepository(EntityUser::class)->findAll() as $value) {
+        // $value->setApiID($value->getId());
+        # code...
+        // }
 
-        $manager->flush();
+        // $manager->flush();
     }
 }

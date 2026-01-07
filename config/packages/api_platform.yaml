@@ -29,6 +29,7 @@ api_platform:
     defaults:
         pagination_enabled: true
         pagination_client_items_per_page: true
+        pagination_client_enabled: false
         route_prefix: "api"
         stateless: true
         cache_headers:
@@ -36,6 +37,10 @@ api_platform:
         extra_properties:
             standard_put: true
             rfc_7807_compliant_errors: true
+        collection:
+            pagination:
+                enabled_parameter_name: pagination
+
     # event_listeners_backward_compatibility_layer: false
     # keep_legacy_inflector: false
 

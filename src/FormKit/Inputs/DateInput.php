@@ -6,7 +6,7 @@ final class DateInput extends FieldsInput {
 
   use InputTrait;
 
-  const TYPE = 'datepicker_primevue';
+  const TYPE = 'datepicker';
 
   const DEFAULT = ['dateFormat' => "dd/mm", 'selectionMode' => "range", 'selectionMode' => 'range', 'hourFormat' => 12, 'showTime' => true];
 

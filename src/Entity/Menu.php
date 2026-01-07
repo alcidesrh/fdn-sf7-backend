@@ -29,6 +29,12 @@ use Doctrine\ORM\Mapping as ORM;
         new Mutation(name: 'update'),
         new DeleteMutation(name: 'delete'),
         new QueryCollection(
+            paginationEnabled: false
+            // filters: ['order.filter', 'menu.filter'],
+            // extraArgs: ['tipo' => ['type' => 'String', 'default' => 'root']],
+        ),
+        new QueryCollection(
+            name: 'collection',
             paginationType: 'page',
             filters: ['order.filter', 'menu.filter'],
             extraArgs: ['tipo' => ['type' => 'String', 'default' => 'root']],
@@ -42,11 +48,11 @@ use Doctrine\ORM\Mapping as ORM;
 )]
 #[ApiFilter(SearchFilter::class, alias: 'menu.filter',  properties: ['tipo' => SearchFilterInterface::STRATEGY_EXACT])]
 #[CollectionMetadataAttribute(
-    class: 'columns-wraper',
+    class: 'col-wraper',
     props: [
-        ['name' => 'id', 'class' => ' small-column'],
-        ['name' => 'icon', 'class' => ' small-column'],
-        ['name' => 'nombre', 'class' => 'columns-wraper'],
+        ['name' => 'id', 'class' => ' col-small'],
+        ['name' => 'icon', 'class' => ' col-small'],
+        ['name' => 'nombre', 'class' => 'col-wraper'],
         ['name' => 'posicion'],
         ['name' => 'tipo'],
         ['name' => 'status'],
@@ -60,16 +66,14 @@ class Menu extends Base {
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $posicion = null;
 
-    #[FormMetadataAttribute(merge: ['$formkit' => 'select_primevue', 'options' => '$types'])]
+    #[FormMetadataAttribute(merge: ['$formkit' => 'select', 'options' => '$types'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $tipo = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nombre = null;
 
-    #[FormMetadataAttribute(merge: ['$formkit' => 'iconinput_primevue', 'icon' => '$icon'])]
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $icon = null;
+
 
     #[FormMetadataAttribute(merge: ['options' => '$parent', 'label' => 'Padre'])]
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'children')]
@@ -86,6 +90,9 @@ class Menu extends Base {
     #[FormMetadataAttribute(merge: ['options' => '$actions', 'label' => 'Accion'])]
     #[ORM\ManyToOne]
     private ?Action $action = null;
+
+    #[ORM\ManyToOne]
+    private ?Icon $icon = null;
 
 
     public function __construct() {
@@ -182,15 +189,6 @@ class Menu extends Base {
         return $this;
     }
 
-    public function getIcon(): ?string {
-        return $this->icon;
-    }
-
-    public function setIcon(?string $icon): static {
-        $this->icon = $icon;
-
-        return $this;
-    }
 
     public function getAction(): ?Action {
         return $this->action;
@@ -198,6 +196,16 @@ class Menu extends Base {
 
     public function setAction(?Action $action): static {
         $this->action = $action;
+
+        return $this;
+    }
+
+    public function getIcon(): ?Icon {
+        return $this->icon;
+    }
+
+    public function setIcon(?Icon $icon): static {
+        $this->icon = $icon;
 
         return $this;
     }

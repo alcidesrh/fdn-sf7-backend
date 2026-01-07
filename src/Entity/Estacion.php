@@ -63,7 +63,7 @@ class Estacion extends Enclave {
 
     use LegacyTrait, SluggableTrait;
 
-    #[ORM\OneToMany(mappedBy: 'estacion', targetEntity: User::class)]
+    #[ORM\ManyToMany(targetEntity: User::class)]
     private Collection $users;
 
     #[ORM\Column(length: 10)]

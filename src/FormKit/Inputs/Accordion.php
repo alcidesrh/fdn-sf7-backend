@@ -2,7 +2,6 @@
 
 namespace App\FormKit\Inputs;
 
-use function Symfony\Component\String\u;
 
 final class Accordion extends FormGroups {
 

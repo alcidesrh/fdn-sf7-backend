@@ -8,7 +8,7 @@ final class DateInput extends FieldsInput {
 
   const TYPE = 'datepicker';
 
-  const DEFAULT = ['dateFormat' => "dd/mm", 'selectionMode' => "range", 'selectionMode' => 'range', 'hourFormat' => 12, 'showTime' => true];
+  const DEFAULT = ['range' => true];
 
   public function __construct(array|string $props = '') {
 

@@ -8,12 +8,15 @@ final class Fieldset extends FormGroups {
 
   use InputTrait;
 
-  public function __construct(array $props = []) {
-
+  public function __construct(array $args = []) {
+    if (isset($args['type'])) {
+      $type = $args['type'];
+      unset($args['type']);
+    } else {
+      $type = 'div';
+    }
     parent::__construct([
-      '$cmp' => 'FieldsetPrimevue',
-    ], ['props' => [
-      'attrs' => ['toggleable' => true, ...$props]
-    ],]);
+      '$el' => $type,
+    ], $args ? ['attrs' => $args] : []);
   }
 }

@@ -43,20 +43,27 @@ class Schema {
   private array $attrs = [];
   private array $defaultAttrs = ['exclude' => ['id', 'label', 'createdAt', 'updatedAt']];
 
-  public string $entityName = "";
   public string $entity = '' {
     set(string $entity) {
-      $this->entityName = $entity;
       $this->entity = "App\Entity\\" . $entity;
       $this->ini($entity);
     }
   }
-  const FORM_SCHEMA_NAMESPACE = 'App\FormKit\FormSchema\\';
+  public string $schemaFileNameSpace {
+    get {
+      return 'App\FormKit\FormSchema\\' . $this->entityPathInfo['filename'] . 'Schema';
+    }
+  }
+  public string $schemaFilePath {
+    get {
+      return __DIR__ . '/FormSchema/' . $this->entityPathInfo['filename'] . 'Schema.php';
+    }
+  }
 
-  public function __construct(protected EntityManagerInterface $entityManager, protected IriConverterInterface $iriConverter, private FormSchemaRepository $formSchemaRepo, string $entity) {
 
+  public function __construct(protected EntityManagerInterface $entityManager, protected IriConverterInterface $iriConverter, private FormSchemaRepository $formSchemaRepo, private  array $entityPathInfo) {
     $this->filesystem = new Filesystem();
-    $this->entity = $entity;
+    $this->entity = $this->entityPathInfo['filename'];
   }
   public function setReflection(): self {
     $this->reflection = new ReflectionClass($this->entity);
@@ -77,7 +84,7 @@ class Schema {
     return $this;
   }
   public function setFormSchema(): self {
-    $this->formSchema = $this->formSchemaRepo->findOneBy(['entity' => $this->entityName]);
+    $this->formSchema = $this->formSchemaRepo->findOneBy(['entity' => $this->entityPathInfo['filename']]);
     return $this;
   }
   public function ini(): self {
@@ -89,14 +96,11 @@ class Schema {
   }
   public function getSchema(?string $entity = null): object|array {
 
-    if ($entity && $this->entityName != $entity) {
+    if ($entity && $this->entityPathInfo['filename'] != $entity) {
       $this->entity = $entity;
     }
-    if ($this->existAndEdited(__DIR__ . '/FormSchema/', $this->entityName . 'Schema.php')) {
-      $this->build((new (self::FORM_SCHEMA_NAMESPACE . $this->entityName . 'Schema'))->entitySchema);
-    } else if ($this->existAndEdited(__DIR__ . '/../Entity/') || $this->existAndEdited(__DIR__ . '/', 'Schema.php') || !$this->formSchema) {
-      $this->build();
-    }
+    $this->checkAndBuild();
+
     return new class(
       $this->formSchema->getSchema()
     ) implements SchemaInterface {
@@ -109,45 +113,38 @@ class Schema {
       }
     };
   }
-  // public function getSchemaJson(): string {
-  //   return \json_encode($this->getSchema());
-  // }
-  public function build(array $entitySchema = []): self {
 
-    if (!empty($entitySchema)) {
-      $group = ['div' => ['children' => $entitySchema]];
-      $form = $this->arrayToSchema($group);
-    } else if (
-      $this->filesystem->exists(__DIR__ . '/FormSchema/' . $this->entityName . 'Schema.php')
+  public function checkAndBuild(): bool {
+    if (
+      !$this->formSchema ||
+      Finder::create()->files()->in(__DIR__)->date('since ' . $this->formSchema->getUpdatedAt()->format('Y-m-d H:i:s'))->hasResults() ||
+      Finder::create()->files()->in($this->entityPathInfo['dirname'])->files()->name($this->entityPathInfo['basename'])->date('since ' . $this->formSchema->getUpdatedAt()->format('Y-m-d H:i:s'))->hasResults()
     ) {
-      $group = ['div' => ['children' => (new (self::FORM_SCHEMA_NAMESPACE . $this->entityName . 'Schema'))->entitySchema]];
-
-
-      $form = $this->arrayToSchema($group);
-    } else {
-
-      if (!empty($schema = $this->attrs['schema'])) {
+      if ($this->filesystem->exists($this->schemaFilePath)) {
+        $group = ['div' => ['children' => (new ($this->schemaFileNameSpace))->entitySchema]];
+        $form = $this->arrayToSchema($group);
+      } else if (!empty($schema = $this->attrs['schema'] ?? [])) {
         $group = ['div' => ['children' => $schema]];
         $form = $this->arrayToSchema($group);
-      } else if (isset($this->attrs['columns'])) {
-        $el = Html::create(['class' => ""]);
-        foreach (\array_chunk($this->toArray(), \round($this->count() / $this->attrs['columns'])) as $v) {
-          $temp = Html::create();
-          $temp->children->value($v, $temp);
-          $el->addChildren($temp);
+      } else {
+        $group = ['div' => ['children' => $this->properties->map(fn($property) => $property->getName())->toArray()]];
+        $form = $this->arrayToSchema(self::wraperSchemaArray($group['div']['children']));
+      }
+      if (isset($form)) {
+        if (!$this->formSchema) {
+          $this->formSchema = new FormSchema();
+          $this->formSchema->setEntity($this->entityPathInfo['filename']);
         }
+        $this->formSchema->setSchema($form());
+        $this->formSchemaRepo->save($this->formSchema);
+
+        return true;
       }
     }
-
-    if (!$this->formSchema) {
-      $this->formSchema = new FormSchema();
-      $this->formSchema->setEntity($this->entityName);
-    }
-    $this->formSchema->setSchema($form());
-    $this->formSchemaRepo->save($this->formSchema);
-
-    return $this;
+    // }
+    return false;
   }
+
   public function arrayToSchema(mixed $c) {
 
     foreach ($c as $k => $v) {
@@ -159,7 +156,7 @@ class Schema {
         'form' => Form::create($data),
         'div' =>   Html::create($data),
         'span' =>   Html::create($data),
-        'fieldset' =>  Fieldset::create($data),
+        '$el' =>  Fieldset::create($data),
         'accordion' =>   Accordion::create($data),
         'picklist' =>   Picklist::create($data),
         'group' =>   Group::create($data),
@@ -169,7 +166,6 @@ class Schema {
       };
 
       if ($input) {
-
         if (isset($v['merge'])) {
           $input->merge($v['merge']);
         }
@@ -227,29 +223,30 @@ class Schema {
     } else {
       $type = $property->getType()->getName();
     }
+    if ($data = $property->getAttributes(FormMetadataAttribute::class)[0] ?? null) {
+      $data = $data->newInstance()->data;
+      if (isset($data['merge'])) {
+        $toMerge = $data['merge'];
+        $type = isset($toMerge['type']) ? $toMerge['type'] : $type;
+      }
+    }
 
     $input = self::input($type, $field);
-    //  match ($type) {
-    //   'string' => Text::create($field),
-    //   'password' => Password::create($field),
-    //   'bool' => Checkbox::create($field),
-    //   'int', 'float' => Number::create($field),
-    //   'picklist' => Picklist::create($field),
-    //   \DateTimeInterface::class, \DateTime::class => DateInput::create($field),
-    //   CollectionsCollection::class, 'array' => MultiSelect::create($field),
-    //   default => Select::create($field)
-    // };
 
     if (!$typeInfo->isNullable()) {
       $input->validation();
     }
 
-    if ($data = $property->getAttributes(FormMetadataAttribute::class)[0] ?? null) {
-      $data = $data->newInstance()->data;
-      if (isset($data['merge'])) {
-        $input->merge($data['merge']);
-      }
+    if (isset($toMerge)) {
+      $input->merge($toMerge);
     }
+
+    // if ($data = $property->getAttributes(FormMetadataAttribute::class)[0] ?? null) {
+    //   $data = $data->newInstance()->data;
+    //   if (isset($data['merge'])) {
+    //     $input->merge($data['merge']);
+    //   }
+    // }
 
     if (!empty($props)) {
       $input->merge($props);
@@ -266,12 +263,13 @@ class Schema {
           $class::cases()
         ));
       } else {
-        if (!$input->containsKey('options')) {
-          $options = $class ? (new Collection($this->entityManager->getRepository($class)->findAll()))
-            ->map(fn($el) => ['label' => (string)$el, 'value' => $this->iriConverter->getIriFromResource($el)])->toArray()
-            : [];
-          $input->set('options', $options);
-        }
+        $input->remove('options');
+        $input->set('target', basename(str_replace('\\', '/', $class)));
+        //   $options = $class ? (new Collection($this->entityManager->getRepository($class)->findAll()))
+        //     ->map(fn($el) => ['label' => (string)$el, 'value' => $this->iriConverter->getIriFromResource($el)])->toArray()
+        //     : [];
+        //   $input->set('options', $options);
+        // }
       }
     }
     if ($input->containsKey('$el')) {
@@ -281,6 +279,7 @@ class Schema {
 
     return $input;
   }
+
   private function extractAttrs(?Reflector $reflector = null): self {
     $reflector = $reflector ?: $this->reflection;
     if ($data = $reflector->getAttributes(FormMetadataAttribute::class)) {
@@ -294,23 +293,10 @@ class Schema {
     }
     return $this;
   }
-  public function existAndEdited($path, $name = null): bool {
-    $name = $name ?: $this->entityName . '.php';
-
-    if (!$this->filesystem->exists($path . $name) || !$this->formSchema) {
-      return false;
-    }
-    $finder = new Finder();
-    $finder->files()->in($path)->files()->name($name)->date('> ' . $this->formSchema->getUpdatedAt()->format('Y-m-d H:i'));
-    if (\iterator_count($finder)) {
-      return true;
-    }
-    return false;
-  }
   static public function input($type, $field) {
     return match ($type) {
       'string' => Text::create($field),
-      'password' => Password::create($field),
+      'password' => Text::create(['name' => $field, 'type' => ' password']),
       'bool' => Checkbox::create($field),
       'int', 'float' => Number::create($field),
       'picklist' => Picklist::create($field),
@@ -318,5 +304,55 @@ class Schema {
       CollectionsCollection::class, 'array' => MultiSelect::create($field),
       default => Select::create($field)
     };
+  }
+  static public function wraperSchemaArray(array $fields): array {
+
+    $temp = ['div' => [
+      'children' =>
+      [
+        [
+          'div' =>
+          [
+            'class' => 'form-header',
+            'children' => [
+              [
+                'span' =>
+                [
+                  'class' => 'font-medium u-text-1',
+                  'children' => '$slots.header'
+                ]
+              ],
+              [
+                'div' => [
+                  'children' => '$slots.crudBtn'
+                ]
+              ],
+            ]
+          ]
+        ],
+        [
+          'div' => [
+            'class' => 'toast-error-form',
+            'children' => [
+              'component' => 'FormKitMessages'
+            ]
+          ]
+        ],
+        [
+          'div' => [
+            'class' => 'row',
+            'children' => [
+              'div' => [
+                'class' => 'col-6 col-md-3',
+                'children' => []
+              ]
+            ]
+          ]
+        ]
+      ]
+    ]];
+    $temp['div']['children'][2]['div']['children']['div']['children'] = $fields;
+
+    return $temp;
   }
 }

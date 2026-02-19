@@ -171,6 +171,10 @@ type Query {
         "Returns the elements in the list that come after the specified cursor."
         after: String
     ): FacturaCursorConnection
+    icon(id: ID!): Icon
+    icons: [Icon]
+    iconCategory(id: ID!): IconCategory
+    iconCategories: [IconCategory]
     localidad(id: ID!): Localidad
     localidads(
         id: Int
@@ -180,7 +184,8 @@ type Query {
         order: [LocalidadFilter_order]
     ): [Localidad]
     menu(id: ID!): Menu
-    menus(
+    menus: [Menu]
+    collectionMenus(
         "Returns the current page."
         page: Int
 
@@ -325,19 +330,12 @@ type Query {
         after: String
     ): TaxonCursorConnection
     user(id: ID!): User
-    usernameUser(id: ID!): User
     users(
-        "Returns the first n elements from the list."
-        first: Int
+        "Returns the current page."
+        page: Int
 
-        "Returns the last n elements from the list."
-        last: Int
-
-        "Returns the elements in the list that come before the specified cursor."
-        before: String
-
-        "Returns the elements in the list that come after the specified cursor."
-        after: String
+        "Returns the number of items per page."
+        itemsPerPage: Int
 
         createdAt: [UserFilter_createdAt]
         order: [UserFilter_order]
@@ -345,8 +343,9 @@ type Query {
         username: String
         nombre: String
         apellido: String
-    ): UserCursorConnection
-    getUserByUsernameUser(username: String): User
+        email: String
+    ): UserPageConnection
+    getByUsernameUser(username: String): User
     venta(id: ID!): Venta
     ventas(
         "Returns the first n elements from the list."
@@ -399,6 +398,7 @@ type Action implements Node {
     nombre: String
     roles(order: [RoleFilter_order]): [Role]
     _id: Int!
+    label: String
     status: Status
 }
 
@@ -422,6 +422,7 @@ type Role implements Node {
         order: [ActionFilter_order]
     ): ActionPageConnection
     _id: Int!
+    label: String
 }
 
 input PermisoFilter_order {
@@ -436,6 +437,7 @@ type Permiso implements Node {
     nombre: String
     nota: String
     _id: Int!
+    label: String
     status: Status
 }
 
@@ -475,21 +477,15 @@ type ActionPaginationInfo {
 type Agencia implements Node {
     id: ID!
     users(
-        "Returns the first n elements from the list."
-        first: Int
+        "Returns the current page."
+        page: Int
 
-        "Returns the last n elements from the list."
-        last: Int
-
-        "Returns the elements in the list that come before the specified cursor."
-        before: String
-
-        "Returns the elements in the list that come after the specified cursor."
-        after: String
+        "Returns the number of items per page."
+        itemsPerPage: Int
 
         createdAt: [UserFilter_createdAt]
         order: [UserFilter_order]
-    ): UserCursorConnection
+    ): UserPageConnection
     alias: String!
     email: String
     telefono: String
@@ -498,6 +494,7 @@ type Agencia implements Node {
     nombre: String
     nota: String
     _id: Int!
+    label: String
     status: Status
     legacyId: Int
 }
@@ -515,20 +512,13 @@ input UserFilter_order {
     apellido: String
     username: String
     createdAt: String
-    status: String
+    email: String
 }
 
-"Cursor connection for User."
-type UserCursorConnection {
-    edges: [UserEdge]
-    pageInfo: UserPageInfo!
-    totalCount: Int!
-}
-
-"Edge of User."
-type UserEdge {
-    node: User
-    cursor: String!
+"Page connection for User."
+type UserPageConnection {
+    collection: [User]
+    paginationInfo: UserPaginationInfo!
 }
 
 type User implements Node {
@@ -538,10 +528,12 @@ type User implements Node {
     "The hashed password"
     password: String
 
+    plainPassword: String
     fullName: String
     userRoles(order: [RoleFilter_order]): [Role]
     permisos(order: [PermisoFilter_order]): [Permiso]
     _id: Int!
+    label: String
     createdAt: String
 
     "Returns updatedAt."
@@ -566,20 +558,23 @@ type Localidad implements Node {
     nombre: String!
     nacion: Nacion
     _id: Int!
+    label: String
 }
 
 type Nacion implements Node {
     id: ID!
     nombre: String!
     _id: Int!
+    label: String
 }
 
-"Information about the current page."
-type UserPageInfo {
-    endCursor: String
-    startCursor: String
+"Information about the pagination."
+type UserPaginationInfo {
+    itemsPerPage: Int!
+    lastPage: Int!
+    totalCount: Int!
+    currentPage: Int!
     hasNextPage: Boolean!
-    hasPreviousPage: Boolean!
 }
 
 "Cursor connection for Agencia."
@@ -609,6 +604,7 @@ type Asiento implements Node {
     bus: Bus!
     clase: String
     _id: Int!
+    label: String
 }
 
 type Bus implements Node {
@@ -634,6 +630,7 @@ type Bus implements Node {
     marca: String
     placa: String
     _id: Int!
+    label: String
     createdAt: String
 
     "Returns updatedAt."
@@ -670,6 +667,7 @@ type Empresa implements Node {
     denominacionSocial: String
     alias: String
     _id: Int!
+    label: String
     createdAt: String
 
     "Returns updatedAt."
@@ -696,6 +694,7 @@ type Piloto implements Node {
     nacionalidad: String
     fullName: String
     _id: Int!
+    label: String
     createdAt: String
 
     "Returns updatedAt."
@@ -732,6 +731,7 @@ type Boleto implements Node {
     asiento: Asiento!
     salida: Salida!
     _id: Int!
+    label: String
     status: Status
     createdAt: String
 
@@ -743,6 +743,7 @@ type Cliente implements Node {
     id: ID!
     dpi: String
     _id: Int!
+    label: String
     createdAt: String
 
     "Returns updatedAt."
@@ -777,6 +778,7 @@ type BoletoLog implements Node {
     boleto: Boleto!
     tipo: Int
     _id: Int!
+    label: String
     createdAt: String
 
     "Returns updatedAt."
@@ -827,6 +829,7 @@ type Salida implements Node {
         after: String
     ): BoletoCursorConnection
     _id: Int!
+    label: String
     createdAt: String
 
     "Returns updatedAt."
@@ -844,6 +847,7 @@ type Recorrido implements Node {
     nombre: String
     nota: String
     _id: Int!
+    label: String
     status: Status
     legacyId: Int
 }
@@ -867,6 +871,7 @@ type Parada implements Node {
     nombre: String
     nota: String
     _id: Int!
+    label: String
     status: Status
 }
 
@@ -879,6 +884,7 @@ type Enclave implements Node {
     nombre: String
     nota: String
     _id: Int!
+    label: String
     status: Status
 }
 
@@ -921,6 +927,7 @@ type SalidaLog implements Node {
     tipo: String
     salida: Salida!
     _id: Int!
+    label: String
     createdAt: String
 
     "Returns updatedAt."
@@ -1049,21 +1056,15 @@ type EnclavePageInfo {
 type Estacion implements Node {
     id: ID!
     users(
-        "Returns the first n elements from the list."
-        first: Int
+        "Returns the current page."
+        page: Int
 
-        "Returns the last n elements from the list."
-        last: Int
-
-        "Returns the elements in the list that come before the specified cursor."
-        before: String
-
-        "Returns the elements in the list that come after the specified cursor."
-        after: String
+        "Returns the number of items per page."
+        itemsPerPage: Int
 
         createdAt: [UserFilter_createdAt]
         order: [UserFilter_order]
-    ): UserCursorConnection
+    ): UserPageConnection
     alias: String!
     email: String
     telefono: String
@@ -1072,6 +1073,7 @@ type Estacion implements Node {
     nombre: String
     nota: String
     _id: Int!
+    label: String
     status: Status
     legacyId: Int
     slug: String
@@ -1102,6 +1104,7 @@ type EstacionPaginationInfo {
 type FDN implements Node {
     id: ID!
     _id: Int!
+    label: String
 }
 
 "Cursor connection for FDN."
@@ -1133,6 +1136,7 @@ type Factura implements Node {
     serie: String
     venta: Venta
     _id: Int!
+    label: String
     createdAt: String
 
     "Returns updatedAt."
@@ -1149,6 +1153,7 @@ type Venta implements Node {
     precio: Float
     factura: Factura
     _id: Int!
+    label: String
     createdAt: String
 
     "Returns updatedAt."
@@ -1178,6 +1183,22 @@ type FacturaPageInfo {
     hasPreviousPage: Boolean!
 }
 
+type Icon implements Node {
+    id: ID!
+    icon: String!
+    name: String
+    _id: Int!
+    label: String
+}
+
+type IconCategory implements Node {
+    id: ID!
+    totalIcons: Int
+    _id: Int!
+    name: String!
+    icons: [Icon]
+}
+
 input LocalidadFilter_order {
     id: String
 }
@@ -1187,21 +1208,12 @@ type Menu implements Node {
     posicion: Int
     tipo: String
     nombre: String
-    icon: String
     parent: Menu
-    children(
-        "Returns the current page."
-        page: Int
-
-        "Returns the number of items per page."
-        itemsPerPage: Int
-
-        order: [MenuFilter_order]
-        tipo: String
-        tipo_list: [String]
-    ): MenuPageConnection
+    children: [Menu]
     action: Action
+    icon: Icon
     _id: Int!
+    label: String
     status: Status
 }
 
@@ -1386,6 +1398,7 @@ type Taxon implements Node {
     nombre: String
     nota: String
     _id: Int!
+    label: String
     status: Status
 }
 
@@ -1533,6 +1546,30 @@ type Mutation {
 
     "Creates a Factura."
     createFactura(input: createFacturaInput!): createFacturaPayload
+
+    "Updates a Icon."
+    updateIcon(input: updateIconInput!): updateIconPayload
+
+    "Deletes a Icon."
+    deleteIcon(input: deleteIconInput!): deleteIconPayload
+
+    "Creates a Icon."
+    createIcon(input: createIconInput!): createIconPayload
+
+    "Updates a IconCategory."
+    updateIconCategory(
+        input: updateIconCategoryInput!
+    ): updateIconCategoryPayload
+
+    "Deletes a IconCategory."
+    deleteIconCategory(
+        input: deleteIconCategoryInput!
+    ): deleteIconCategoryPayload
+
+    "Creates a IconCategory."
+    createIconCategory(
+        input: createIconCategoryInput!
+    ): createIconCategoryPayload
 
     "Creates a Localidad."
     createLocalidad(input: createLocalidadInput!): createLocalidadPayload
@@ -1685,6 +1722,7 @@ input createActionInput {
     ruta: String
     nombre: String
     roles: [String]
+    label: String
     status: Status
     clientMutationId: String
 }
@@ -1701,6 +1739,7 @@ input updateActionInput {
     ruta: String
     nombre: String
     roles: [String]
+    label: String
     status: Status
     clientMutationId: String
 }
@@ -1734,6 +1773,7 @@ input updateAgenciaInput {
     localidad: String
     nombre: String
     nota: String
+    label: String
     status: Status
     legacyId: Int
     clientMutationId: String
@@ -1767,6 +1807,7 @@ input createAgenciaInput {
     localidad: String
     nombre: String
     nota: String
+    label: String
     status: Status
     legacyId: Int
     clientMutationId: String
@@ -1784,6 +1825,7 @@ input updateAsientoInput {
     numero: Int
     bus: String
     clase: String
+    label: String
     clientMutationId: String
 }
 
@@ -1810,6 +1852,7 @@ input createAsientoInput {
     numero: Int!
     bus: String!
     clase: String
+    label: String
     clientMutationId: String
 }
 
@@ -1827,6 +1870,7 @@ input updateBoletoInput {
     boletoLogs: [String]
     asiento: String
     salida: String
+    label: String
     status: Status
     createdAt: String
 
@@ -1860,6 +1904,7 @@ input createBoletoInput {
     boletoLogs: [String]
     asiento: String!
     salida: String!
+    label: String
     status: Status
     createdAt: String
 
@@ -1879,6 +1924,7 @@ input updateBoletoLogInput {
     id: ID!
     boleto: String
     tipo: Int
+    label: String
     createdAt: String
 
     "Returns updatedAt."
@@ -1910,6 +1956,7 @@ type deleteBoletoLogPayload {
 input createBoletoLogInput {
     boleto: String!
     tipo: Int
+    label: String
     createdAt: String
 
     "Returns updatedAt."
@@ -1929,6 +1976,7 @@ type createBoletoLogPayload {
 input updateClienteInput {
     id: ID!
     dpi: String
+    label: String
     createdAt: String
 
     "Returns updatedAt."
@@ -1966,6 +2014,7 @@ type deleteClientePayload {
 "Creates a Cliente."
 input createClienteInput {
     dpi: String
+    label: String
     createdAt: String
 
     "Returns updatedAt."
@@ -1993,6 +2042,7 @@ input createEmpresaInput {
     nombreComercial: String
     denominacionSocial: String
     alias: String
+    label: String
     createdAt: String
 
     "Returns updatedAt."
@@ -2020,6 +2070,7 @@ input updateEmpresaInput {
     nombreComercial: String
     denominacionSocial: String
     alias: String
+    label: String
     createdAt: String
 
     "Returns updatedAt."
@@ -2062,6 +2113,7 @@ input updateEnclaveInput {
     localidad: String
     nombre: String
     nota: String
+    label: String
     status: Status
     clientMutationId: String
 }
@@ -2092,6 +2144,7 @@ input createEnclaveInput {
     localidad: String
     nombre: String
     nota: String
+    label: String
     status: Status
     clientMutationId: String
 }
@@ -2112,6 +2165,7 @@ input createEstacionInput {
     localidad: String
     nombre: String
     nota: String
+    label: String
     status: Status
     legacyId: Int
     slug: String
@@ -2135,6 +2189,7 @@ input updateEstacionInput {
     localidad: String
     nombre: String
     nota: String
+    label: String
     status: Status
     legacyId: Int
     slug: String
@@ -2162,6 +2217,7 @@ type deleteEstacionPayload {
 "Updates a FDN."
 input updateFDNInput {
     id: ID!
+    label: String
     clientMutationId: String
 }
 
@@ -2185,6 +2241,7 @@ type deleteFDNPayload {
 
 "Creates a FDN."
 input createFDNInput {
+    label: String
     clientMutationId: String
 }
 
@@ -2202,6 +2259,7 @@ input updateFacturaInput {
     fecha: String
     serie: String
     venta: String
+    label: String
     createdAt: String
 
     "Returns updatedAt."
@@ -2235,6 +2293,7 @@ input createFacturaInput {
     fecha: String
     serie: String
     venta: String
+    label: String
     createdAt: String
 
     "Returns updatedAt."
@@ -2249,10 +2308,111 @@ type createFacturaPayload {
     clientMutationId: String
 }
 
+"Updates a Icon."
+input updateIconInput {
+    id: ID!
+    icon: String
+    name: String
+    label: String
+    clientMutationId: String
+}
+
+"Updates a Icon."
+type updateIconPayload {
+    icon: Icon
+    clientMutationId: String
+}
+
+"Deletes a Icon."
+input deleteIconInput {
+    id: ID!
+    clientMutationId: String
+}
+
+"Deletes a Icon."
+type deleteIconPayload {
+    icon: Icon
+    clientMutationId: String
+}
+
+"Creates a Icon."
+input createIconInput {
+    icon: String!
+    name: String
+    label: String
+    clientMutationId: String
+}
+
+"Creates a Icon."
+type createIconPayload {
+    icon: Icon
+    clientMutationId: String
+}
+
+"Updates a IconCategory."
+input updateIconCategoryInput {
+    id: ID!
+    totalIcons: Int
+    name: String
+    icons: [updateIconNestedInput]
+    clientMutationId: String
+}
+
+"Updates a Icon."
+input updateIconNestedInput {
+    id: ID
+    icon: String
+    name: String
+    label: String
+    clientMutationId: String
+}
+
+"Updates a IconCategory."
+type updateIconCategoryPayload {
+    iconCategory: IconCategory
+    clientMutationId: String
+}
+
+"Deletes a IconCategory."
+input deleteIconCategoryInput {
+    id: ID!
+    clientMutationId: String
+}
+
+"Deletes a IconCategory."
+type deleteIconCategoryPayload {
+    iconCategory: IconCategory
+    clientMutationId: String
+}
+
+"Creates a IconCategory."
+input createIconCategoryInput {
+    totalIcons: Int
+    name: String!
+    icons: [createIconNestedInput]
+    clientMutationId: String
+}
+
+"Creates a Icon."
+input createIconNestedInput {
+    id: ID
+    icon: String!
+    name: String
+    label: String
+    clientMutationId: String
+}
+
+"Creates a IconCategory."
+type createIconCategoryPayload {
+    iconCategory: IconCategory
+    clientMutationId: String
+}
+
 "Creates a Localidad."
 input createLocalidadInput {
     nombre: String!
     nacion: String
+    label: String
     clientMutationId: String
 }
 
@@ -2267,6 +2427,7 @@ input updateLocalidadInput {
     id: ID!
     nombre: String
     nacion: String
+    label: String
     clientMutationId: String
 }
 
@@ -2293,10 +2454,11 @@ input createMenuInput {
     posicion: Int
     tipo: String
     nombre: String
-    icon: String
     parent: String
     children: [String]
     action: String
+    icon: String
+    label: String
     status: Status
     clientMutationId: String
 }
@@ -2313,10 +2475,11 @@ input updateMenuInput {
     posicion: Int
     tipo: String
     nombre: String
-    icon: String
     parent: String
     children: [String]
     action: String
+    icon: String
+    label: String
     status: Status
     clientMutationId: String
 }
@@ -2342,6 +2505,7 @@ type deleteMenuPayload {
 "Creates a Nacion."
 input createNacionInput {
     nombre: String!
+    label: String
     clientMutationId: String
 }
 
@@ -2355,6 +2519,7 @@ type createNacionPayload {
 input updateNacionInput {
     id: ID!
     nombre: String
+    label: String
     clientMutationId: String
 }
 
@@ -2383,6 +2548,7 @@ input updateParadaInput {
     recorridos: [String]
     nombre: String
     nota: String
+    label: String
     status: Status
     clientMutationId: String
 }
@@ -2411,6 +2577,7 @@ input createParadaInput {
     recorridos: [String]
     nombre: String
     nota: String
+    label: String
     status: Status
     clientMutationId: String
 }
@@ -2428,6 +2595,7 @@ input createPermisoInput {
     children: [String]
     nombre: String
     nota: String
+    label: String
     status: Status
     clientMutationId: String
 }
@@ -2446,6 +2614,7 @@ input updatePermisoInput {
     children: [String]
     nombre: String
     nota: String
+    label: String
     status: Status
     clientMutationId: String
 }
@@ -2477,6 +2646,7 @@ input updateRecorridoInput {
     final: String
     nombre: String
     nota: String
+    label: String
     status: Status
     legacyId: Int
     clientMutationId: String
@@ -2508,6 +2678,7 @@ input createRecorridoInput {
     final: String
     nombre: String
     nota: String
+    label: String
     status: Status
     legacyId: Int
     clientMutationId: String
@@ -2567,6 +2738,7 @@ input createRoleInput {
     children: [String]
     permisos: [String]
     actions: [String]
+    label: String
     clientMutationId: String
 }
 
@@ -2584,6 +2756,7 @@ input updateRoleInput {
     children: [String]
     permisos: [String]
     actions: [String]
+    label: String
     clientMutationId: String
 }
 
@@ -2649,6 +2822,7 @@ input updateSalidaInput {
     empresa: String
     salidaLogs: [String]
     boletos: [String]
+    label: String
     createdAt: String
 
     "Returns updatedAt."
@@ -2683,6 +2857,7 @@ input createSalidaInput {
     empresa: String
     salidaLogs: [String]
     boletos: [String]
+    label: String
     createdAt: String
 
     "Returns updatedAt."
@@ -2702,6 +2877,7 @@ input updateSalidaLogInput {
     id: ID!
     tipo: String
     salida: String
+    label: String
     createdAt: String
 
     "Returns updatedAt."
@@ -2733,6 +2909,7 @@ type deleteSalidaLogPayload {
 input createSalidaLogInput {
     tipo: String
     salida: String!
+    label: String
     createdAt: String
 
     "Returns updatedAt."
@@ -2756,6 +2933,7 @@ input updateTaxonInput {
     children: [String]
     nombre: String
     nota: String
+    label: String
     status: Status
     clientMutationId: String
 }
@@ -2785,6 +2963,7 @@ input createTaxonInput {
     children: [String]
     nombre: String
     nota: String
+    label: String
     status: Status
     clientMutationId: String
 }
@@ -2801,8 +2980,10 @@ input createUserInput {
 
     "The hashed password"
     password: String
+    plainPassword: String
     userRoles: [String]
     permisos: [String]
+    label: String
     createdAt: String
 
     "Returns updatedAt."
@@ -2832,8 +3013,10 @@ input updateUserInput {
 
     "The hashed password"
     password: String
+    plainPassword: String
     userRoles: [String]
     permisos: [String]
+    label: String
     createdAt: String
 
     "Returns updatedAt."
@@ -2876,6 +3059,7 @@ input updateVentaInput {
     user: String
     precio: Float
     factura: String
+    label: String
     createdAt: String
 
     "Returns updatedAt."
@@ -2909,6 +3093,7 @@ input createVentaInput {
     user: String!
     precio: Float
     factura: String
+    label: String
     createdAt: String
 
     "Returns updatedAt."

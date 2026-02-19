@@ -24,7 +24,6 @@ trait ContactoTrait {
   #[ORM\Column(length: 255, nullable: true)]
   protected ?string $direccion = null;
 
-  #[FormMetadataAttribute(merge: ['options' => '$localidades'])]
   #[ORM\ManyToOne]
   protected ?Localidad $localidad = null;
 

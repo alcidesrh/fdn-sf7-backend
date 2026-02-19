@@ -17,7 +17,7 @@ final class UserByUsernameResolver implements QueryItemResolverInterface {
   public function __invoke($item, array $context): object {
 
     if ($arg = $context['args']['username'] ?? null) {
-      if ($user = $this->userRepository->findOneBy(['username' => $arg]))
+      if ($user = $this->userRepository->findOneBy(['id' => $arg]))
         return $user;
     }
     $this->serverSentEvent->error([
@@ -25,7 +25,7 @@ final class UserByUsernameResolver implements QueryItemResolverInterface {
       'detail' => "El usuario <b>{$arg}</b> no existe",
       'summary' => 'No se pudo iniciar la sesión.'
     ]);
-    throw new \Exception('No existe el usario: ' . $arg);
+    throw new \Exception('No existe el usuario: ' . $arg);
     $user = new User();
     $user->setUsername('error')->setNombre('error')->setId(0);
     return $user;

@@ -66,7 +66,7 @@ class Menu extends Base {
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $posicion = null;
 
-    #[FormMetadataAttribute(merge: ['$formkit' => 'select', 'options' => '$types'])]
+    #[FormMetadataAttribute(merge: ['$formkit' => 'select', 'target' => 'Menu'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $tipo = null;
 

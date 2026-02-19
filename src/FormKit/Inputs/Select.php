@@ -3,7 +3,7 @@
 namespace App\FormKit\Inputs;
 
 
-final class Select extends FieldsInput {
+class Select extends FieldsInput {
 
   use InputTrait;
 

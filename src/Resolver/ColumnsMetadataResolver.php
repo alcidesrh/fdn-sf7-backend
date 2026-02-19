@@ -15,8 +15,8 @@ final class ColumnsMetadataResolver implements QueryItemResolverInterface {
 
 
   const FORMKIT = [
-    'int' => 'number',
-    'string' => 'text',
+    'int' => 'text_search',
+    'string' => 'text_search',
     'DateTime' => 'datepicker',
     'DateTimeInterface' => 'datepicker',
     Status::class => 'selecticon',
@@ -44,8 +44,8 @@ final class ColumnsMetadataResolver implements QueryItemResolverInterface {
           $value['class'] = isset($value['class']) ? $class . ' ' . $value['class'] : $class;
         }
         if ((\is_array($value) && !empty($value['filter']))) {
-          $schema = $this->getSchema($value, $reflection->reflection->getProperty($value['name']));
-          $data[] = [...$value, 'schema' => $schema];
+          $schema = $this->getSchema($value['filter'], $reflection->reflection->getProperty($value['name']));
+          $data[] = [...$value, 'align' => 'left', 'schema' => $schema];
           $filter = true;
         } else {
           $data[] = $value;
@@ -53,7 +53,7 @@ final class ColumnsMetadataResolver implements QueryItemResolverInterface {
       }
     } else {
 
-      $collection = $reflection->properties->map(fn(ReflectionProperty $v) => ['name' => $v->getName(), 'class' => 'col-wraper' . ($v->getName() == 'id' ? ' col-small' : '')]);
+      $collection = $reflection->properties->filter(fn(ReflectionProperty $v) => $v->getName() != 'label')->map(fn(ReflectionProperty $v) => ['name' => $v->getName(), 'field' => $v->getName(), 'class' => 'col-wraper' . ($v->getName() == 'id' ? ' col-small' : '')]);
 
       if ($temp = $collection->findFirstKeyAndValue(fn($i, $v) => $v['name'] == 'id')) {
 
@@ -65,12 +65,14 @@ final class ColumnsMetadataResolver implements QueryItemResolverInterface {
 
     return ['collection' => $data, 'filter' => $filter];
   }
-  public function getSchema(&$data, ReflectionProperty $reflection) {
+  public function getSchema(&$data = [], ReflectionProperty $reflection) {
 
     $type = $reflection->getType()->getName();
-    $schema = ['$formkit' => self::FORMKIT[$type], 'name' => $data['name'], 'loading' => '$loading', ...['outerClass' => \join(' ', ['mb-0! px-0!',  $data['outerClass'] ?? ''])]];
-
-    $data['class'] = \join(' ', [$data['class'] ?? '', $data['columnClass'] ?? '']);
+    $schema = ['$formkit' => self::FORMKIT[$type], 'name' => $reflection->getName(), 'id' => $reflection->getName(), 'loading' => '$loading', 'outerClass' => 'mb-0! '];
+    if (\is_array($data)) {
+      $schema = [...$schema, ...$data, 'outerClass' => \join(' ', [$schema['outerClass'],  $data['outerClass'] ?? ''])];
+    }
+    // data['class'] = \join(' ', [$data['class'] ?? '', $data['columnClass'] ?? '']);
 
     $schema = Schema::input($type, $schema);
 

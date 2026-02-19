@@ -145,3 +145,17 @@ return 1;
 //, '179.60.175.107' oficinista de Victorias
 //190.149.186.20 Oficina de Mazate
 // '186.151.119.106' Oficina Reu
+$data = [
+  '$surface-1' => 'oklch(98.4% 0.003 247.858);',
+  '$surface-2' => 'oklch(96.8% 0.007 247.896);',
+  '$surface-3' => 'oklch(92.9% 0.013 255.508);',
+  '$surface-4' => 'oklch(86.9% 0.022 252.894);',
+  '$surface-5' => 'oklch(70.4% 0.04 256.788);',
+  '$surface-6' => 'oklch(55.4% 0.046 257.417);',
+  '$surface-7' => 'oklch(44.6% 0.043 257.281);',
+  '$surface' => 'oklch(44.6% 0.043 257.281)',
+  '$surface-8' => 'oklch(37.2% 0.044 257.287);',
+  '$surface-9' => 'oklch(27.9% 0.041 260.031);',
+  '$surface-10' => 'oklch(20.8% 0.042 265.755);',
+  '$surface-11' => 'oklch(12.9% 0.042 264.695);',
+];

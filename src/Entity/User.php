@@ -71,17 +71,18 @@ use App\State\UserPasswordHasher;
     ]
 )]
 #[ApiFilter(DateFilter::class, properties: ['createdAt'])]
-#[ApiFilter(OrderFilter::class, properties: ['id', 'nombre', 'apellido', 'username', 'createdAt', 'status'], arguments: ['orderParameterName' => 'order'])]
+#[ApiFilter(OrderFilter::class, properties: ['id', 'nombre', 'apellido', 'username', 'createdAt', 'email'], arguments: ['orderParameterName' => 'order'])]
 
 #[CollectionMetadataAttribute(
     class: 'col-wraper',
     props: [
-        ['name' => 'id', 'label' => 'Id', 'sort' => true, 'filter' => true, 'columnClass' => 'col-small'],
-        ['name' => 'username', 'label' => 'Usuario', 'sort' => true, 'filter' => true, 'columnClass' => 'col-medium'],
-        ['name' => 'nombre', 'label' => 'Nombre', 'sort' => true, 'filter' => true, 'columnClass' => 'col-medium'],
-        ['name' => 'apellido', 'columnClass' => 'col-medium', 'label' => 'Apellido', 'sort' => true, 'filter' => true],
-        ['name' => 'email', 'label' => 'Correo', 'sort' => true, 'filter' => true, 'columnClass' => 'col-medium'],
-        ['name' => 'createdAt', 'label' => 'Fecha creación', 'sort' => 'fecha', 'filter' => true],
+        ['name' => 'id', 'filter' => ['inputType' => 'number'], 'label' => 'Id', 'sortable' => true, 'class' => 'col-small'],
+        ['name' => 'username', 'label' => 'Usuario', 'sortable' => true, 'filter' => true, 'class' => 'col-medium'],
+        ['name' => 'nombre', 'label' => 'Nombre', 'sortable' => true, 'filter' => true, 'class' => 'col-medium'],
+        ['name' => 'apellido', 'class' => 'col-medium', 'label' => 'Apellido', 'sortable' => true, 'filter' => true],
+        ['name' => 'email', 'label' => 'Correo', 'sortable' => true, 'filter' => true, 'class' => 'col-medium'],
+        ['name' => 'createdAt', 'label' => 'Fecha creación', 'sortable' => true, 'filter' => true],
+        ['name' => 'userRoles', 'label' => 'Roles',  'class' => 'col-medium'],
         ['name' => 'status', 'label' => 'Status',]
     ]
 )]
@@ -115,11 +116,6 @@ use App\State\UserPasswordHasher;
         ],
         [
             'div' => [
-                'class' => 'divider'
-            ]
-        ],
-        [
-            'div' => [
                 'class' => 'toast-error-form',
                 'children' => [
                     'component' => 'FormKitMessages'
@@ -130,45 +126,79 @@ use App\State\UserPasswordHasher;
             'div' => [
                 'class' => 'form-row',
                 'children' => [
-                    'div' => [
-                        'class' => 'form-col',
-
-                        'children' => [
-                            [
-                                'fieldset' => [
-                                    'props' => [
-                                        'legend' => 'Datos Personales',
-                                    ],
-                                    'children' => 7
-                                ]
-                            ],
-
-                            [
-                                'fieldset' => [
-                                    'props' => [
-                                        'legend' => 'Roles & Privilegios',
-                                    ],
-                                    'children' => 3
-                                ]
-                            ],
-                            [
-                                'fieldset' => [
-                                    'props' => [
-                                        'legend' => 'Credenciales',
-                                    ],
+                    [
+                        'div' => [
+                            'class' => 'form-col',
+                            'children' => [
+                                '$el' => [
+                                    'type' => 'fieldset',
                                     'children' => [
-                                        'div' => [
-                                            'children' => [
-                                                ['username' => ['label' => 'Usuario']],
-                                                ['plainPassword' => ['validation' => false, 'type' => 'password', 'label' => 'Nueva contraseña', 'inputProps' => ['autocomplete' => 'new-password']]],
-                                                ['plainPassword' => ['type' => 'password', 'name' => 'password_confirm', 'label' => 'Repita la contraseña', 'validation' => 'confirm']]
+                                        [
+                                            '$el' => [
+                                                'type' => 'legend',
+                                                'children' => 'Información básica'
+                                            ]
+                                        ],
+                                        [
+                                            '$el' => [
+                                                'type' => 'div',
+                                                'children' => 7
                                             ]
                                         ]
                                     ]
                                 ]
                             ],
                         ]
-                    ]
+                    ],
+                    [
+                        'div' => [
+                            'class' => 'form-col',
+                            'children' => [
+                                '$el' => [
+                                    'type' => 'fieldset',
+                                    'children' => [
+                                        [
+                                            '$el' => [
+                                                'type' => 'legend',
+                                                'children' => 'Roles & Privilegios'
+                                            ]
+                                        ],
+                                        [
+                                            '$el' => [
+                                                'type' => 'div',
+                                                'children' => 2
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ],
+                    [
+                        'div' => [
+                            'class' => 'form-col',
+                            'children' => [
+                                [
+                                    '$el' => [
+                                        'type' => 'fieldset',
+                                        'children' => [
+                                            '$el' => [
+                                                'type' => 'legend',
+                                                'children' => 'Credenciales'
+                                            ],
+                                            'div' => [
+                                                'children' => [
+                                                    ['username' => ['label' => 'Usuario']],
+                                                    ['plainPassword' => ['validation' => false, 'type' => 'password', 'label' => 'Nueva contraseña', 'inputProps' => ['autocomplete' => 'new-password']]],
+                                                    ['plainPassword' => ['type' => 'password', 'name' => 'password_confirm', 'label' => 'Repita la contraseña', 'validation' => 'confirm']]
+                                                ]
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ],
+                    ],
                 ]
             ]
         ]

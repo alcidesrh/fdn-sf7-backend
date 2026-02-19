@@ -17,14 +17,13 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RoleRepository::class)]
 #[ApiResource(
-    paginationEnabled: false,
     graphQlOperations: [
         new Query(),
         new Mutation(name: 'create'),
         new Mutation(name: 'update'),
         new DeleteMutation(name: 'delete'),
         new QueryCollection(
-            // paginationType: 'page',
+            paginationType: 'page',
             filters: ['order.filter'],
         )
     ]

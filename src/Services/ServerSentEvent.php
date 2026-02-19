@@ -7,10 +7,30 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\Serializer\Encoder\EncoderInterface;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Contracts\Service\ServiceMethodsSubscriberTrait;
+use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Twig\Environment;
 
-class ServerSentEvent {
-    public function __construct(private HubInterface $hubInterface, private RequestStack $requestStack, private EncoderInterface $encoderInterface, private string $sessionID = "") {
+class ServerSentEvent implements ServiceSubscriberInterface {
+    use ServiceMethodsSubscriberTrait;
+    public EncoderInterface $encoderInterface {
+        get {
+            return $this->getSerializer();
+        }
+    }
+    public static function getSubscribedServices(): array {
+        return [
+            'serializer' => SerializerInterface::class,
+        ];
+    }
+
+    private function getSerializer(): SerializerInterface {
+        return $this->container->get('serializer');
+    }
+
+    public function __construct(private HubInterface $hubInterface, private RequestStack $requestStack,  private string $sessionID = "") {
     }
 
     public function errorPago($mensaje = 'Ha ocurrido un error. No se ha realizado el pago.', $detalle = null) {

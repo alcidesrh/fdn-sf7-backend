@@ -21,12 +21,6 @@ final class ItemResolver implements QueryItemResolverInterface {
    */
   public function __invoke(?object $item, array $context): object {
 
-
-    // if (!empty($context['args']['form'])) {
-    //   $form = (new Schema($this->entityManagerInterface, $this->iriConverter, $this->repo, $context['args']['entity']))->getSchema();
-    //   // $schema = $form->getSchemaJson();
-    // $this->serverSentEvent->form($form);
-    // }
     if (!empty($context['args']['id'])) {
       $item = $this->entityManagerInterface->getRepository(Doctrine::entityNamespace($context['args']['entity']))->find($context['args']['id']);
 

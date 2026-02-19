@@ -55,6 +55,12 @@ api_platform:
     #         - '%kernel.project_dir%/src/Form'
     # resource_class_directories:
     #     - '%kernel.project_dir%/src/Entity'
+    # state:
+    #     error_provider:
+    #         class: 'App\Error\ErrorProvider'
+    #         tags:
+    #             - key: "api_platform.state.error_provider"
+    #             name: "api_platform.state_provider"
 services:
     _defaults:
         autowire: false

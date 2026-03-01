@@ -17,7 +17,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PermisoRepository::class)]
 #[ApiResource(
-    paginationEnabled: false,
     graphQlOperations: [
         new Query(),
         new Mutation(name: 'create'),

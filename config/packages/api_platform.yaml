@@ -8,7 +8,7 @@ api_platform:
         include_type: true
     collection:
         pagination:
-            page_parameter_name: page
+            page_parameter_name: currentPage
     graphql:
         # introspection: false
         # graphql_playground:

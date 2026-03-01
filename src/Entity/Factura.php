@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use App\Entity\Base\TimeStatusBase;
 use App\Repository\FacturaRepository;
@@ -18,6 +19,7 @@ class Factura extends TimeStatusBase {
 
     #[ORM\Column(type: Types::GUID, nullable: true)]
     private ?string $uuid = null;
+
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $fecha = null;

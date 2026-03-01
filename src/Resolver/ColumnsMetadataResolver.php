@@ -63,7 +63,7 @@ final class ColumnsMetadataResolver implements QueryItemResolverInterface {
       }
     }
 
-    return ['collection' => $data, 'filter' => $filter];
+    return $data;
   }
   public function getSchema(&$data = [], ReflectionProperty $reflection) {
 

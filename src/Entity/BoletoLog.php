@@ -2,14 +2,14 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
+use App\Attribute\ApiResourceNoPagination;
 use App\Entity\Base\LogBase;
 use App\Repository\BoletoLogRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BoletoLogRepository::class)]
-#[ApiResource]
+#[ApiResourceNoPagination]
 class BoletoLog extends LogBase {
 
     #[ORM\ManyToOne(inversedBy: 'boletoLogs')]

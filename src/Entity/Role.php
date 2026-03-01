@@ -2,11 +2,11 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GraphQl\DeleteMutation;
 use ApiPlatform\Metadata\GraphQl\Mutation;
 use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\GraphQl\QueryCollection;
+use App\Attribute\ApiResourceNoPagination;
 use App\Attribute\FormMetadataAttribute;
 use App\Entity\Base\Base;
 use App\Entity\Base\Constants\RolesTrait;
@@ -16,14 +16,13 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RoleRepository::class)]
-#[ApiResource(
+#[ApiResourceNoPagination(
     graphQlOperations: [
         new Query(),
         new Mutation(name: 'create'),
         new Mutation(name: 'update'),
         new DeleteMutation(name: 'delete'),
         new QueryCollection(
-            paginationType: 'page',
             filters: ['order.filter'],
         )
     ]

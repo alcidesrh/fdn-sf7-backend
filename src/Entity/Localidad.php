@@ -5,11 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Doctrine\Common\Filter\SearchFilterInterface;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\GraphQl\DeleteMutation;
-use ApiPlatform\Metadata\GraphQl\Mutation;
-use ApiPlatform\Metadata\GraphQl\Query;
-use ApiPlatform\Metadata\GraphQl\QueryCollection;
+use App\Attribute\ApiResourcePaginationPage;
 use App\Attribute\CollectionMetadataAttribute;
 use App\Attribute\FormMetadataAttribute;
 use App\Entity\Base\Base;
@@ -18,19 +14,7 @@ use App\Repository\LocalidadRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: LocalidadRepository::class)]
-#[ApiResource(
-    paginationEnabled: false,
-    graphQlOperations: [
-        new Query(),
-        new Mutation(name: 'create'),
-        new Mutation(name: 'update'),
-        new DeleteMutation(name: 'delete'),
-        new QueryCollection(
-            paginationType: 'page',
-            filters: ['or.filter',  'order.filter']
-        )
-    ]
-)]
+#[ApiResourcePaginationPage]
 
 #[ApiFilter(OrFilter::class, alias: 'or.filter', properties: ['id', 'nombre'], arguments: ['searchFilterProperties' => ['id' => SearchFilterInterface::STRATEGY_EXACT,  'nombre' => SearchFilterInterface::STRATEGY_IPARTIAL]])]
 

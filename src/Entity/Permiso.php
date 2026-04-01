@@ -2,11 +2,7 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\GraphQl\DeleteMutation;
-use ApiPlatform\Metadata\GraphQl\Mutation;
-use ApiPlatform\Metadata\GraphQl\Query;
-use ApiPlatform\Metadata\GraphQl\QueryCollection;
+use App\Attribute\ApiResourceNoPagination;
 use App\Attribute\CollectionMetadataAttribute;
 use App\Attribute\FormMetadataAttribute;
 use App\Entity\Base\NombreNotaStatusBase;
@@ -16,18 +12,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PermisoRepository::class)]
-#[ApiResource(
-    graphQlOperations: [
-        new Query(),
-        new Mutation(name: 'create'),
-        new Mutation(name: 'update'),
-        new DeleteMutation(name: 'delete'),
-        new QueryCollection(
-            paginationType: 'page',
-            filters: ['order.filter'],
-        )
-    ]
-)]
+#[ApiResourceNoPagination]
 #[FormMetadataAttribute(order: ['nombre', 'roles', 'parents', 'children', 'status', 'nota'])]
 
 #[CollectionMetadataAttribute(
@@ -48,7 +33,7 @@ class Permiso extends NombreNotaStatusBase {
     /**
      * @var Collection<int, Role>
      */
-    #[ORM\ManyToMany(targetEntity: Role::class, inversedBy: 'permisos')]
+    #[ORM\ManyToMany(targetEntity: Role::class,  mappedBy: 'permisos')]
     private ?Collection $roles;
 
     /**
@@ -56,6 +41,8 @@ class Permiso extends NombreNotaStatusBase {
      */
     #[FormMetadataAttribute(merge: ['options' => '$parents'])]
     #[ORM\ManyToMany(targetEntity: self::class, inversedBy: 'children')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(onDelete: 'CASCADE')]
     private ?Collection $parents;
 
     /**

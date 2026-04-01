@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
+use App\Attribute\ApiResourceNoPagination;
 use App\Entity\Base\NombreNotaStatusBaseSuperClass;
 use App\Entity\Base\Traits\LegacyTrait;
 use App\Repository\RecorridoRepository;
@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\InheritanceType('JOINED')]
 #[ORM\DiscriminatorColumn(name: 'discr', type: 'string')]
 #[ORM\DiscriminatorMap(['recorrido' => Recorrido::class, 'ruta' => Ruta::class])]
-#[ApiResource]
+#[ApiResourceNoPagination]
 class Recorrido extends NombreNotaStatusBaseSuperClass {
 
     use LegacyTrait;

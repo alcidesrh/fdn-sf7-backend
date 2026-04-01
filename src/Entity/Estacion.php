@@ -2,53 +2,17 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Doctrine\Common\Filter\SearchFilterInterface;
-use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\GraphQl\DeleteMutation;
-use ApiPlatform\Metadata\GraphQl\Mutation;
-use ApiPlatform\Metadata\GraphQl\Query;
-use ApiPlatform\Metadata\GraphQl\QueryCollection;
+use App\Attribute\ApiResourcePaginationPage;
 use App\Attribute\CollectionMetadataAttribute;
 use App\Entity\Base\Traits\LegacyTrait;
 use App\Entity\Base\Traits\SluggableTrait;
-use App\Filter\OrFilter;
 use App\Repository\EstacionRepository;
-use App\Resolver\FindByFindOneByFieldResolver;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: EstacionRepository::class)]
-#[ApiResource(
-    graphQlOperations: [
-        new Query(),
-        new Mutation(name: 'create'),
-        new Mutation(name: 'update'),
-        new DeleteMutation(name: 'delete'),
-        new QueryCollection(
-            paginationType: 'page',
-            filters: ['or.filter.estacion', 'order.filter.estacion'],
-            // filters: ['or.filter', 'date.filter', 'order.filter'],
-            // extraArgs: ['fullName' => ['type' => 'String']]
-        ),
-        // new Query(
-        //     name: 'findByFindOneByFieldResolver',
-        //     resolver: FindByFindOneByFieldResolver::class,
-        //     args: [
-        //         'entity' => ['type' => 'String'],
-        //         'field' => ['type' => 'String'],
-        //         'value' => ['type' => 'String']
-        //     ],
-        //     // read: false
-        // ),
-    ]
-)]
-
-#[ApiFilter(OrFilter::class, alias: 'or.filter.estacion', properties: ['id', 'nombre', 'alias'], arguments: ['searchFilterProperties' => ['id' => SearchFilterInterface::STRATEGY_EXACT, 'nombre' => SearchFilterInterface::STRATEGY_IPARTIAL, 'alias' => SearchFilterInterface::STRATEGY_IPARTIAL]])]
-
-#[ApiFilter(OrderFilter::class, alias: 'order.filter.estacion', properties: ['id', 'nombre', 'alias', 'status'], arguments: ['orderParameterName' => 'order'])]
+#[ApiResourcePaginationPage]
 
 #[CollectionMetadataAttribute(properties: [
     ['name' => 'id', 'label' => 'Id', 'sort' => true, 'filter' => true],
@@ -64,6 +28,8 @@ class Estacion extends Enclave {
     use LegacyTrait, SluggableTrait;
 
     #[ORM\ManyToMany(targetEntity: User::class)]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(onDelete: 'CASCADE')]
     private Collection $users;
 
     #[ORM\Column(length: 10)]

@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
+use App\Attribute\ApiResourcePaginationPage;
 use App\Entity\Base\LogBase;
 use App\Repository\SalidaLogRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SalidaLogRepository::class)]
-#[ApiResource]
+#[ApiResourcePaginationPage]
 class SalidaLog extends LogBase {
 
     #[ORM\Column(length: 100, nullable: true)]

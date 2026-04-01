@@ -3,7 +3,7 @@
 namespace App\ApiResource;
 
 use ApiPlatform\GraphQl\Resolver\QueryItemResolverInterface;
-use ApiPlatform\Metadata\ApiResource;
+use App\Attribute\ApiResourcePaginationPage;
 use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\IriConverterInterface;
 use App\FormKit\Schema;
@@ -13,7 +13,7 @@ use App\Resolver\FormResourceResolver;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
-#[ApiResource(
+#[ApiResourcePaginationPage(
   graphQlOperations: [
     new Query(
       name: 'get',

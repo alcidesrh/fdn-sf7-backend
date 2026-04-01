@@ -2,14 +2,7 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Doctrine\Common\Filter\DateFilterInterface;
-use ApiPlatform\Doctrine\Common\Filter\SearchFilterInterface;
-use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
-use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\GraphQl\Query;
-use ApiPlatform\Metadata\GraphQl\QueryCollection;
+use App\Attribute\ApiResourcePaginationPage;
 use App\Attribute\CollectionMetadataAttribute;
 use App\Entity\Base\TimeLegacyStatusBase;
 use App\Entity\Base\Traits\StatusTrait;
@@ -20,24 +13,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BusRepository::class)]
-#[ApiResource(
-    graphQlOperations: [
-        new Query(),
-        // new Mutation(name: 'create'),
-        // new Mutation(name: 'update'),
-        // new DeleteMutation(name: 'delete'),
-        new QueryCollection(
-            paginationType: 'page',
-            filters: ['bus.or.filter', 'bus.date.filter', 'bus.order.filter'],
-        ),
-    ]
-)]
+#[ApiResourcePaginationPage]
 
-#[ApiFilter(OrFilter::class, alias: 'bus.or.filter', properties: ['id', 'marca', 'placa', 'status'], arguments: ['searchFilterProperties' => ['id' => SearchFilterInterface::STRATEGY_EXACT, 'placa' => SearchFilterInterface::STRATEGY_IPARTIAL, 'marca' => SearchFilterInterface::STRATEGY_IPARTIAL, 'status' => SearchFilterInterface::STRATEGY_EXACT, 'createdAt' => DateFilterInterface::EXCLUDE_NULL]])]
-
-#[ApiFilter(DateFilter::class, alias: 'bus.date.filter', properties: ['createdAt' => DateFilterInterface::EXCLUDE_NULL])]
-
-#[ApiFilter(OrderFilter::class, alias: 'bus.order.filter', properties: ['id', 'marca', 'placa', 'createdAt', 'status'], arguments: ['orderParameterName' => 'order'])]
 
 #[CollectionMetadataAttribute(properties: [
     ['name' => 'id', 'label' => 'Id', 'sort' => true, 'filter' => true],

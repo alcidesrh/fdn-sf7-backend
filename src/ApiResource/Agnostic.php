@@ -3,6 +3,7 @@
 namespace App\ApiResource;
 
 use ApiPlatform\Metadata\ApiResource;
+use App\Attribute\ApiResourcePaginationPage;
 use ApiPlatform\Metadata\GraphQl\Mutation;
 use ApiPlatform\Metadata\GraphQl\Query;
 use App\DTO\DeleteMultipleDTO;
@@ -24,9 +25,9 @@ use App\Resolver\ItemResolver;
     new Query(),
     new Query(
       name: 'collection',
-       resolver: CollectionResolver::class,
+      resolver: CollectionResolver::class,
       read: false,
-      args: ['resource' => ['type' => 'String'], 'fields' => ['type' => '[String]']],
+      args: ['resource' => ['type' => 'String']],
       output: MetadataDTO::class,
     ),
     new Query(

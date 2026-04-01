@@ -3,22 +3,22 @@
 namespace App\Entity;
 
 use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Doctrine\Orm\Filter\ExactFilter;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
-use ApiPlatform\Doctrine\Orm\Filter\OrFilter as FilterOrFilter;
+use ApiPlatform\Doctrine\Orm\Filter\OrFilter;
 use ApiPlatform\Doctrine\Orm\Filter\PartialSearchFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiResource;
+use App\Attribute\ApiResourcePaginationPage;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use ApiPlatform\Metadata\GraphQl\DeleteMutation;
 use ApiPlatform\Metadata\GraphQl\Mutation;
 use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\GraphQl\QueryCollection;
 use ApiPlatform\Metadata\QueryParameter;
-use App\Attribute\ApiResourceNoPagination;
 use App\Attribute\CollectionMetadataAttribute;
 use App\Attribute\FormMetadataAttribute;
 use App\Entity\Base\UserBase;
@@ -29,37 +29,36 @@ use App\State\UserPasswordHasher;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-#[ApiResource(
+#[ApiResourcePaginationPage(
     graphQlOperations: [
         new Query(),
         new Mutation(name: 'create', processor: UserPasswordHasher::class),
         new Mutation(name: 'update', processor: UserPasswordHasher::class),
-        new DeleteMutation(name: 'delete'),
         new QueryCollection(
             paginationType: 'page',
             parameters: [
                 // 'search[:property]' => new QueryParameter(
                 //     properties: ['username', 'nombre', 'apellido', 'email'], // Only these properties get parameters created
-                //     filter: new FilterOrFilter(new PartialSearchFilter())
+                //     filter: new OrFilter(new PartialSearchFilter())
                 // ),
                 'id' => new QueryParameter(
-                    filter: new FilterOrFilter(new IdPartialSearchFilter()),
+                    filter: new OrFilter(new IdPartialSearchFilter()),
                     property: 'id',
                 ),
                 'username' => new QueryParameter(
-                    filter: new FilterOrFilter(new PartialSearchFilter()),
+                    filter: new OrFilter(new PartialSearchFilter()),
                     property: 'username'
                 ),
                 'nombre' => new QueryParameter(
-                    filter: new FilterOrFilter(new PartialSearchFilter()),
+                    filter: new OrFilter(new PartialSearchFilter()),
                     property: 'nombre'
                 ),
                 'apellido' => new QueryParameter(
-                    filter: new FilterOrFilter(new PartialSearchFilter()),
+                    filter: new OrFilter(new PartialSearchFilter()),
                     property: 'apellido'
                 ),
                 'email' => new QueryParameter(
-                    filter: new FilterOrFilter(new PartialSearchFilter()),
+                    filter: new OrFilter(new PartialSearchFilter()),
                     property: 'email'
                 ),
             ],
@@ -72,6 +71,8 @@ use App\State\UserPasswordHasher;
     ]
 )]
 #[ApiFilter(DateFilter::class, properties: ['createdAt'])]
+// #[ApiFilter(SearchFilter::class, properties: ['userRoles.id' => 'exact'])]
+#[ApiFilter(SearchFilter::class, properties: ['permisos.id' => 'exact', 'userRoles.id' => 'exact'])]
 #[ApiFilter(OrderFilter::class, properties: ['id', 'nombre', 'apellido', 'username', 'createdAt', 'email'], arguments: ['orderParameterName' => 'order'])]
 
 #[CollectionMetadataAttribute(
@@ -232,8 +233,8 @@ class User extends UserBase implements UserInterface, PasswordAuthenticatedUserI
 
     #[FormMetadataAttribute(merge: ['options' => '$roles', 'label' => 'Roles'])]
     #[ORM\JoinTable(name: 'user_role')]
-    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
-    #[ORM\InverseJoinColumn(name: 'role_id', referencedColumnName: 'id')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'role_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToMany(targetEntity: Role::class)]
     private Collection $userRoles;
 

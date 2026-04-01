@@ -62,10 +62,10 @@ use Symfony\Component\Serializer\NameConverter\NameConverterInterface;
  * <?php
  * // api/src/Entity/Book.php
  * use ApiPlatform\Metadata\ApiFilter;
- * use ApiPlatform\Metadata\ApiResource;
+ * use App\Attribute\ApiResourcePaginationPage;
  * use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
  *
- * #[ApiResource]
+ * #[ApiResourcePaginationPage]
  * #[ApiFilter(SearchFilter::class, properties: ['isbn' => 'exact', 'description' => 'partial'])]
  * class Book
  * {

@@ -3,7 +3,7 @@
 namespace App\ApiResource;
 
 use ApiPlatform\GraphQl\Resolver\QueryItemResolverInterface;
-use ApiPlatform\Metadata\ApiResource;
+use App\Attribute\ApiResourcePaginationPage;
 use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\GraphQl\QueryCollection;
 use App\DTO\CollectionDTO;
@@ -19,7 +19,7 @@ interface ListInterface {
   public function getList(): array;
 }
 
-#[ApiResource(
+#[ApiResourcePaginationPage(
   paginationEnabled: false,
   graphQlOperations: [
     new Query(

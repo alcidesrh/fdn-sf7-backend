@@ -5,11 +5,9 @@ namespace App\Entity;
 use ApiPlatform\Doctrine\Common\Filter\SearchFilterInterface;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\GraphQl\DeleteMutation;
-use ApiPlatform\Metadata\GraphQl\Mutation;
 use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\GraphQl\QueryCollection;
+use App\Attribute\ApiResourceNoPagination;
 use App\Attribute\CollectionMetadataAttribute;
 use App\Attribute\FormMetadataAttribute;
 use App\Entity\Base\Base;
@@ -22,16 +20,10 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MenuRepository::class)]
-#[ApiResource(
+#[ApiResourceNoPagination(
     graphQlOperations: [
-        new Query(),
-        new Mutation(name: 'create'),
-        new Mutation(name: 'update'),
-        new DeleteMutation(name: 'delete'),
         new QueryCollection(
             paginationEnabled: false
-            // filters: ['order.filter', 'menu.filter'],
-            // extraArgs: ['tipo' => ['type' => 'String', 'default' => 'root']],
         ),
         new QueryCollection(
             name: 'collection',

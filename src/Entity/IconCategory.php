@@ -2,35 +2,15 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Doctrine\Orm\State\Options;
-use ApiPlatform\Doctrine\Orm\Util\QueryNameGeneratorInterface;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\GraphQl\DeleteMutation;
-use ApiPlatform\Metadata\GraphQl\Mutation;
-use ApiPlatform\Metadata\GraphQl\Query;
-use ApiPlatform\Metadata\GraphQl\QueryCollection;
-use ApiPlatform\Metadata\Operation;
+use App\Attribute\ApiResourcePaginationPage;
 use App\Repository\IconCategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: IconCategoryRepository::class)]
-#[ApiResource(
-    normalizationContext: ['groups' => ['iconcategory:read']],
-    denormalizationContext: ['groups' => ['iconcategory:write']],
-    paginationEnabled: false,
-    // graphQlOperations: [
-    //     new Query(),
-    //     new Mutation(name: 'create'),
-    //     new Mutation(name: 'update'),
-    //     new DeleteMutation(name: 'delete'),
-    //     new QueryCollection(),
-    // ]
-)]
+#[ApiResourcePaginationPage]
 class IconCategory {
 
     #[Groups(['iconcategory:read', 'iconcategory:write'])]
@@ -51,6 +31,8 @@ class IconCategory {
      */
     #[Groups(['iconcategory:read', 'iconcategory:write'])]
     #[ORM\ManyToMany(targetEntity: Icon::class)]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(onDelete: 'CASCADE')]
     private Collection $icons;
 
 

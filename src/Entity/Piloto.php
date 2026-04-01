@@ -2,39 +2,18 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Doctrine\Common\Filter\DateFilterInterface;
-use ApiPlatform\Doctrine\Common\Filter\SearchFilterInterface;
-use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
-use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\GraphQl\Query;
-use ApiPlatform\Metadata\GraphQl\QueryCollection;
+use App\Attribute\ApiResourcePaginationPage;
 use App\Attribute\CollectionMetadataAttribute;
 use App\Entity\Base\PersonaBase;
-use App\Filter\OrFilter;
 use App\Repository\PilotoRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PilotoRepository::class)]
 
-#[ApiResource(
-    graphQlOperations: [
-        new Query(),
-        new QueryCollection(
-            paginationType: 'page',
-            filters: ['piloto.filter', 'piloto.date.filter', 'piloto.order.filter'],
-            extraArgs: ['fullName' => ['type' => 'String']]
-        ),
-    ]
-)]
+#[ApiResourcePaginationPage]
 
-#[ApiFilter(OrFilter::class, alias: 'piloto.filter', properties: ['id', 'fullName', 'email', 'status', 'licencia', 'telefono'], arguments: ['searchFilterProperties' => ['id' => SearchFilterInterface::STRATEGY_EXACT, 'fullName' => SearchFilterInterface::STRATEGY_IPARTIAL, 'email' => SearchFilterInterface::STRATEGY_IPARTIAL, 'licencia' => SearchFilterInterface::STRATEGY_IPARTIAL, 'telefono' => SearchFilterInterface::STRATEGY_IPARTIAL, 'status' => SearchFilterInterface::STRATEGY_EXACT, 'createdAt' => DateFilterInterface::INCLUDE_NULL_BEFORE_AND_AFTER]])]
 
-#[ApiFilter(DateFilter::class, alias: 'piloto.date.filter', properties: ['createdAt' => DateFilterInterface::EXCLUDE_NULL, 'fecha_nacimiento' => DateFilterInterface::EXCLUDE_NULL])]
-
-#[ApiFilter(OrderFilter::class, alias: 'piloto.order.filter', properties: ['id', 'nombre', 'email', 'createdAt', 'status'], arguments: ['orderParameterName' => 'order'])]
 
 #[CollectionMetadataAttribute(properties: [
     ['name' => 'id', 'label' => 'Id', 'sort' => true, 'filter' => true],

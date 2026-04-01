@@ -2,14 +2,13 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
+use App\Attribute\ApiResourcePaginationPage;
 use App\Entity\Base\PersonaBase;
 use App\Repository\ClienteRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Timestampable\Traits\Timestampable;
 
 #[ORM\Entity(repositoryClass: ClienteRepository::class)]
-#[ApiResource]
+#[ApiResourcePaginationPage]
 class Cliente extends PersonaBase {
 
     #[ORM\Column(length: 15, nullable: true)]

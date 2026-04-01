@@ -7,15 +7,17 @@ use App\Repository\ParadaRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use ApiPlatform\Metadata\ApiResource;
+use App\Attribute\ApiResourcePaginationPage;
 
 #[ORM\Entity(repositoryClass: ParadaRepository::class)]
-#[ApiResource]
+#[ApiResourcePaginationPage]
 class Parada extends NombreNotaStatusBaseSuperClass {
     #[ORM\ManyToOne]
     private ?Enclave $enclave = null;
 
     #[ORM\ManyToMany(targetEntity: Recorrido::class, inversedBy: 'paradas')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(onDelete: 'CASCADE')]
     private Collection $recorridos;
 
     public function __construct() {

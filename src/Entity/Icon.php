@@ -2,16 +2,14 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
+use App\Attribute\ApiResourceNoPagination;
 use App\Entity\Base\Base;
 use App\Repository\IconRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: IconRepository::class)]
-#[ApiResource(
-    paginationEnabled: false
-)]
+#[ApiResourceNoPagination]
 class Icon extends Base {
 
     #[Groups(['iconcategory:read', 'iconcategory:write'])]

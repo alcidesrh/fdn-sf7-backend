@@ -3,14 +3,14 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiProperty;
-use ApiPlatform\Metadata\ApiResource;
+use App\Attribute\ApiResourcePaginationPage;
 use App\Entity\Base\TimeStatusBase;
 use App\Repository\FacturaRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: FacturaRepository::class)]
-#[ApiResource]
+#[ApiResourcePaginationPage]
 class Factura extends TimeStatusBase {
 
 

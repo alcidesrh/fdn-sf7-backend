@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
+use App\Attribute\ApiResourcePaginationPage;
 use App\Entity\Base\NombreNotaStatusBaseSuperClass;
 use App\Repository\TaxonRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -11,7 +11,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TaxonRepository::class)]
-#[ApiResource]
+#[ApiResourcePaginationPage]
 #[ORM\InheritanceType('JOINED')]
 #[ORM\DiscriminatorColumn(name: 'discr', type: 'string')]
 #[ORM\DiscriminatorMap(['enclave' => Menu::class])]
@@ -28,6 +28,8 @@ class Taxon extends NombreNotaStatusBaseSuperClass {
      * @var Collection<int, self>
      */
     #[ORM\ManyToMany(targetEntity: self::class)]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(onDelete: 'CASCADE')]
     protected ?Collection $children;
 
     public function __construct() {

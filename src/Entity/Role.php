@@ -2,11 +2,8 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\GraphQl\DeleteMutation;
-use ApiPlatform\Metadata\GraphQl\Mutation;
-use ApiPlatform\Metadata\GraphQl\Query;
-use ApiPlatform\Metadata\GraphQl\QueryCollection;
 use App\Attribute\ApiResourceNoPagination;
+use App\Attribute\ApiResourcePaginationPage;
 use App\Attribute\FormMetadataAttribute;
 use App\Entity\Base\Base;
 use App\Entity\Base\Constants\RolesTrait;
@@ -16,17 +13,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RoleRepository::class)]
-#[ApiResourceNoPagination(
-    graphQlOperations: [
-        new Query(),
-        new Mutation(name: 'create'),
-        new Mutation(name: 'update'),
-        new DeleteMutation(name: 'delete'),
-        new QueryCollection(
-            filters: ['order.filter'],
-        )
-    ]
-)]
+#[ApiResourceNoPagination]
 
 class Role extends Base {
 
@@ -40,6 +27,8 @@ class Role extends Base {
      */
     #[FormMetadataAttribute(merge: ['options' => '$parents'])]
     #[ORM\ManyToMany(targetEntity: self::class, inversedBy: 'children')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(onDelete: 'CASCADE')]
     private ?Collection $parents;
 
     /**
@@ -53,13 +42,17 @@ class Role extends Base {
      * @var Collection<int, Permiso>
      */
     #[FormMetadataAttribute(merge: ['options' => '$permisos'])]
-    #[ORM\ManyToMany(targetEntity: Permiso::class, mappedBy: 'roles')]
+    #[ORM\ManyToMany(targetEntity: Permiso::class, inversedBy: 'roles')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(onDelete: 'CASCADE')]
     private ?Collection $permisos;
 
     /**
      * @var Collection<int, Action>
      */
-    #[ORM\ManyToMany(targetEntity: Action::class, mappedBy: 'roles')]
+    #[ORM\ManyToMany(targetEntity: Action::class, inversedBy: 'roles')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(onDelete: 'CASCADE')]
     private Collection $actions;
 
     public function __construct() {

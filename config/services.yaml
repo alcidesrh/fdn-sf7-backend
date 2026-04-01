@@ -61,6 +61,8 @@ services:
     App\Serializer\Normalizer\GraphqlExceptionNormalizer:
         tags:
             - { name: "serializer.normalizer", priority: 12 }
+            
+     
 
     # App\GraphQL\Type\Definition\DateScalar:
     #     tags:
@@ -78,6 +80,14 @@ services:
     App\GraphQL\Type\Definition\DateType:
         tags:
             - { name: api_platform.graphql.type }   
+
+    App\Services\EntityConfigSynchronizer:
+        arguments:
+            $logger: '@logger'
+
+    App\EventListener\EntityConfigSyncListener:
+        tags:
+            - { name: doctrine.event_subscriber }        
 
         
 

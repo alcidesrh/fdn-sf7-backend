@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Attribute\ApiResourceNoPagination;
+use App\Attribute\ApiResourcePaginationPage;
 use App\Entity\Base\TimeStatusBase;
 use App\Repository\SalidaRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -11,7 +11,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SalidaRepository::class)]
-#[ApiResourceNoPagination]
+#[ApiResourcePaginationPage]
 class Salida extends TimeStatusBase {
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]

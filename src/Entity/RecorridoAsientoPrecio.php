@@ -2,12 +2,12 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
+use App\Attribute\ApiResourcePaginationPage;
 use App\Repository\RecorridoAsientoPrecioRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RecorridoAsientoPrecioRepository::class)]
-#[ApiResource]
+#[ApiResourcePaginationPage]
 class RecorridoAsientoPrecio {
     #[ORM\Id]
     #[ORM\GeneratedValue]

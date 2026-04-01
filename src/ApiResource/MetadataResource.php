@@ -10,12 +10,7 @@ use App\Resolver\ColumnsMetadataResolver;
 use App\Security\ABAC;
 
 #[ApiResource(
-  operations: [
-    new Get(
-      provider: MetadataResource::class,
-      uriTemplate: '/metadata/{className}'
-    )
-  ],
+
 
   graphQlOperations: [
     new Query(

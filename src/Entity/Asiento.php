@@ -2,14 +2,14 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
+use App\Attribute\ApiResourceNoPagination;
 use App\Entity\Base\Base;
 use App\Repository\AsientoRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AsientoRepository::class)]
-#[ApiResource]
+#[ApiResourceNoPagination]
 class Asiento extends Base {
 
     #[ORM\Column(type: Types::SMALLINT)]

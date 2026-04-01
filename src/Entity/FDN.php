@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
+use App\Attribute\ApiResourcePaginationPage;
 use App\Entity\Base\Base;
 use App\Repository\FDNRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,7 +11,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\InheritanceType('JOINED')]
 #[ORM\DiscriminatorColumn(name: 'discr', type: 'string')]
 #[ORM\DiscriminatorMap(['fdn' => FDN::class, 'enclave' => Enclave::class, 'parada' => Parada::class, 'taxon' => Taxon::class])]
-#[ApiResource]
-class FDN extends Base
-{
+#[ApiResourcePaginationPage]
+class FDN extends Base {
 }

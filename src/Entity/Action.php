@@ -2,10 +2,6 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\GraphQl\DeleteMutation;
-use ApiPlatform\Metadata\GraphQl\Mutation;
-use ApiPlatform\Metadata\GraphQl\Query;
-use ApiPlatform\Metadata\GraphQl\QueryCollection;
 use App\Attribute\ApiResourceNoPagination;
 use App\Attribute\CollectionMetadataAttribute;
 use App\Attribute\FormMetadataAttribute;
@@ -17,17 +13,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ActionRepository::class)]
-#[ApiResourceNoPagination(
-    graphQlOperations: [
-        new Query(),
-        new Mutation(name: 'create'),
-        new Mutation(name: 'update'),
-        new DeleteMutation(name: 'delete'),
-        new QueryCollection(
-            filters: ['order.filter'],
-        ),
-    ]
-)]
+#[ApiResourceNoPagination]
 #[FormMetadataAttribute(order: ['nombre', 'ruta', 'roles'])]
 #[CollectionMetadataAttribute(
     class: 'col-wraper',
@@ -51,7 +37,7 @@ class Action extends Base {
     /**
      * @var Collection<int, Role>
      */
-    #[ORM\ManyToMany(targetEntity: Role::class, inversedBy: 'actions')]
+    #[ORM\ManyToMany(targetEntity: Role::class, mappedBy: 'actions')]
     private Collection $roles;
 
     public function __construct() {

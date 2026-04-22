@@ -97,14 +97,10 @@ final class EntityConfigSynchronizer {
       }
 
       $collectionFieldConfig->setField($data[0]);
-      $collectionFieldConfig->setType($data[1]);
       $collectionFieldConfig->setVisible(true);
       $collectionFieldConfig->setSortable(false);
       $collectionFieldConfig->setLabel(null);
       $collectionFieldConfig->setAttrs(null);
-      if (count($data) > 2) {
-        $collectionFieldConfig->setRelatedTo($data[2]);
-      }
 
 
       $config->addcollectionFieldConfig($collectionFieldConfig);

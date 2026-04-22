@@ -40,7 +40,7 @@
 		anonymous
 		# Enable the subscription API (double-check that it's what you want)
 		subscriptions
-		cors_origins http://localhost:9000 http://localhost
+		cors_origins http://localhost:9000 http://localhostq
 		# Extra directives
 		{$MERCURE_EXTRA_DIRECTIVES}
 	}
@@ -61,13 +61,13 @@
     # Matches requests for HTML documents, for static files and for Nuxt.js files,
     # except for known API paths and paths with extensions handled by API Platform
     @nuxt expression `(
-            header({'Accept': '*text/html*'})
-            && !path(
+          
+						 !path(
                  '/index*','/logout', '/docs*', '/borrar*', '/api*', '/graphql*', '/schema.graphql', '/bundles*', '/contexts*', '/_profiler*', '/_wdt*', '/test_event',
                 '*.json*', '*.html', '*.csv', '*.yml', '*.yaml', '*.xml', '/auth', '/nuxt.svg'
             )
-        )
-        || path('/favicon.ico', '/manifest.json', '/robots.txt', '/_nuxt*', '.cache*', '/sitemap*', '/font*', '*.png', '/api_icon*', '_vsf*', '*nuxt_devtools*')`
+        )`
+        # || path('/favicon.ico', '/manifest.json', '/robots.txt', '/.quasar*', '.cache*', '/sitemap*', '/font*', '*.png', '/api_icon*', '_vsf*', '/@vite*', '/node_modules*', '/src*', '/@id*')`
 
     reverse_proxy @nuxt http://{$PWA_UPSTREAM}
 

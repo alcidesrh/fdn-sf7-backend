@@ -11,13 +11,26 @@ use ApiPlatform\Metadata\GraphQl\Mutation;
 use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\QueryParameter;
 use App\Attribute\ApiResourceNoPagination;
+use App\DTO\EntityConfigurationDTO;
+use App\GraphQL\Type\Definition\EntityConfigurationType;
 use App\Repository\EntityConfigurationRepository;
+use App\Resolver\EntityConfigurationResolver;
 use App\Resolver\UpdateEntityConfigurationFieldsResolver;
 
 #[ORM\Entity(repositoryClass: EntityConfigurationRepository::class)]
 #[ApiResourceNoPagination(
   graphQlOperations: [
     new Query(name: 'item_query'),
+    new Query(
+      name: 'entityConfigurationByClass',
+      parameters: [
+        'entityClass' => new QueryParameter(
+          filter: new ExactFilter(),
+          property: 'entityClass'
+        ),
+      ],
+      output: EntityConfigurationDTO::class
+    ),
     new QueryCollection(
       paginationEnabled: false,
       parameters: [
@@ -26,6 +39,7 @@ use App\Resolver\UpdateEntityConfigurationFieldsResolver;
           property: 'entityClass'
         ),
       ],
+      output: EntityConfigurationDTO::class
     ),
 
     // new Mutation(name: 'update', security: 'is_granted("ROLE_ADMIN_CONFIG")'),

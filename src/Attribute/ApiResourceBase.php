@@ -14,6 +14,7 @@ use Attribute;
 class ApiResourceBase extends ApiResource {
 
     public function __construct(protected ?array $graphQlOperations = null, protected ?Operations $operations = null, ...$data) {
+        
         $default = [
             new Query(),
             new Mutation(name: 'create'),

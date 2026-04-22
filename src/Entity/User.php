@@ -71,7 +71,6 @@ use App\State\UserPasswordHasher;
     ]
 )]
 #[ApiFilter(DateFilter::class, properties: ['createdAt'])]
-// #[ApiFilter(SearchFilter::class, properties: ['userRoles.id' => 'exact'])]
 #[ApiFilter(SearchFilter::class, properties: ['permisos.id' => 'exact', 'userRoles.id' => 'exact'])]
 #[ApiFilter(OrderFilter::class, properties: ['id', 'nombre', 'apellido', 'username', 'createdAt', 'email'], arguments: ['orderParameterName' => 'order'])]
 

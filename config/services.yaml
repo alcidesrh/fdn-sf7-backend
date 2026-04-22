@@ -67,9 +67,7 @@ services:
     # App\GraphQL\Type\Definition\DateScalar:
     #     tags:
     #         - { name: api_platform.graphql.type }    
-
-    # App\GraphQL\Type\Converter\DateTypeConverter:
-    #     decorates: api_platform.graphql.type_converter 
+    
     App\GraphQL\Type\Converter\DateTypeConverter:
         decorates: 'api_platform.graphql.type_converter'
         arguments:
@@ -87,9 +85,7 @@ services:
 
     App\EventListener\EntityConfigSyncListener:
         tags:
-            - { name: doctrine.event_subscriber }        
-
-        
+            - { name: doctrine.event_subscriber }     
 
     # App\GraphQL\Type\Converter\TypeConverter:
     #     decorates: api_platform.graphql.type_converter                     

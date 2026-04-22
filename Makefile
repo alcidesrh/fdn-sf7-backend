@@ -138,8 +138,8 @@ caddy: ## Log to the docker container
 
 db: ## Log to the docker container
 	@$(DOCKER_COMP) exec database sh
-pwa: ## Log to the docker container
-	@$(DOCKER_COMP) exec pwa sh
+frontend: ## Log to the docker container
+	@$(DOCKER_COMP) exec frontend sh
 
 kill: ## Force Stop containers
 	@$(DOCKER_COMP) kill

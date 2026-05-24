@@ -3,11 +3,14 @@
 namespace App\Entity\Base\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Ignore;
 
 trait LegacyTrait {
   #[ORM\Column(nullable: true)]
+  #[Ignore]
   protected ?int $legacyId = null;
 
+  #[Ignore]
   public function getLegacyId(): ?int {
     return $this->legacyId;
   }

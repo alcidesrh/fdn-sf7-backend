@@ -11,26 +11,18 @@ use ApiPlatform\Metadata\GraphQl\Mutation;
 use ApiPlatform\Metadata\GraphQl\Query;
 use ApiPlatform\Metadata\QueryParameter;
 use App\Attribute\ApiResourceNoPagination;
-use App\DTO\EntityConfigurationDTO;
-use App\GraphQL\Type\Definition\EntityConfigurationType;
 use App\Repository\EntityConfigurationRepository;
-use App\Resolver\EntityConfigurationResolver;
 use App\Resolver\UpdateEntityConfigurationFieldsResolver;
+use Symfony\Component\ObjectMapper\Attribute\Map;
+use Symfony\Component\ObjectMapper\Condition\TargetClass;
+use Symfony\Component\ObjectMapper\Transform\MapCollection;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: EntityConfigurationRepository::class)]
 #[ApiResourceNoPagination(
+  order: ['collectionFieldConfig.position' => 'ASC'],
   graphQlOperations: [
     new Query(name: 'item_query'),
-    new Query(
-      name: 'entityConfigurationByClass',
-      parameters: [
-        'entityClass' => new QueryParameter(
-          filter: new ExactFilter(),
-          property: 'entityClass'
-        ),
-      ],
-      output: EntityConfigurationDTO::class
-    ),
     new QueryCollection(
       paginationEnabled: false,
       parameters: [
@@ -39,10 +31,19 @@ use App\Resolver\UpdateEntityConfigurationFieldsResolver;
           property: 'entityClass'
         ),
       ],
-      output: EntityConfigurationDTO::class
     ),
-
-    // new Mutation(name: 'update', security: 'is_granted("ROLE_ADMIN_CONFIG")'),
+    new QueryCollection(
+      name: 'get',
+      order: ['collectionFieldConfig.position' => 'ASC', 'formFields.position' => 'ASC'],
+      normalizationContext: ['groups' => ['read:dto']],
+      paginationEnabled: false,
+      parameters: [
+        'entityClass' => new QueryParameter(
+          filter: new ExactFilter(),
+          property: 'entityClass'
+        ),
+      ],
+    ),
     new Mutation(name: 'update'),
     new Mutation(
       name: 'updateWithRelations',
@@ -64,24 +65,22 @@ use App\Resolver\UpdateEntityConfigurationFieldsResolver;
       ]
     )
   ],
-  // normalizationContext: ['groups' => ['entity_config:read']],
-  // denormalizationContext: ['groups' => ['entity_config:write']],
 )]
 class EntityConfiguration {
   #[ORM\Id]
   #[ORM\GeneratedValue]
   #[ORM\Column]
-  // #[Groups(['entity_config:read'])]
   private ?int $id = null;
 
   #[ORM\Column(length: 255, unique: true)]
-  // #[Groups(['entity_config:read', 'entity_config:write'])]
-  private string $entityClass;
+  public string $entityClass;
 
   #[ORM\OneToMany(mappedBy: 'entityConfig', targetEntity: CollectionFieldConfig::class, cascade: ['persist', 'remove'], orphanRemoval: true, fetch: 'LAZY')]
+  #[Groups(['read:dto'])]
   private Collection $collectionFieldConfig;
 
   #[ORM\OneToMany(mappedBy: 'entityConfig', targetEntity: FormFieldConfig::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+  #[Groups(['read:dto'])]
   private Collection $formFields;
 
 
@@ -150,5 +149,16 @@ class EntityConfiguration {
       }
     }
     return $this;
+  }
+  public function orderFields(Collection $data): void {
+    $position = 1;
+    foreach ($data as $field) {
+      if (!$field->isVisible()) continue;
+      $field->setPosition($position++);
+    }
+    foreach ($data as $field) {
+      if ($field->isVisible()) continue;
+      $field->setPosition($position++);
+    }
   }
 }

@@ -20,7 +20,15 @@ final class EntityConfigSynchronizer {
   public function syncEntity(string $entityClass): void {
     $config = $this->entityManager->getRepository(EntityConfiguration::class)
       ->findOneBy(['entityClass' => $entityClass]);
-
+    // if ($config) {
+    //   $item = $config->getCollectionFieldConfig();
+    //   $toDelete = $item->filter(fn(CollectionFieldConfig $v) => in_array($v->field, ['legacyId', 'password', 'apiTokens', 'plainPassword', 'userIdentifier']));
+    //   foreach ($toDelete  as $key => $value) {
+    //     $item->removeElement($value);
+    //   }
+    //   $this->entityManager->flush();
+    // }
+    // return;
     if (!$config) {
       $config = new EntityConfiguration($entityClass);
       $this->entityManager->persist($config);
@@ -53,6 +61,9 @@ final class EntityConfigSynchronizer {
     // Para mayor detalle puedes hacer:
     $detalle = [];
     foreach ($camposSimples as $campo) {
+      if (\in_array($campo, ['legacyId', 'password', 'apiTokens'])) {
+        continue;
+      }
       $detalle[] = [$campo, match ($metadata->getFieldMapping($campo)['type']) {
         'string', 'text'  => 'text',
         'integer', 'float' => 'number',
@@ -84,32 +95,22 @@ final class EntityConfigSynchronizer {
       $existing[$field->getField()] = $field;
     }
 
-    $maxPosition = 0; // $existing ? max(array_map(fn($f) => $f->getPosition(), $existing)) : 0;
-
     foreach ($currentFields as $data) {
+
       if (!isset($existing[$data[0]])) {
-        $collectionFieldConfig = new CollectionFieldConfig();
+        $collectionFieldConfig = new CollectionFieldConfig($data);
         $this->entityManager->persist($collectionFieldConfig);
-        $collectionFieldConfig->setPosition(++$maxPosition);
       } else {
         $collectionFieldConfig = $existing[$data[0]];
-        $collectionFieldConfig->setPosition(++$maxPosition);
+        $collectionFieldConfig->setData($data);
       }
-
-      $collectionFieldConfig->setField($data[0]);
-      $collectionFieldConfig->setVisible(true);
-      $collectionFieldConfig->setSortable(false);
-      $collectionFieldConfig->setLabel(null);
-      $collectionFieldConfig->setAttrs(null);
-
-
       $config->addcollectionFieldConfig($collectionFieldConfig);
-
       $this->logger->info('Campo de listado añadido automáticamente: {field} en {entity}', [
         'field' => $data[0],
         'entity' => $config->getEntityClass()
       ]);
     }
+    $config->orderFields($config->getCollectionFieldConfig());
   }
 
   private function syncFormFields(EntityConfiguration $config, array $currentFields): void {
@@ -118,24 +119,14 @@ final class EntityConfigSynchronizer {
       $existing[$field->getField()] = $field;
     }
 
-    $maxPosition = 0; //$existing ? max(array_map(fn($f) => $f->getPosition(), $existing)) : 0;
-
     foreach ($currentFields as $data) {
+
       if (!isset($existing[$data[0]])) {
-        $formField = new FormFieldConfig();
+        $formField = new FormFieldConfig($data);
         $this->entityManager->persist($formField);
-        $formField->setPosition(++$maxPosition);
       } else {
         $formField = $existing[$data[0]];
-      }
-      $formField->setField($data[0]);
-      $formField->setType($data[1]);
-      $formField->setGroupName(null);
-      $formField->setAttrs(null);
-      $formField->setVisible(true);
-      $formField->setLabel(true);
-      if (count($data) > 2) {
-        $formField->setRelatedTo($data[2]);
+        $formField->setData($data);
       }
 
       $config->addFormField($formField);
@@ -145,5 +136,6 @@ final class EntityConfigSynchronizer {
         'entity' => $config->getEntityClass()
       ]);
     }
+    $config->orderFields($config->getFormFields());
   }
 }

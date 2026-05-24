@@ -10,15 +10,11 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\MappedSuperclass]
 class Base {
-
     use DataLoader;
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[ExcludeAttribute]
-    #[ApiProperty(identifier: true)]
-    protected ?int $id;
+    protected int $id;
 
     #[ExcludeAttribute]
     public ?string $label = null;

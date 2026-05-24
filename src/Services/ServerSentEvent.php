@@ -62,7 +62,7 @@ class ServerSentEvent implements ServiceSubscriberInterface {
     public function error($mensaje = 'MSG ServerSent: Ha ocurrido un error.', $detalle = null) {
         $temp = 'error';
         if ($tabid = $this->requestStack->getCurrentRequest()->headers->get('Tabid', '')) {
-            $temp .= '_tab' . $tabid;
+            // $temp .= '_tab' . $tabid;
         }
         $this->hubInterface->publish(
             new Update(

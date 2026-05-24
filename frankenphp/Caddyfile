@@ -31,7 +31,11 @@
 
 	mercure {
 		# Transport to use (default to Bolt)
-		transport_url {$MERCURE_TRANSPORT_URL:bolt:///data/mercure.db}
+		# transport_url {$MERCURE_TRANSPORT_URL:bolt:///data/mercure.db}
+		transport bolt {
+        path /data/mercure.db
+    }
+		
 		# Publisher JWT key
 		publisher_jwt {env.MERCURE_PUBLISHER_JWT_KEY} {env.MERCURE_PUBLISHER_JWT_ALG}
 		# Subscriber JWT key
@@ -40,7 +44,7 @@
 		anonymous
 		# Enable the subscription API (double-check that it's what you want)
 		subscriptions
-		cors_origins http://localhost:9000 http://localhostq
+		cors_origins http://localhost:9000 http://localhost
 		# Extra directives
 		{$MERCURE_EXTRA_DIRECTIVES}
 	}

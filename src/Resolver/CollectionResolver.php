@@ -6,6 +6,7 @@ use ApiPlatform\GraphQl\Resolver\QueryItemResolverInterface;
 use ApiPlatform\Metadata\IriConverterInterface;
 use function Symfony\Component\String\u;
 use App\DTO\MetadataDTO;
+use App\Enum\Status;
 use App\Useful\Doctrine;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,8 +19,13 @@ final class CollectionResolver implements QueryItemResolverInterface {
    */
   public function __invoke(?object $item, array $context): object {
     $metadata = new MetadataDTO();
-    $metadata->data = (new ArrayCollection($this->entityManagerInterface->getRepository(Doctrine::entityNamespace($context['args']['resource']))->findAll()))->map(fn($v) => ['id' => $this->iriConverter->getIriFromResource($v), 'label' => $v->getLabel()])->toArray();
 
+    // if ($context['args']['resource'] == 'Status') {
+    //   $metadata->data = \array_map(fn($item) => ['id' => $item, 'label' => $item], Status::cases());
+    //   return $metadata;
+    // } else {
+    $metadata->data = (new ArrayCollection($this->entityManagerInterface->getRepository(Doctrine::entityNamespace($context['args']['resource']))->findAll()))->map(fn($v) => ['id' => $this->iriConverter->getIriFromResource($v), 'label' => $v->getLabel()])->toArray();
+    // }
     return $metadata;
   }
 }

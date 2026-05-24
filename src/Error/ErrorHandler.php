@@ -25,7 +25,6 @@ final class ErrorHandler implements ErrorHandlerInterface {
       } else {
         $response['message'] = $formatter($error);
       }
-
       $this->serverSentEvent->error($response);
     }
     // Log or filter the errors.

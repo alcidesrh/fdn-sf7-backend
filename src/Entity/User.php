@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
-use ApiPlatform\Doctrine\Orm\Filter\ExactFilter;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\OrFilter;
 use ApiPlatform\Doctrine\Orm\Filter\PartialSearchFilter;
@@ -26,9 +25,10 @@ use App\Filter\IdPartialSearchFilter;
 use App\Resolver\UserByUsernameResolver;
 use App\Services\Collection as ServicesCollection;
 use App\State\UserPasswordHasher;
+use Symfony\Component\Serializer\Attribute\Ignore;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\Table(name: '`user`')]
+#[ORM\Table(name: '"user"')]
 #[ApiResourcePaginationPage(
     graphQlOperations: [
         new Query(),
@@ -57,6 +57,10 @@ use App\State\UserPasswordHasher;
                     filter: new OrFilter(new PartialSearchFilter()),
                     property: 'apellido'
                 ),
+                'nit' => new QueryParameter(
+                    filter: new OrFilter(new PartialSearchFilter()),
+                    property: 'nit'
+                ),
                 'email' => new QueryParameter(
                     filter: new OrFilter(new PartialSearchFilter()),
                     property: 'email'
@@ -71,7 +75,7 @@ use App\State\UserPasswordHasher;
     ]
 )]
 #[ApiFilter(DateFilter::class, properties: ['createdAt'])]
-#[ApiFilter(SearchFilter::class, properties: ['permisos.id' => 'exact', 'userRoles.id' => 'exact'])]
+#[ApiFilter(SearchFilter::class, properties: ['permisos.id' => 'exact', 'userRoles.id' => 'exact', 'localidad.id' => 'exact'])]
 #[ApiFilter(OrderFilter::class, properties: ['id', 'nombre', 'apellido', 'username', 'createdAt', 'email'], arguments: ['orderParameterName' => 'order'])]
 
 #[CollectionMetadataAttribute(
@@ -219,6 +223,7 @@ class User extends UserBase implements UserInterface, PasswordAuthenticatedUserI
      */
     #[ApiProperty(readable: false)]
     #[ORM\Column(nullable: true)]
+    #[Ignore]
     private ?string $password = null;
 
     #[Assert\NotBlank()]
@@ -227,6 +232,7 @@ class User extends UserBase implements UserInterface, PasswordAuthenticatedUserI
 
     private ?string $fullName;
 
+    #[Ignore]
     #[ORM\OneToMany(mappedBy: 'usuario', targetEntity: ApiToken::class)]
     private Collection $apiTokens;
 
@@ -270,10 +276,7 @@ class User extends UserBase implements UserInterface, PasswordAuthenticatedUserI
         return $this;
     }
 
-    /**
-     *
-     * @see UserInterface
-     */
+    #[Ignore]
     public function getUserIdentifier(): string {
         return (string) $this->username;
     }
@@ -370,9 +373,7 @@ class User extends UserBase implements UserInterface, PasswordAuthenticatedUserI
             ->first() ?: null;
     }
 
-    /**
-     * @return string
-     */
+    #[Ignore]
     public function getValidTokenStrings(): ?string {
         return $this->getApiTokens()
             ->filter(fn(ApiToken $token) => $token->isValid())

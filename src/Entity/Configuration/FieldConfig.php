@@ -2,9 +2,11 @@
 
 namespace App\Entity\Configuration;
 
+use ApiPlatform\Metadata\ApiProperty;
 use App\Entity\Base\Traits\DataLoader;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\MappedSuperclass]
 class FieldConfig {
@@ -12,37 +14,30 @@ class FieldConfig {
   #[ORM\Id]
   #[ORM\GeneratedValue]
   #[ORM\Column]
-  protected ?int $id = null;
-
-  #[ORM\ManyToOne(inversedBy: 'collectionFieldConfig')]
-  protected EntityConfiguration $entityConfig;
+  public ?int $id = null;
 
   #[ORM\Column(length: 255)]
-  protected string $field;
+  #[Groups(['read:dto'])]
+  public string $field;
 
   #[ORM\Column(type: 'integer')]
-  protected int $position;
+  #[Groups(['read:dto'])]
+  public int $position;
 
   #[ORM\Column(nullable: true)]
-  protected bool $visible = true;
+  #[Groups(['read:dto'])]
+  public bool $visible = true;
 
   #[ORM\Column(length: 255, nullable: true)]
-  protected ?string $label = null;
+  #[Groups(['read:dto'])]
+  public ?string $label = null;
 
   #[ORM\Column(type: Types::JSON, nullable: true)]
-  private ?array $attrs = null;
+  #[Groups(['read:dto'])]
+  public ?array $attrs = null;
 
   public function getId(): ?int {
     return $this->id;
-  }
-
-  public function getEntityConfig(): EntityConfiguration {
-    return $this->entityConfig;
-  }
-
-  public function setEntityConfig(EntityConfiguration $entityConfig): self {
-    $this->entityConfig = $entityConfig;
-    return $this;
   }
 
   public function getField(): string {
@@ -53,7 +48,7 @@ class FieldConfig {
     $this->field = $field;
     return $this;
   }
-
+  #[Groups(['read:dto'])]
   public function getName(): string {
     return $this->field;
   }

@@ -8,8 +8,8 @@ use ApiPlatform\State\ProviderInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
 
-#[AsAlias('api_platform.state.error_provider')]
-#[AsTaggedItem('api_platform.state.error_provider')]
+// #[AsAlias('api_platform.state.error_provider')]
+// #[AsTaggedItem('api_platform.state.error_provider')]
 final class ErrorProvider implements ProviderInterface {
   public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null {
     $request = $context['request'];

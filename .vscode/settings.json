@@ -33,4 +33,7 @@
   ],
   "intelephense.references.exclude": [],
   "editor.hover.above": true,
+  "files.autoSave": "onFocusChange",
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
 }

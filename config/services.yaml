@@ -10,8 +10,8 @@ services:
     _defaults:
         autowire: true # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
-         bind:
-            string $projectDir: '%kernel.project_dir%'
+        bind:
+            $projectDir: "%kernel.project_dir%"
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -61,34 +61,32 @@ services:
     App\Serializer\Normalizer\GraphqlExceptionNormalizer:
         tags:
             - { name: "serializer.normalizer", priority: 12 }
-            
-     
 
     # App\GraphQL\Type\Definition\DateScalar:
     #     tags:
-    #         - { name: api_platform.graphql.type }    
-    
+    #         - { name: api_platform.graphql.type }
+
     App\GraphQL\Type\Converter\DateTypeConverter:
-        decorates: 'api_platform.graphql.type_converter'
+        decorates: "api_platform.graphql.type_converter"
         arguments:
             $decorated: '@App\GraphQL\Type\Converter\DateTypeConverter.inner'
-            $types: '@api_platform.graphql.types_container'
-        autoconfigure: false    
+            $types: "@api_platform.graphql.types_container"
+        autoconfigure: false
 
     App\GraphQL\Type\Definition\DateType:
         tags:
-            - { name: api_platform.graphql.type }   
+            - { name: api_platform.graphql.type }
 
     App\Services\EntityConfigSynchronizer:
         arguments:
-            $logger: '@logger'
+            $logger: "@logger"
 
     App\EventListener\EntityConfigSyncListener:
         tags:
-            - { name: doctrine.event_subscriber }     
+            - { name: doctrine.event_subscriber }
 
     # App\GraphQL\Type\Converter\TypeConverter:
-    #     decorates: api_platform.graphql.type_converter                     
+    #     decorates: api_platform.graphql.type_converter
 
     # App\Serializer\UserSerializer:
     #     # arguments:

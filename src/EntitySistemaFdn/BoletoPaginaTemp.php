@@ -6,7 +6,7 @@ use App\Repository\BoletoPaginaTempRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: BoletoPaginaTempRepository::class)]
+#[ORM\Entity(readOnly: true)]
 class BoletoPaginaTemp
 {
     #[ORM\Id]
